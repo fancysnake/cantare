@@ -4,6 +4,7 @@ export type Locale = 'en' | 'pl';
 
 interface Strings {
   siteDescriptionFallback: string;
+  navLabel: string;
   navAllSongs: string;
   navArtists: string;
   navTags: string;
@@ -14,6 +15,9 @@ interface Strings {
   themeAuto: string;
   themeLight: string;
   themeDark: string;
+  themeAutoWord: string;
+  themeLightWord: string;
+  themeDarkWord: string;
   themeAria: (mode: string) => string;
   searchDefault: string;
   searchNoscript: string;
@@ -53,6 +57,7 @@ interface Strings {
 
 const en: Strings = {
   siteDescriptionFallback: 'a songbook for singing together.',
+  navLabel: 'Site navigation',
   navAllSongs: 'All songs',
   navArtists: 'Artists',
   navTags: 'Tags',
@@ -63,6 +68,9 @@ const en: Strings = {
   themeAuto: '🌓 Auto',
   themeLight: '☀️ Light',
   themeDark: '🌙 Dark',
+  themeAutoWord: 'auto',
+  themeLightWord: 'light',
+  themeDarkWord: 'dark',
   themeAria: (mode) => `Theme: ${mode}. Click to change.`,
   searchDefault: 'Type to search songs by title, lyrics, artist, album or tag.',
   searchNoscript: 'Search requires JavaScript. You can still',
@@ -104,6 +112,7 @@ const plPlural = new Intl.PluralRules('pl');
 
 const pl: Strings = {
   siteDescriptionFallback: 'śpiewnik do wspólnego śpiewania.',
+  navLabel: 'Nawigacja',
   navAllSongs: 'Wszystkie piosenki',
   navArtists: 'Wykonawcy',
   navTags: 'Tagi',
@@ -114,6 +123,9 @@ const pl: Strings = {
   themeAuto: '🌓 Auto',
   themeLight: '☀️ Jasny',
   themeDark: '🌙 Ciemny',
+  themeAutoWord: 'automatyczny',
+  themeLightWord: 'jasny',
+  themeDarkWord: 'ciemny',
   themeAria: (mode) => `Motyw: ${mode}. Kliknij, aby zmienić.`,
   searchDefault: 'Szukaj piosenek po tytule, słowach, wykonawcy, albumie lub tagu.',
   searchNoscript: 'Wyszukiwarka wymaga JavaScriptu. Możesz nadal',

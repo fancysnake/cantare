@@ -1,11 +1,14 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { locale } from '../lib/i18n';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
 }
 
-const songs = [...Astro.props.songs].sort((a, b) => a.data.title.localeCompare(b.data.title));
+const songs = [...Astro.props.songs].sort((a, b) =>
+  a.data.title.localeCompare(b.data.title, locale),
+);
 ---
 
 <ul class="song-list">

@@ -62,19 +62,19 @@ const initialDiagrams = chordNames.flatMap((name) => {
     }
   </header>
   <div class="sheet-controls">
-    <div class="transpose" hidden>
-      <span>{t.transposeLabel}</span>
-      <button data-transpose="-1" aria-label={t.transposeDown}>−</button>
+    <div class="transpose" role="group" aria-labelledby="transpose-label" hidden>
+      <span id="transpose-label">{t.transposeLabel}</span>
+      <button class="btn" data-transpose="-1" aria-label={t.transposeDown}>−</button>
       <output class="transpose-state" aria-live="polite">0</output>
-      <button data-transpose="+1" aria-label={t.transposeUp}>+</button>
-      <button data-transpose="0" aria-label={t.transposeReset}>{t.reset}</button>
+      <button class="btn" data-transpose="+1" aria-label={t.transposeUp}>+</button>
+      <button class="btn" data-transpose="0" aria-label={t.transposeReset}>{t.reset}</button>
     </div>
-    <div class="autoscroll" hidden>
-      <span>{t.scrollLabel}</span>
-      <button class="scroll-toggle" aria-pressed="false" aria-label={t.scrollStart}>⏵</button>
-      <button data-speed="-1" aria-label={t.scrollSlower}>−</button>
+    <div class="autoscroll" role="group" aria-labelledby="autoscroll-label" hidden>
+      <span id="autoscroll-label">{t.scrollLabel}</span>
+      <button class="btn scroll-toggle" aria-pressed="false" aria-label={t.scrollStart}>⏵</button>
+      <button class="btn" data-speed="-1" aria-label={t.scrollSlower}>−</button>
       <output class="scroll-state" aria-live="polite">3/8</output>
-      <button data-speed="+1" aria-label={t.scrollFaster}>+</button>
+      <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
     </div>
   </div>
   {
@@ -230,8 +230,12 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       const popover = document.createElement('div');
       popover.className = 'chord-popover';
+      popover.setAttribute('role', 'tooltip');
       popover.hidden = true;
       document.body.appendChild(popover);
+
+      let shownFor: HTMLElement | null = null;
+      let hoverTimer = 0;
 
       const chordTarget = (event: Event): HTMLElement | null =>
         event.target instanceof Element
@@ -240,17 +244,52 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       const show = (chordEl: HTMLElement, svg: string) => {
         popover.innerHTML = svg;
-        const rect = chordEl.getBoundingClientRect();
-        popover.style.left = `${window.scrollX + rect.left}px`;
-        popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
         popover.hidden = false;
+        const rect = chordEl.getBoundingClientRect();
+        const maxLeft = document.documentElement.clientWidth - popover.offsetWidth - 8;
+        const left = Math.max(8, Math.min(rect.left, maxLeft));
+        popover.style.left = `${window.scrollX + left}px`;
+        popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
+        shownFor = chordEl;
       };
 
-      if (window.matchMedia('(hover: hover)').matches) {
-        // Desktop: show after hovering a chord for 0.5s, hide on leave.
-        let hoverTimer = 0;
-        let shownFor: HTMLElement | null = null;
+      const hide = () => {
+        window.clearTimeout(hoverTimer);
+        popover.hidden = true;
+        shownFor = null;
+      };
 
+      // Chords are focusable so keyboard users can reach the diagrams.
+      const makeFocusable = () => {
+        for (const el of sheetEl.querySelectorAll<HTMLElement>('.chord')) {
+          if (el.textContent?.trim()) el.tabIndex = 0;
+        }
+      };
+      makeFocusable();
+      document.addEventListener('song:rerendered', () => {
+        hide();
+        makeFocusable();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !popover.hidden) hide();
+      });
+
+      document.addEventListener('focusin', (event) => {
+        const chordEl = chordTarget(event);
+        const name = chordEl?.textContent?.trim();
+        const svg = name ? svgFor(name) : null;
+        if (chordEl && svg) show(chordEl, svg);
+        else if (shownFor) hide();
+      });
+
+      document.addEventListener('focusout', (event) => {
+        if (chordTarget(event) === shownFor) hide();
+      });
+
+      if (window.matchMedia('(hover: hover)').matches) {
+        // Desktop: show after hovering a chord for 0.5s; the popover itself
+        // stays open while hovered (WCAG 1.4.13) and Esc dismisses it.
         document.addEventListener('mouseover', (event) => {
           const chordEl = chordTarget(event);
           if (!chordEl || chordEl === shownFor) return;
@@ -259,7 +298,6 @@ const initialDiagrams = chordNames.flatMap((name) => {
           if (!svg) return;
           window.clearTimeout(hoverTimer);
           hoverTimer = window.setTimeout(() => {
-            shownFor = chordEl;
             show(chordEl, svg);
           }, 500);
         });
@@ -267,12 +305,16 @@ const initialDiagrams = chordNames.flatMap((name) => {
         document.addEventListener('mouseout', (event) => {
           const chordEl = chordTarget(event);
           if (!chordEl) return;
-          if (event.relatedTarget instanceof Node && chordEl.contains(event.relatedTarget)) return;
+          const next = event.relatedTarget;
+          if (next instanceof Node && (chordEl.contains(next) || popover.contains(next))) return;
           window.clearTimeout(hoverTimer);
-          if (shownFor === chordEl) {
-            popover.hidden = true;
-            shownFor = null;
-          }
+          if (shownFor === chordEl) hide();
+        });
+
+        popover.addEventListener('mouseleave', (event) => {
+          const next = event.relatedTarget;
+          if (next instanceof Node && shownFor?.contains(next)) return;
+          hide();
         });
       } else {
         // Touch: tap a chord to toggle, tap elsewhere to dismiss.
@@ -283,7 +325,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           if (chordEl && svg && popover.hidden) {
             show(chordEl, svg);
           } else {
-            popover.hidden = true;
+            hide();
           }
         });
       }

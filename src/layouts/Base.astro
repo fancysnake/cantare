@@ -34,11 +34,13 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
   <body>
     <header class="site-header">
       <a href="/" class="brand">{site.name}</a>
-      <a href="/songs/">{t.navAllSongs}</a>
-      <a href="/artists/">{t.navArtists}</a>
-      <a href="/tags/">{t.navTags}</a>
-      <button id="chords-toggle" hidden>🎸</button>
-      <button id="theme-toggle" hidden>🌓</button>
+      <nav aria-label={t.navLabel}>
+        <a href="/songs/">{t.navAllSongs}</a>
+        <a href="/artists/">{t.navArtists}</a>
+        <a href="/tags/">{t.navTags}</a>
+      </nav>
+      <button id="chords-toggle" class="btn" hidden>🎸</button>
+      <button id="theme-toggle" class="btn" hidden>🌓</button>
     </header>
     <main>
       <slot />
@@ -54,6 +56,11 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
           light: t.themeLight,
           dark: t.themeDark,
         };
+        const WORDS: Record<Mode, string> = {
+          system: t.themeAutoWord,
+          light: t.themeLightWord,
+          dark: t.themeDarkWord,
+        };
         const NEXT: Record<Mode, Mode> = { system: 'light', light: 'dark', dark: 'system' };
         const stored = localStorage.getItem('theme');
         let mode: Mode = stored === 'light' || stored === 'dark' ? stored : 'system';
@@ -67,7 +74,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
             localStorage.setItem('theme', mode);
           }
           toggle.textContent = LABELS[mode];
-          toggle.setAttribute('aria-label', t.themeAria(LABELS[mode]));
+          toggle.setAttribute('aria-label', t.themeAria(WORDS[mode]));
         };
 
         toggle.addEventListener('click', () => {

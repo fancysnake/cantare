@@ -133,6 +133,14 @@ run preview`; searching a lyric fragment finds the song; search works without
       Polish plural rules for song counts. — _Test: with locale "pl" the whole
       UI reads in Polish; switching config to "en" restores English._
 
+- [ ] 13. **Frontend review fixes** — keyboard-accessible chord popovers
+      (tabindex, focus, Esc, hoverable popover, viewport clamp), nav landmark,
+      touch-target fixes, grouped toolbars with aria-labelledby, stronger
+      border token, locale-aware sorting, shared .btn class, popover
+      role/cleanup, emoji-free aria-labels, chords-on-scoped mobile shrink.
+      — _Test: Tab reaches chords and shows diagrams; Esc closes; popover
+      stays open when hovered; all buttons share styling._
+
 - [x] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
       (authoring a new song, running tasks), `mise run check` task running
       `astro check`. — _Test: `mise run check` passes; adding a new `.cho` file and
