@@ -50,7 +50,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   album, and tag pages each show only their songs; links round-trip from a
   song page._
 
-- [ ] 6. **Pagefind search** — extend the `build` script to `astro build && pagefind
+- [x] 6. **Pagefind search** — extend the `build` script to `astro build && pagefind
   --site dist`; add a search page (or header search box) loading the Pagefind UI
   from `/pagefind/pagefind-ui.js`; mark song lyrics/title regions with
   `data-pagefind-body`, and expose artist/album/tags as search facets via
