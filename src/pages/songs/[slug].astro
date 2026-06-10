@@ -19,11 +19,20 @@ const sheetHtml = renderSong(parseSong(song.data.source));
 ---
 
 <Base title={`${title} — ${artist} | Cantare`}>
-  <header>
-    <h1>{title}</h1>
+  <header data-pagefind-body>
+    <h1 data-pagefind-meta="title">{title}</h1>
     <p class="song-meta">
-      <a href={`/artists/${slugify(artist)}/`}>{artist}</a>
-      {album && <> · <a href={`/albums/${slugify(album)}/`}>{album}</a></>}
+      <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
+      {
+        album && (
+          <>
+            {' '}
+            · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
+              {album}
+            </a>
+          </>
+        )
+      }
       {key && <> · Key: {key}</>}
       {capo !== undefined && <> · Capo: {capo}</>}
     </p>
@@ -31,7 +40,7 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       tags.length > 0 && (
         <p class="song-meta">
           {tags.map((tag) => (
-            <a class="tag" href={`/tags/${slugify(tag)}/`}>
+            <a class="tag" href={`/tags/${slugify(tag)}/`} data-pagefind-filter="tag">
               #{tag}
             </a>
           ))}
@@ -39,5 +48,5 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       )
     }
   </header>
-  <article class="chord-sheet" set:html={sheetHtml} />
+  <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
 </Base>
