@@ -42,7 +42,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   chorus/verse sections visually distinct; print preview shows only the chord
   sheet._
 
-- [ ] 5. **Browse & taxonomies** — group the song list alphabetically by title
+- [x] 5. **Browse & taxonomies** — group the song list alphabetically by title
   with an artist subtitle; add taxonomy index pages for artists
   (`src/pages/artists/[slug].astro`), albums (`src/pages/albums/[slug].astro`),
   and tags (`src/pages/tags/[slug].astro`), each listing its songs; song pages
