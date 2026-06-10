@@ -359,8 +359,19 @@ const initialDiagrams = chordNames.flatMap((name) => {
       // Transposing replaces the sheet markup; refit the new content.
       document.addEventListener('song:rerendered', refit);
       // Focus mode moves the viewport's top edge; chord visibility changes
-      // line widths — both need a refit.
-      new MutationObserver(refit).observe(document.documentElement, {
+      // line widths — both need a refit. Entering focus mode also switches
+      // to multi-column (leaving it keeps whatever mode is active).
+      new MutationObserver((mutations) => {
+        const focusTurnedOn =
+          mutations.some((m) => m.attributeName === 'data-focus') &&
+          document.documentElement.dataset.focus === 'on';
+        if (focusTurnedOn && !multi) {
+          multi = true;
+          applyMode();
+        } else {
+          refit();
+        }
+      }).observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['data-focus', 'data-chords'],
       });
