@@ -95,7 +95,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   the normalized (post-transpose) chord name. — _Test: hovering G7 shows its
   diagram; after transposing +2, the same position shows A7's diagram._
 
-- [ ] 10b. **Dark mode toggle** — theme inferred from OS setting by default,
+- [x] 10b. **Dark mode toggle** — theme inferred from OS setting by default,
   switchable via a header toggle (light/dark/system), persisted in
   localStorage, no flash on load. — _Test: toggle overrides the OS theme and
   survives reload; "system" follows the OS again._
