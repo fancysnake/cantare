@@ -88,6 +88,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
       <output class="scroll-state" aria-live="polite">3/8</output>
       <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
     </div>
+    <button id="sheet-mode-toggle" class="btn" aria-pressed="false" aria-label={t.viewMulti} hidden>
+      ▥
+    </button>
     <button id="focus-toggle" class="btn" aria-pressed="false" aria-label={t.focusEnter} hidden>
       ⛶
     </button>
@@ -106,7 +109,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
     )
   }
 
-  <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  <div class="sheet-viewport">
+    <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  </div>
   {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
 
   <script
@@ -253,6 +258,60 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       applyFocus();
       focusToggle.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { t } from '../../lib/i18n';
+
+    const modeToggle = document.getElementById('sheet-mode-toggle');
+    const viewport = document.querySelector<HTMLElement>('.sheet-viewport');
+
+    if (modeToggle && viewport) {
+      let multi = document.documentElement.dataset.sheetMode === 'multi';
+
+      // In multi mode the viewport gets the remaining screen height below
+      // its top edge; in single mode it has no explicit height at all.
+      const sizeViewport = () => {
+        if (multi) {
+          const top = viewport.getBoundingClientRect().top + window.scrollY;
+          viewport.style.height = `${Math.max(160, window.innerHeight - top)}px`;
+        } else {
+          viewport.style.removeProperty('height');
+        }
+      };
+
+      const applyMode = () => {
+        if (multi) {
+          document.documentElement.dataset.sheetMode = 'multi';
+          localStorage.setItem('sheet-mode', 'multi');
+          const strip = document.querySelector<HTMLDetailsElement>('.chord-strip');
+          if (strip) strip.open = false;
+          window.scrollTo(0, 0);
+        } else {
+          delete document.documentElement.dataset.sheetMode;
+          localStorage.setItem('sheet-mode', 'single');
+        }
+        modeToggle.textContent = multi ? '▤' : '▥';
+        modeToggle.setAttribute('aria-pressed', String(multi));
+        modeToggle.setAttribute('aria-label', multi ? t.viewSingle : t.viewMulti);
+        sizeViewport();
+      };
+
+      modeToggle.addEventListener('click', () => {
+        multi = !multi;
+        applyMode();
+      });
+
+      window.addEventListener('resize', sizeViewport);
+      // Focus mode changes the toolbar height, which moves the viewport's top.
+      new MutationObserver(sizeViewport).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-focus'],
+      });
+
+      applyMode();
+      modeToggle.hidden = false;
     }
   </script>
 

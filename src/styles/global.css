@@ -228,6 +228,27 @@ h1 {
   display: none;
 }
 
+/* Multi-column mode: the sheet folds into columns inside a screen-height
+   viewport (height set in JS); overflowing columns are clipped for now. */
+:root[data-sheet-mode='multi'] body.song-page .sheet-viewport {
+  overflow: hidden;
+}
+
+:root[data-sheet-mode='multi'] body.song-page .chord-sheet {
+  height: 100%;
+  font-size: 0.8rem;
+  columns: 24em;
+  column-gap: 2.5rem;
+  column-fill: auto;
+}
+
+/* Vertical space is precious on one screen: collapse the chord strip and
+   the copyright line (both return in single mode and in print). */
+:root[data-sheet-mode='multi'] body.song-page .chord-strip,
+:root[data-sheet-mode='multi'] body.song-page .copyright-notice {
+  display: none;
+}
+
 .transpose,
 .autoscroll {
   display: flex;

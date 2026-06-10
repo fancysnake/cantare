@@ -39,6 +39,9 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       if (localStorage.getItem('focus') === 'on') {
         document.documentElement.dataset.focus = 'on';
       }
+      if (localStorage.getItem('sheet-mode') === 'multi') {
+        document.documentElement.dataset.sheetMode = 'multi';
+      }
     </script>
   </head>
   <body class:list={[pageClass]}>

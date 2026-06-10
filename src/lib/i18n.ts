@@ -53,6 +53,8 @@ interface Strings {
   chordDiagram: string;
   focusEnter: string;
   focusExit: string;
+  viewMulti: string;
+  viewSingle: string;
   notFoundTitle: string;
   notFoundHeading: string;
   notFoundBefore: string;
@@ -113,6 +115,8 @@ const en: Strings = {
   chordDiagram: 'chord diagram',
   focusEnter: 'Enter focus mode (hides site navigation)',
   focusExit: 'Exit focus mode (Esc)',
+  viewMulti: 'Fit the song on one screen (columns)',
+  viewSingle: 'Single column with scrolling',
   notFoundTitle: 'Not found',
   notFoundHeading: 'Page not found',
   notFoundBefore: 'This song seems to have ended. Try the',
@@ -175,6 +179,8 @@ const pl: Strings = {
   chordDiagram: 'diagram akordu',
   focusEnter: 'Włącz tryb skupienia (ukrywa nawigację)',
   focusExit: 'Wyłącz tryb skupienia (Esc)',
+  viewMulti: 'Zmieść piosenkę na jednym ekranie (kolumny)',
+  viewSingle: 'Jedna kolumna z przewijaniem',
   notFoundTitle: 'Nie znaleziono',
   notFoundHeading: 'Strona nie istnieje',
   notFoundBefore: 'Ta piosenka chyba już się skończyła. Skorzystaj z',
