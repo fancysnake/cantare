@@ -81,7 +81,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   site header. — _Test: header "Artists" opens the artist list; clicking one
   shows their songs; same for Tags._
 
-- [ ] 9. **Autoscroll** — Ultimate-Guitar-style autoscroll on song pages: a
+- [x] 9. **Autoscroll** — Ultimate-Guitar-style autoscroll on song pages: a
   dependency-free client script (`requestAnimationFrame`) with play/pause and
   speed +/− controls in the song toolbar; controls hidden in print styles and
   absent without JS. — _Test: pressing play scrolls the sheet smoothly; speed
