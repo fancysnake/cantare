@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { slugify } from '../../lib/slug';
+
+const songs = await getCollection('songs');
+
+const artists = new Map<string, { name: string; count: number }>();
+for (const song of songs) {
+  const slug = slugify(song.data.artist);
+  const entry = artists.get(slug) ?? { name: song.data.artist, count: 0 };
+  entry.count += 1;
+  artists.set(slug, entry);
+}
+
+const sorted = [...artists.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name));
+---
+
+<Base title="Artists | Cantare">
+  <h1>Artists</h1>
+  <ul class="song-list">
+    {
+      sorted.map(([slug, { name, count }]) => (
+        <li>
+          <a href={`/artists/${slug}/`}>{name}</a>
+          <span class="song-meta"> — {count} {count === 1 ? 'song' : 'songs'}</span>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

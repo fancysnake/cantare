@@ -76,6 +76,11 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   `:focus-visible` states.
   — _Test: pressing + shifts every chord up a semitone; reload restores original key._
 
+- [x] 8b. **Artist & tag indexes in header** — `/artists/` and `/tags/` index
+  pages listing all artists / all tags (with song counts), linked from the
+  site header. — _Test: header "Artists" opens the artist list; clicking one
+  shows their songs; same for Tags._
+
 - [ ] 9. **Autoscroll** — Ultimate-Guitar-style autoscroll on song pages: a
   dependency-free client script (`requestAnimationFrame`) with play/pause and
   speed +/− controls in the song toolbar; controls hidden in print styles and
