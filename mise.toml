@@ -16,3 +16,11 @@ run = "aube run build"
 [tasks.preview]
 description = "Preview the built site"
 run = "aube run preview"
+
+[tasks.lint]
+description = "ESLint + Prettier check"
+run = ["aube run lint", "aube run format:check"]
+
+[tasks.format]
+description = "Format with Prettier"
+run = "aube run format"

@@ -3,9 +3,9 @@ import { ChordProParser, HtmlDivFormatter, type Song } from 'chordsheetjs';
 export interface SongMeta {
   title: string;
   artist: string;
-  album?: string;
-  key?: string;
-  capo?: number;
+  album?: string | undefined;
+  key?: string | undefined;
+  capo?: number | undefined;
   tags: string[];
 }
 
@@ -19,7 +19,7 @@ export function renderSong(song: Song): string {
 
 export interface RenderedSheet {
   html: string;
-  key?: string;
+  key?: string | undefined;
 }
 
 export function renderTransposed(source: string, semitones: number): RenderedSheet {

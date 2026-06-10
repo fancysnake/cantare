@@ -30,7 +30,10 @@ const initialDiagrams = chordNames.flatMap((name) => {
 });
 ---
 
-<Base title={`${title} — ${artist} | Cantare`}>
+<Base
+  title={`${title} — ${artist} | Cantare`}
+  description={`Lyrics and chords for "${title}" by ${artist}.`}
+>
   <header data-pagefind-body>
     <h1 data-pagefind-meta="title">{title}</h1>
     <p class="song-meta">
