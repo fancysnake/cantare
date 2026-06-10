@@ -221,6 +221,15 @@ const initialDiagrams = chordNames.flatMap((name) => {
         scrollState.textContent = `${level + 1}/${SPEEDS.length}`;
       });
 
+      // Multi-column mode has nothing to scroll: stop a running autoscroll
+      // when it is switched on (the control group is hidden via CSS).
+      new MutationObserver(() => {
+        if (document.documentElement.dataset.sheetMode === 'multi' && playing) stop();
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-sheet-mode'],
+      });
+
       autoscroll.hidden = false;
     }
   </script>
@@ -346,10 +355,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
         cancelAnimationFrame(resizeRaf);
         resizeRaf = requestAnimationFrame(refit);
       });
-      // Focus mode changes the toolbar height, which moves the viewport's top.
+      // Transposing replaces the sheet markup; refit the new content.
+      document.addEventListener('song:rerendered', refit);
+      // Focus mode moves the viewport's top edge; chord visibility changes
+      // line widths — both need a refit.
       new MutationObserver(refit).observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ['data-focus'],
+        attributeFilter: ['data-focus', 'data-chords'],
       });
 
       applyMode();

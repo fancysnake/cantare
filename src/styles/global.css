@@ -248,9 +248,11 @@ h1 {
 }
 
 /* Vertical space is precious on one screen: collapse the chord strip and
-   the copyright line (both return in single mode and in print). */
+   the copyright line (both return in single mode and in print). The
+   autoscroll controls disappear too — nothing scrolls in multi mode. */
 :root[data-sheet-mode='multi'] body.song-page .chord-strip,
-:root[data-sheet-mode='multi'] body.song-page .copyright-notice {
+:root[data-sheet-mode='multi'] body.song-page .copyright-notice,
+:root[data-sheet-mode='multi'] body.song-page .autoscroll {
   display: none;
 }
 
