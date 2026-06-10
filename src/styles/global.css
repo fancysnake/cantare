@@ -410,4 +410,26 @@ h1 {
   .chord-sheet .paragraph {
     break-inside: avoid;
   }
+
+  /* Focus and multi-column modes are screen-only: print the normal
+     single-column sheet whatever the on-screen state. */
+  :root[data-focus='on'] body.song-page .song-toolbar .song-meta {
+    display: block;
+  }
+
+  :root[data-sheet-mode='multi'] body.song-page .chord-strip,
+  :root[data-sheet-mode='multi'] body.song-page .copyright-notice {
+    display: block;
+  }
+
+  /* The JS sets height and font-size inline; !important wins over them. */
+  body.song-page .sheet-viewport {
+    height: auto !important;
+    overflow: visible;
+  }
+
+  :root[data-sheet-mode='multi'] body.song-page .chord-sheet {
+    columns: auto;
+    font-size: inherit !important;
+  }
 }

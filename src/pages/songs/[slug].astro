@@ -259,10 +259,11 @@ const initialDiagrams = chordNames.flatMap((name) => {
       });
 
       document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && focusOn) {
-          focusOn = false;
-          applyFocus();
-        }
+        if (event.key !== 'Escape' || !focusOn) return;
+        // An open chord popover claims the first Escape press.
+        if (document.querySelector('.chord-popover:not([hidden])')) return;
+        focusOn = false;
+        applyFocus();
       });
 
       applyFocus();
