@@ -1,40 +1,40 @@
 /*
- * Brand palette: yellow #FFFF33, red #FF3333, blue #3055AB.
- * Yellow tints backgrounds, blue carries links/accents, red carries chords.
- * Text-bearing variants are darkened (light) / lightened (dark) for AA contrast.
+ * Brand palette: green #008000, purple #47066B, gold #A06B00.
+ * Purple carries links/accents, green carries chords, gold tints
+ * backgrounds and borders. Dark-theme variants are lightened for AA contrast.
  */
 :root {
-  --color-bg: #fdfdec;
+  --color-bg: #faf5e9;
   --color-surface: #ffffff;
-  --color-text: #1d1f2a;
-  --color-muted: #595c6b;
-  --color-border: #e3e3c9;
-  --color-accent: #3055ab;
-  --color-chord: #c92121;
+  --color-text: #241f2b;
+  --color-muted: #5d564a;
+  --color-border: #e7dfc8;
+  --color-accent: #47066b;
+  --color-chord: #008000;
 }
 
 /* Dark palette applies when the OS prefers dark (unless forced light),
    or when the user forces dark via the header toggle. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-bg: #14161e;
-    --color-surface: #1d2030;
-    --color-text: #ecede0;
-    --color-muted: #9fa3b3;
-    --color-border: #363a4d;
-    --color-accent: #91aae9;
-    --color-chord: #ff8080;
+    --color-bg: #191322;
+    --color-surface: #251c31;
+    --color-text: #ece7db;
+    --color-muted: #aaa295;
+    --color-border: #403653;
+    --color-accent: #c89ce4;
+    --color-chord: #58c958;
   }
 }
 
 :root[data-theme='dark'] {
-  --color-bg: #14161e;
-  --color-surface: #1d2030;
-  --color-text: #ecede0;
-  --color-muted: #9fa3b3;
-  --color-border: #363a4d;
-  --color-accent: #91aae9;
-  --color-chord: #ff8080;
+  --color-bg: #191322;
+  --color-surface: #251c31;
+  --color-text: #ece7db;
+  --color-muted: #aaa295;
+  --color-border: #403653;
+  --color-accent: #c89ce4;
+  --color-chord: #58c958;
 }
 
 * {
