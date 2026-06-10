@@ -1,4 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
+
+const songs = (await getCollection('songs')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
 ---
 
 <!doctype html>
@@ -10,6 +15,14 @@
   </head>
   <body>
     <h1>Cantare</h1>
-    <p>A songbook. Songs coming soon.</p>
+    <ul>
+      {
+        songs.map((song) => (
+          <li>
+            {song.data.title} — {song.data.artist}
+          </li>
+        ))
+      }
+    </ul>
   </body>
 </html>
