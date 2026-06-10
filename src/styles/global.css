@@ -77,6 +77,18 @@ h1 {
   margin-left: auto;
 }
 
+/* When the header wraps on phones, center both rows */
+@media (max-width: 40rem) {
+  .site-header {
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  #chords-toggle {
+    margin-left: 0;
+  }
+}
+
 #chords-toggle,
 #theme-toggle {
   font: inherit;
