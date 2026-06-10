@@ -25,6 +25,7 @@ const songs = defineCollection({
     album: z.string().optional(),
     key: z.string().optional(),
     capo: z.number().optional(),
+    copyright: z.string().optional(),
     tags: z.array(z.string()),
     source: z.string(),
   }),

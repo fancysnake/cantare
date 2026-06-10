@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, key, capo, tags } = song.data;
+const { title, artist, album, key, capo, copyright, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 
@@ -91,6 +91,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   }
 
   <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
 
   <script
     is:inline

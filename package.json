@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@tombatossals/chords-db": "^0.5.1",
     "astro": "^6.4.5",

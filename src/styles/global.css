@@ -148,6 +148,10 @@ h1 {
   color: var(--color-muted);
 }
 
+.copyright-notice {
+  font-size: 0.85rem;
+}
+
 .song-list {
   list-style: none;
   padding: 0;

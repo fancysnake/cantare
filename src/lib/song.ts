@@ -6,6 +6,7 @@ export interface SongMeta {
   album?: string | undefined;
   key?: string | undefined;
   capo?: number | undefined;
+  copyright?: string | undefined;
   tags: string[];
 }
 
@@ -45,6 +46,7 @@ export function extractMeta(song: Song): SongMeta {
     album: single(meta.get('album')),
     key: single(meta.get('key')),
     capo: maybeNumber(single(meta.get('capo'))),
+    copyright: single(meta.get('copyright')),
     tags: tags
       ? tags
           .split(',')
