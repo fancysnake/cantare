@@ -58,7 +58,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   run preview`; searching a lyric fragment finds the song; search works without
   any server-side code._
 
-- [ ] 7. **Search-first home & random pick** — the homepage becomes the search
+- [x] 7. **Search-first home & random pick** — the homepage becomes the search
   page (meetup use case: open site → search immediately), with a "Browse all
   songs" link; the grouped alphabetical list moves to `/songs/`. Artist, album,
   and tag pages get indexed by Pagefind (heading only, so they appear as
