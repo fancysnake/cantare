@@ -100,6 +100,13 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   localStorage, no flash on load. — _Test: toggle overrides the OS theme and
   survives reload; "system" follows the OS again._
 
+- [x] 10d. **Mobile text size & chords toggle** — smaller chord-sheet type on
+  narrow viewports so lines don't wrap unreadably; header button toggling
+  chord visibility globally (lyrics-only by default, persisted in
+  localStorage; hides chords, transpose and diagram strip when off).
+  — _Test: phone viewport shows unwrapped lines; chords appear only after
+  enabling and stay enabled after reload._
+
 - [ ] 10c. **Linting toolchain** — ESLint (flat config) with typescript-eslint
   strict-type-checked + stylistic, eslint-plugin-astro; Prettier with
   prettier-plugin-astro; `mise run lint` / `mise run format`; fix all

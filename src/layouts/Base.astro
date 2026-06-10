@@ -15,10 +15,13 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <script is:inline>
-      // Apply a forced theme before first paint to avoid flashing.
+      // Apply forced theme and chord visibility before first paint.
       const storedTheme = localStorage.getItem('theme');
       if (storedTheme === 'light' || storedTheme === 'dark') {
         document.documentElement.dataset.theme = storedTheme;
+      }
+      if (localStorage.getItem('chords') === 'on') {
+        document.documentElement.dataset.chords = 'on';
       }
     </script>
   </head>
@@ -28,6 +31,7 @@ const { title } = Astro.props;
       <a href="/songs/">All songs</a>
       <a href="/artists/">Artists</a>
       <a href="/tags/">Tags</a>
+      <button id="chords-toggle" hidden>🎸</button>
       <button id="theme-toggle" hidden>🌓</button>
     </header>
     <main>
@@ -61,6 +65,33 @@ const { title } = Astro.props;
 
         apply();
         toggle.hidden = false;
+      }
+
+      const chordsToggle = document.getElementById('chords-toggle');
+      if (chordsToggle) {
+        let chordsOn = localStorage.getItem('chords') === 'on';
+
+        const applyChords = () => {
+          if (chordsOn) {
+            document.documentElement.dataset.chords = 'on';
+            localStorage.setItem('chords', 'on');
+            chordsToggle.textContent = '🎸 Chords on';
+          } else {
+            delete document.documentElement.dataset.chords;
+            localStorage.setItem('chords', 'off');
+            chordsToggle.textContent = '🎸 Chords off';
+          }
+          chordsToggle.setAttribute('aria-pressed', String(chordsOn));
+          chordsToggle.setAttribute('aria-label', `Chords ${chordsOn ? 'shown' : 'hidden'}. Click to toggle.`);
+        };
+
+        chordsToggle.addEventListener('click', () => {
+          chordsOn = !chordsOn;
+          applyChords();
+        });
+
+        applyChords();
+        chordsToggle.hidden = false;
       }
     </script>
   </body>
