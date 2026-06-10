@@ -14,6 +14,13 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <script is:inline>
+      // Apply a forced theme before first paint to avoid flashing.
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        document.documentElement.dataset.theme = storedTheme;
+      }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -21,9 +28,40 @@ const { title } = Astro.props;
       <a href="/songs/">All songs</a>
       <a href="/artists/">Artists</a>
       <a href="/tags/">Tags</a>
+      <button id="theme-toggle" hidden>🌓</button>
     </header>
     <main>
       <slot />
     </main>
+    <script>
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) {
+        type Mode = 'system' | 'light' | 'dark';
+        const LABELS: Record<Mode, string> = { system: '🌓 Auto', light: '☀️ Light', dark: '🌙 Dark' };
+        const NEXT: Record<Mode, Mode> = { system: 'light', light: 'dark', dark: 'system' };
+        const stored = localStorage.getItem('theme');
+        let mode: Mode = stored === 'light' || stored === 'dark' ? stored : 'system';
+
+        const apply = () => {
+          if (mode === 'system') {
+            delete document.documentElement.dataset.theme;
+            localStorage.removeItem('theme');
+          } else {
+            document.documentElement.dataset.theme = mode;
+            localStorage.setItem('theme', mode);
+          }
+          toggle.textContent = LABELS[mode];
+          toggle.setAttribute('aria-label', `Theme: ${mode}. Click to change.`);
+        };
+
+        toggle.addEventListener('click', () => {
+          mode = NEXT[mode];
+          apply();
+        });
+
+        apply();
+        toggle.hidden = false;
+      }
+    </script>
   </body>
 </html>
