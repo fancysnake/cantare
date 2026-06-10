@@ -28,3 +28,6 @@ run = "aube run format"
 [tasks.check]
 description = "Type-check templates with astro check"
 run = "aube run check"
+
+[env]
+_.path = ['{{config_root}}/node_modules/.bin']
