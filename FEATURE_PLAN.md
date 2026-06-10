@@ -87,13 +87,13 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   absent without JS. — _Test: pressing play scrolls the sheet smoothly; speed
   controls change the rate; pause stops it._
 
-- [ ] 10. **Chord lookup (diagrams)** — add `@tombatossals/chords-db` (fingering
-  data) and `svguitar` (SVG diagram rendering) via aube; tapping/hovering a
-  chord in the sheet shows its diagram in a popover, plus a "chords in this
-  song" strip above the sheet; honor ChordPro `{define: ...}` overrides;
-  lookup uses the normalized (post-transpose) chord name. — _Test: hovering G7
-  shows its diagram; after transposing +2, the same position shows A7's
-  diagram; a song with a custom {define} shows the custom shape._
+- [ ] 10. **Chord lookup (diagrams)** — fingering data from
+  `@tombatossals/chords-db`, rendered by our own small SVG chord-box module
+  (svguitar was rejected by aube's low-download gate; hand-rolled renderer
+  chosen instead); tapping/hovering a chord in the sheet shows its diagram in
+  a popover, plus a "chords in this song" strip above the sheet; lookup uses
+  the normalized (post-transpose) chord name. — _Test: hovering G7 shows its
+  diagram; after transposing +2, the same position shows A7's diagram._
 
 - [ ] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
   (authoring a new song, running tasks), `mise run check` task running

@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 time:
+  '@tombatossals/chords-db@0.5.1': 2019-11-02T10:28:23.088Z
   astro-pagefind@2.0.0: 2026-05-10T12:00:24.854Z
   astro@6.4.5: 2026-06-09T12:45:58.736Z
   chordsheetjs@15.3.1: 2026-05-29T21:02:28.166Z
@@ -14,6 +15,9 @@ importers:
 
   .:
     dependencies:
+      '@tombatossals/chords-db':
+        specifier: ^0.5.1
+        version: 0.5.1
       astro:
         specifier: ^6.4.5
         version: 6.4.5(picomatch@4.0.4)(rollup@4.61.1)(vite@7.3.5)
@@ -376,6 +380,9 @@ packages:
 
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
+
+  '@tombatossals/chords-db@0.5.1':
+    resolution: {integrity: sha512-5kLLtwOxmnFfpVTYfYiw1Q22NJ8msb5JeyDLre09XnUFx2l6KSeqPtJQPsVPOak4BUenlsv/j2H65KBVhB6qgQ==}
 
   '@types/debug@4.1.13':
     resolution: {integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==}
@@ -1486,6 +1493,8 @@ snapshots:
       '@types/hast': 3.0.4
 
   '@shikijs/vscode-textmate@10.0.2': {}
+
+  '@tombatossals/chords-db@0.5.1': {}
 
   '@types/debug@4.1.13':
     dependencies:

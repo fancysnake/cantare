@@ -3,6 +3,9 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { parseSong, renderSong } from '../../lib/song';
 import { slugify } from '../../lib/slug';
+import { diagramDataForChords } from '../../lib/chord-data';
+import { chordDiagramSvg } from '../../lib/chord-diagram';
+import { chordKey } from '../../lib/chord-lookup';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -15,7 +18,16 @@ interface Props {
 
 const { song } = Astro.props;
 const { title, artist, album, key, capo, tags } = song.data;
-const sheetHtml = renderSong(parseSong(song.data.source));
+const parsed = parseSong(song.data.source);
+const sheetHtml = renderSong(parsed);
+
+const chordNames = [...new Set(parsed.getChords())];
+const diagramData = diagramDataForChords(chordNames);
+const initialDiagrams = chordNames.flatMap((name) => {
+  const dataKey = chordKey(name);
+  const position = dataKey ? diagramData[dataKey] : undefined;
+  return position ? [chordDiagramSvg(name, position)] : [];
+});
 ---
 
 <Base title={`${title} — ${artist} | Cantare`}>
@@ -64,9 +76,23 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       <button data-speed="+1" aria-label="Scroll faster">+</button>
     </div>
   </div>
+  {
+    initialDiagrams.length > 0 && (
+      <details class="chord-strip">
+        <summary>Chords in this song</summary>
+        <div class="chord-grid" id="chord-grid">
+          {initialDiagrams.map((svg) => (
+            <figure class="chord-card" set:html={svg} />
+          ))}
+        </div>
+      </details>
+    )
+  }
+
   <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
 
   <script type="application/json" id="song-source" set:html={JSON.stringify(song.data.source).replace(/</g, '\\u003c')} />
+  <script type="application/json" id="chord-data" set:html={JSON.stringify(diagramData).replace(/</g, '\\u003c')} />
 
   <script>
     import { renderTransposed } from '../../lib/song';
@@ -85,6 +111,7 @@ const sheetHtml = renderSong(parseSong(song.data.source));
         sheet.innerHTML = html;
         const sign = offset > 0 ? `+${offset}` : `${offset}`;
         state.textContent = key ? `${sign} (${key})` : sign;
+        document.dispatchEvent(new CustomEvent('song:rerendered'));
       };
 
       toolbar.addEventListener('click', (event) => {
@@ -160,6 +187,63 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       });
 
       autoscroll.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { chordDiagramSvg } from '../../lib/chord-diagram';
+    import { chordKey, type DiagramData } from '../../lib/chord-lookup';
+
+    const dataEl = document.getElementById('chord-data');
+    const sheetEl = document.querySelector<HTMLElement>('.chord-sheet');
+
+    if (dataEl && sheetEl) {
+      const data: DiagramData = JSON.parse(dataEl.textContent ?? '{}');
+
+      const svgFor = (name: string): string | null => {
+        const dataKey = chordKey(name);
+        const position = dataKey ? data[dataKey] : undefined;
+        return position ? chordDiagramSvg(name, position) : null;
+      };
+
+      const grid = document.getElementById('chord-grid');
+      const refreshGrid = () => {
+        if (!grid) return;
+        const names = [
+          ...new Set(
+            [...sheetEl.querySelectorAll('.chord')]
+              .map((el) => el.textContent?.trim() ?? '')
+              .filter(Boolean),
+          ),
+        ];
+        grid.innerHTML = names
+          .map((name) => {
+            const svg = svgFor(name);
+            return svg ? `<figure class="chord-card">${svg}</figure>` : '';
+          })
+          .join('');
+      };
+      document.addEventListener('song:rerendered', refreshGrid);
+
+      const popover = document.createElement('div');
+      popover.className = 'chord-popover';
+      popover.hidden = true;
+      document.body.appendChild(popover);
+
+      document.addEventListener('click', (event) => {
+        const chordEl = (event.target as HTMLElement).closest<HTMLElement>('.chord-sheet .chord');
+        const name = chordEl?.textContent?.trim();
+        const svg = name ? svgFor(name) : null;
+        if (chordEl && svg) {
+          popover.innerHTML = svg;
+          const rect = chordEl.getBoundingClientRect();
+          popover.style.left = `${window.scrollX + rect.left}px`;
+          popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
+          popover.hidden = false;
+        } else {
+          popover.hidden = true;
+        }
+      });
     }
   </script>
 </Base>

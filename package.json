@@ -11,6 +11,7 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@tombatossals/chords-db": "^0.5.1",
     "astro": "^6.4.5",
     "astro-pagefind": "^2.0.0",
     "chordsheetjs": "^15.3.1",
