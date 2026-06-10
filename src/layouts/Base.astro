@@ -6,9 +6,10 @@ import { locale, t } from '../lib/i18n';
 interface Props {
   title?: string | undefined;
   description?: string | undefined;
+  fullWidth?: boolean | undefined;
 }
 
-const { title, description = `${site.name} — ${site.description}` } = Astro.props;
+const { title, description = `${site.name} — ${site.description}`, fullWidth } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : site.name;
 ---
 
@@ -42,7 +43,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       <button id="chords-toggle" class="btn" hidden>🎸</button>
       <button id="theme-toggle" class="btn" hidden>🌓</button>
     </header>
-    <main>
+    <main class:list={[{ 'full-width': fullWidth }]}>
       <slot />
     </main>
     <script>

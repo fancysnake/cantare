@@ -58,6 +58,11 @@ main {
   padding: 1rem;
 }
 
+main.full-width {
+  max-width: none;
+  padding: 1rem 1.5rem;
+}
+
 a {
   color: var(--color-accent);
 }
