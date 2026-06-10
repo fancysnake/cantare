@@ -95,14 +95,23 @@ h1 {
   margin-right: 0.5rem;
 }
 
-.transpose {
+.sheet-controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.5rem 1.5rem;
   margin: 0.75rem 0;
 }
 
-.transpose button {
+.transpose,
+.autoscroll {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.transpose button,
+.autoscroll button {
   font: inherit;
   color: var(--color-text);
   background: var(--color-surface);
@@ -113,23 +122,26 @@ h1 {
   cursor: pointer;
 }
 
-.transpose button:hover {
+.transpose button:hover,
+.autoscroll button:hover {
   border-color: var(--color-accent);
 }
 
-.transpose button:focus-visible {
+.transpose button:focus-visible,
+.autoscroll button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-.transpose-state {
+.transpose-state,
+.scroll-state {
   min-width: 4.5rem;
   text-align: center;
   color: var(--color-muted);
 }
 
 @media print {
-  .transpose {
+  .sheet-controls {
     display: none;
   }
 }

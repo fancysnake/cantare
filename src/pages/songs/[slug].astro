@@ -48,12 +48,21 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       )
     }
   </header>
-  <div class="transpose" hidden>
-    <span>Transpose:</span>
-    <button data-transpose="-1" aria-label="Transpose down a semitone">−</button>
-    <output class="transpose-state" aria-live="polite">0</output>
-    <button data-transpose="+1" aria-label="Transpose up a semitone">+</button>
-    <button data-transpose="0" aria-label="Reset transposition">Reset</button>
+  <div class="sheet-controls">
+    <div class="transpose" hidden>
+      <span>Transpose:</span>
+      <button data-transpose="-1" aria-label="Transpose down a semitone">−</button>
+      <output class="transpose-state" aria-live="polite">0</output>
+      <button data-transpose="+1" aria-label="Transpose up a semitone">+</button>
+      <button data-transpose="0" aria-label="Reset transposition">Reset</button>
+    </div>
+    <div class="autoscroll" hidden>
+      <span>Scroll:</span>
+      <button class="scroll-toggle" aria-pressed="false" aria-label="Start autoscroll">⏵</button>
+      <button data-speed="-1" aria-label="Scroll slower">−</button>
+      <output class="scroll-state" aria-live="polite">3/8</output>
+      <button data-speed="+1" aria-label="Scroll faster">+</button>
+    </div>
   </div>
   <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
 
@@ -87,6 +96,70 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       });
 
       toolbar.hidden = false;
+    }
+  </script>
+
+  <script>
+    const autoscroll = document.querySelector<HTMLElement>('.autoscroll');
+    const toggle = autoscroll?.querySelector<HTMLButtonElement>('.scroll-toggle');
+    const scrollState = autoscroll?.querySelector<HTMLOutputElement>('.scroll-state');
+
+    if (autoscroll && toggle && scrollState) {
+      const SPEEDS = [10, 20, 30, 45, 60, 85, 120, 160]; // px per second
+      let level = 2;
+      let playing = false;
+      let last = 0;
+      let carry = 0;
+
+      const atBottom = () =>
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
+
+      const stop = () => {
+        playing = false;
+        last = 0;
+        toggle.textContent = '⏵';
+        toggle.setAttribute('aria-pressed', 'false');
+        toggle.setAttribute('aria-label', 'Start autoscroll');
+      };
+
+      const tick = (timestamp: number) => {
+        if (!playing) return;
+        if (last) {
+          carry += (SPEEDS[level]! * (timestamp - last)) / 1000;
+          const pixels = Math.floor(carry);
+          if (pixels > 0) {
+            window.scrollBy(0, pixels);
+            carry -= pixels;
+          }
+          if (atBottom()) {
+            stop();
+            return;
+          }
+        }
+        last = timestamp;
+        requestAnimationFrame(tick);
+      };
+
+      toggle.addEventListener('click', () => {
+        if (playing) {
+          stop();
+        } else if (!atBottom()) {
+          playing = true;
+          toggle.textContent = '⏸';
+          toggle.setAttribute('aria-pressed', 'true');
+          toggle.setAttribute('aria-label', 'Pause autoscroll');
+          requestAnimationFrame(tick);
+        }
+      });
+
+      autoscroll.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-speed]');
+        if (!button) return;
+        level = Math.max(0, Math.min(SPEEDS.length - 1, level + Number(button.dataset.speed)));
+        scrollState.textContent = `${level + 1}/${SPEEDS.length}`;
+      });
+
+      autoscroll.hidden = false;
     }
   </script>
 </Base>
