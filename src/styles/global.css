@@ -192,6 +192,36 @@ h1 {
   margin: 0.75rem 0;
 }
 
+/* Compact song-page toolbar: title, meta and controls share one wrapping row. */
+.song-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+}
+
+.song-toolbar header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+}
+
+.song-toolbar h1 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.song-toolbar .song-meta {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.song-toolbar .sheet-controls {
+  margin: 0;
+}
+
 .transpose,
 .autoscroll {
   display: flex;

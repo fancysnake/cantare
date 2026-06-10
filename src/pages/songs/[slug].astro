@@ -32,46 +32,43 @@ const initialDiagrams = chordNames.flatMap((name) => {
 ---
 
 <Base title={`${title} — ${artist}`} description={`${title} — ${artist}`} fullWidth>
-  <header data-pagefind-body>
-    <h1 data-pagefind-meta="title">{title}</h1>
-    <p class="song-meta">
-      <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
-      {
-        album && (
-          <>
-            {' '}
-            · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
-              {album}
-            </a>
-          </>
-        )
-      }
-      {
-        language && (
-          <>
-            {' '}
-            · <a href={`/languages/${slugify(language)}/`} data-pagefind-filter="language">
-              {language}
-            </a>
-          </>
-        )
-      }
-      {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
-      {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
-    </p>
-    {
-      tags.length > 0 && (
-        <p class="song-meta">
-          {tags.map((tag) => (
+  <div class="song-toolbar">
+    <header data-pagefind-body>
+      <h1 data-pagefind-meta="title">{title}</h1>
+      <p class="song-meta">
+        <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
+        {
+          album && (
+            <>
+              {' '}
+              · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
+                {album}
+              </a>
+            </>
+          )
+        }
+        {
+          language && (
+            <>
+              {' '}
+              · <a href={`/languages/${slugify(language)}/`} data-pagefind-filter="language">
+                {language}
+              </a>
+            </>
+          )
+        }
+        {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
+        {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
+        {
+          tags.map((tag) => (
             <a class="tag" href={`/tags/${slugify(tag)}/`} data-pagefind-filter="tag">
               #{tag}
             </a>
-          ))}
-        </p>
-      )
-    }
-  </header>
-  <div class="sheet-controls">
+          ))
+        }
+      </p>
+    </header>
+    <div class="sheet-controls">
     <div class="transpose" role="group" aria-labelledby="transpose-label" hidden>
       <span id="transpose-label">{t.transposeLabel}</span>
       <button class="btn" data-transpose="-1" aria-label={t.transposeDown}>−</button>
@@ -85,6 +82,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
       <button class="btn" data-speed="-1" aria-label={t.scrollSlower}>−</button>
       <output class="scroll-state" aria-live="polite">3/8</output>
       <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
+    </div>
     </div>
   </div>
   {
