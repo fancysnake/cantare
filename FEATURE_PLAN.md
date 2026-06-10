@@ -107,6 +107,12 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   — _Test: phone viewport shows unwrapped lines; chords appear only after
   enabling and stay enabled after reload._
 
+- [ ] 10e. **Brand color palette** — rebase the theme's CSS custom properties
+  on brand colors #FFFF33 (yellow), #FF3333 (red), #3055AB (blue): derive
+  light/dark variants with sufficient WCAG contrast for text, links, chords,
+  and accents in both themes. — _Test: both themes use the new palette and
+  body/chord text stays readable (AA contrast)._
+
 - [ ] 10c. **Linting toolchain** — ESLint (flat config) with typescript-eslint
   strict-type-checked + stylistic, eslint-plugin-astro; Prettier with
   prettier-plugin-astro; `mise run lint` / `mise run format`; fix all
