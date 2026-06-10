@@ -16,6 +16,9 @@ jobs:
       - name: Install dependencies
         run: aube install
 
+      - name: Generate Astro types
+        run: mise run sync
+
       - name: ESLint + Prettier check
         run: mise run lint
 

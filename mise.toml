@@ -29,5 +29,9 @@ run = "aube run format"
 description = "Type-check templates with astro check"
 run = "aube run check"
 
+[tasks.sync]
+description = "Generate Astro types (astro sync)"
+run = "aube exec astro sync"
+
 [env]
 _.path = ['{{config_root}}/node_modules/.bin']
