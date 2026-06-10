@@ -69,7 +69,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   artist page as a result; the random button opens a song; on a tag page it
   only picks songs with that tag._
 
-- [ ] 8. **Client-side transposition** — on the song page, +/− semitone buttons (and
+- [x] 8. **Client-side transposition** — on the song page, +/− semitone buttons (and
   capo display) powered by a small client script that calls the shared
   `src/lib/song.ts` render function (raw ChordPro + semitone offset → HTML);
   default key from metadata; buttons get `aria-label`s and visible
