@@ -107,7 +107,7 @@ run preview`; searching a lyric fragment finds the song; search works without
       — _Test: phone viewport shows unwrapped lines; chords appear only after
       enabling and stay enabled after reload._
 
-- [ ] 10e. **Brand color palette** — rebase the theme's CSS custom properties
+- [x] 10e. **Brand color palette** — rebase the theme's CSS custom properties
       on brand colors #FFFF33 (yellow), #FF3333 (red), #3055AB (blue): derive
       light/dark variants with sufficient WCAG contrast for text, links, chords,
       and accents in both themes. — _Test: both themes use the new palette and
