@@ -230,20 +230,60 @@ const initialDiagrams = chordNames.flatMap((name) => {
       popover.hidden = true;
       document.body.appendChild(popover);
 
-      document.addEventListener('click', (event) => {
-        const chordEl = (event.target as HTMLElement).closest<HTMLElement>('.chord-sheet .chord');
-        const name = chordEl?.textContent?.trim();
-        const svg = name ? svgFor(name) : null;
-        if (chordEl && svg) {
-          popover.innerHTML = svg;
-          const rect = chordEl.getBoundingClientRect();
-          popover.style.left = `${window.scrollX + rect.left}px`;
-          popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
-          popover.hidden = false;
-        } else {
-          popover.hidden = true;
-        }
-      });
+      const chordTarget = (event: Event): HTMLElement | null =>
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>('.chord-sheet .chord')
+          : null;
+
+      const show = (chordEl: HTMLElement, svg: string) => {
+        popover.innerHTML = svg;
+        const rect = chordEl.getBoundingClientRect();
+        popover.style.left = `${window.scrollX + rect.left}px`;
+        popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
+        popover.hidden = false;
+      };
+
+      if (window.matchMedia('(hover: hover)').matches) {
+        // Desktop: show after hovering a chord for 0.5s, hide on leave.
+        let hoverTimer = 0;
+        let shownFor: HTMLElement | null = null;
+
+        document.addEventListener('mouseover', (event) => {
+          const chordEl = chordTarget(event);
+          if (!chordEl || chordEl === shownFor) return;
+          const name = chordEl.textContent?.trim();
+          const svg = name ? svgFor(name) : null;
+          if (!svg) return;
+          window.clearTimeout(hoverTimer);
+          hoverTimer = window.setTimeout(() => {
+            shownFor = chordEl;
+            show(chordEl, svg);
+          }, 500);
+        });
+
+        document.addEventListener('mouseout', (event) => {
+          const chordEl = chordTarget(event);
+          if (!chordEl) return;
+          if (event.relatedTarget instanceof Node && chordEl.contains(event.relatedTarget)) return;
+          window.clearTimeout(hoverTimer);
+          if (shownFor === chordEl) {
+            popover.hidden = true;
+            shownFor = null;
+          }
+        });
+      } else {
+        // Touch: tap a chord to toggle, tap elsewhere to dismiss.
+        document.addEventListener('click', (event) => {
+          const chordEl = chordTarget(event);
+          const name = chordEl?.textContent?.trim();
+          const svg = name ? svgFor(name) : null;
+          if (chordEl && svg && popover.hidden) {
+            show(chordEl, svg);
+          } else {
+            popover.hidden = true;
+          }
+        });
+      }
     }
   </script>
 </Base>
