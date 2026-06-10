@@ -1,28 +1,21 @@
 ---
 import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
 
 const songs = (await getCollection('songs')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cantare</title>
-  </head>
-  <body>
-    <h1>Cantare</h1>
-    <ul>
-      {
-        songs.map((song) => (
-          <li>
-            <a href={`/songs/${song.id}/`}>{song.data.title}</a> — {song.data.artist}
-          </li>
-        ))
-      }
-    </ul>
-  </body>
-</html>
+<Base title="Cantare">
+  <h1>Songs</h1>
+  <ul>
+    {
+      songs.map((song) => (
+        <li>
+          <a href={`/songs/${song.id}/`}>{song.data.title}</a> — {song.data.artist}
+        </li>
+      ))
+    }
+  </ul>
+</Base>

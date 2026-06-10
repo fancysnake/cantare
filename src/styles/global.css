@@ -1,0 +1,132 @@
+:root {
+  --color-bg: #faf9f7;
+  --color-surface: #ffffff;
+  --color-text: #24211e;
+  --color-muted: #6b645c;
+  --color-border: #e3ded7;
+  --color-accent: #8a4f24;
+  --color-chord: #1f5f8b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1d1b19;
+    --color-surface: #26231f;
+    --color-text: #ece8e2;
+    --color-muted: #a39a8e;
+    --color-border: #3a352f;
+    --color-accent: #d99a62;
+    --color-chord: #7db8e0;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+h1 {
+  line-height: 1.2;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 1rem;
+}
+
+.site-header .brand {
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.song-meta {
+  color: var(--color-muted);
+}
+
+/* Chord sheet — base rules from HtmlDivFormatter#cssString */
+.chord-sheet .chord:not(:last-child) {
+  padding-right: 10px;
+}
+
+.chord-sheet .paragraph {
+  margin-bottom: 1em;
+}
+
+.chord-sheet .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chord-sheet .chord:after {
+  content: '\200b';
+}
+
+.chord-sheet .lyrics:after {
+  content: '\200b';
+}
+
+.chord-sheet {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+
+.chord-sheet .chord {
+  font-weight: 600;
+  color: var(--color-chord);
+}
+
+.chord-sheet .paragraph.chorus {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 0.75rem;
+}
+
+.chord-sheet .comment {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* The formatter repeats the title inside the sheet; the page header owns it */
+.chord-sheet h1.title {
+  display: none;
+}
+
+@media print {
+  .site-header,
+  nav {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .chord-sheet {
+    border: none;
+    padding: 0;
+  }
+
+  .chord-sheet .paragraph {
+    break-inside: avoid;
+  }
+}
