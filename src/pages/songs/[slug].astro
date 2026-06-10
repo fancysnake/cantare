@@ -1,0 +1,39 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { parseSong, renderSong } from '../../lib/song';
+
+export async function getStaticPaths() {
+  const songs = await getCollection('songs');
+  return songs.map((song) => ({ params: { slug: song.id }, props: { song } }));
+}
+
+interface Props {
+  song: CollectionEntry<'songs'>;
+}
+
+const { song } = Astro.props;
+const { title, artist, album, key, capo } = song.data;
+const sheetHtml = renderSong(parseSong(song.data.source));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — {artist} | Cantare</title>
+  </head>
+  <body>
+    <nav><a href="/">← All songs</a></nav>
+    <header>
+      <h1>{title}</h1>
+      <p>
+        {artist}
+        {album && <> · {album}</>}
+        {key && <> · Key: {key}</>}
+        {capo !== undefined && <> · Capo: {capo}</>}
+      </p>
+    </header>
+    <article class="chord-sheet" set:html={sheetHtml} />
+  </body>
+</html>

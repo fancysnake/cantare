@@ -19,7 +19,7 @@ const songs = (await getCollection('songs')).sort((a, b) =>
       {
         songs.map((song) => (
           <li>
-            {song.data.title} — {song.data.artist}
+            <a href={`/songs/${song.id}/`}>{song.data.title}</a> — {song.data.artist}
           </li>
         ))
       }

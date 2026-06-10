@@ -1,4 +1,4 @@
-import { ChordProParser, type Song } from 'chordsheetjs';
+import { ChordProParser, HtmlDivFormatter, type Song } from 'chordsheetjs';
 
 export interface SongMeta {
   title: string;
@@ -11,6 +11,10 @@ export interface SongMeta {
 
 export function parseSong(source: string): Song {
   return new ChordProParser().parse(source);
+}
+
+export function renderSong(song: Song): string {
+  return new HtmlDivFormatter().format(song);
 }
 
 function single(value: string | string[] | null | undefined): string | undefined {
