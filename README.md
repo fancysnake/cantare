@@ -11,6 +11,12 @@ parsing and rendering), and [Pagefind](https://pagefind.app) (client-side
 search). Tooling: [mise](https://mise.jdx.dev) for tasks and tool versions,
 [aube](https://aube.jdx.dev) as the package manager.
 
+## Running your own instance
+
+The site name, description, and canonical URL live in `site.config.json` at
+the repo root. To host another songbook from this codebase, change that file
+and replace the contents of `songs/` — nothing else references the brand.
+
 ## Getting started
 
 ```sh

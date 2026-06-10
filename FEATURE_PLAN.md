@@ -119,7 +119,14 @@ run preview`; searching a lyric fragment finds the song; search works without
       findings. — _Test: `mise run lint` exits clean; introducing an `any` or
       unused variable makes it fail._
 
-- [ ] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
+- [x] 11b. **Site config for multiple instances** — `site.config.json` at the
+      repo root (name, description, url) consumed by the layout (brand, page
+      titles, meta) and astro.config, so one codebase can host several
+      songbook instances differing only in config + `songs/`.
+      — _Test: changing `name` in site.config.json rebrands the header and
+      every page title after rebuild._
+
+- [x] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
       (authoring a new song, running tasks), `mise run check` task running
       `astro check`. — _Test: `mise run check` passes; adding a new `.cho` file and
       rebuilding makes it appear in index and search with no other changes._

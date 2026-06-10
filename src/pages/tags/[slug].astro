@@ -27,7 +27,7 @@ interface Props {
 const { name, songs } = Astro.props;
 ---
 
-<Base title={`Tag: ${name} | Cantare`}>
+<Base title={`Tag: ${name}`}>
   <h1 data-pagefind-body data-pagefind-meta={`title:Tag: ${name}`}>Tag: {name}</h1>
   <SongList songs={songs} />
   <RandomButton urls={songs.map((song) => `/songs/${song.id}/`)} />

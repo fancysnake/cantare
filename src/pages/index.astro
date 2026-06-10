@@ -7,7 +7,7 @@ const songs = await getCollection('songs');
 const songUrls = songs.map((song) => `/songs/${song.id}/`);
 ---
 
-<Base title="Cantare">
+<Base>
   <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
   <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
 

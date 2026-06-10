@@ -1,12 +1,14 @@
 ---
 import '../styles/global.css';
+import { site } from '../lib/site';
 
 interface Props {
-  title: string;
-  description?: string;
+  title?: string | undefined;
+  description?: string | undefined;
 }
 
-const { title, description = 'Cantare — a songbook for singing together.' } = Astro.props;
+const { title, description = `${site.name} — ${site.description}` } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : site.name;
 ---
 
 <!doctype html>
@@ -16,7 +18,7 @@ const { title, description = 'Cantare — a songbook for singing together.' } = 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     <script is:inline>
       // Apply forced theme and chord visibility before first paint.
       const storedTheme = localStorage.getItem('theme');
@@ -30,7 +32,7 @@ const { title, description = 'Cantare — a songbook for singing together.' } = 
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="brand">Cantare</a>
+      <a href="/" class="brand">{site.name}</a>
       <a href="/songs/">All songs</a>
       <a href="/artists/">Artists</a>
       <a href="/tags/">Tags</a>
@@ -82,11 +84,11 @@ const { title, description = 'Cantare — a songbook for singing together.' } = 
           if (chordsOn) {
             document.documentElement.dataset.chords = 'on';
             localStorage.setItem('chords', 'on');
-            chordsToggle.textContent = '🎸 Chords on';
+            chordsToggle.textContent = '🎸 With chords';
           } else {
             delete document.documentElement.dataset.chords;
             localStorage.setItem('chords', 'off');
-            chordsToggle.textContent = '🎸 Chords off';
+            chordsToggle.textContent = '🎸 Without chords';
           }
           chordsToggle.setAttribute('aria-pressed', String(chordsOn));
           chordsToggle.setAttribute(
