@@ -1,0 +1,4 @@
+dist/
+.astro/
+aube-lock.yaml
+songs/

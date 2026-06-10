@@ -37,10 +37,11 @@ const SUFFIX_ALIASES: Record<string, string> = {
 };
 
 export function parseChordName(name: string): { root: string; suffix: string } | null {
-  const match = name.trim().match(/^([A-G][#b]?)(.*)$/);
+  const match = /^([A-G][#b]?)(.*)$/.exec(name.trim());
   if (!match) return null;
-  const root = ENHARMONIC[match[1]!] ?? match[1]!;
-  const suffix = match[2]!.replace(/\/.*$/, ''); // ignore bass notes for fingering lookup
+  const [, rawRoot = '', rawSuffix = ''] = match;
+  const root = ENHARMONIC[rawRoot] ?? rawRoot;
+  const suffix = rawSuffix.replace(/\/.*$/, ''); // ignore bass notes for fingering lookup
   return { root, suffix };
 }
 

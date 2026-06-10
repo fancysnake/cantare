@@ -25,7 +25,10 @@ const sorted = [...tags.entries()].sort((a, b) => a[1].name.localeCompare(b[1].n
       sorted.map(([slug, { name, count }]) => (
         <li>
           <a href={`/tags/${slug}/`}>#{name}</a>
-          <span class="song-meta"> — {count} {count === 1 ? 'song' : 'songs'}</span>
+          <span class="song-meta">
+            {' '}
+            — {count} {count === 1 ? 'song' : 'songs'}
+          </span>
         </li>
       ))
     }

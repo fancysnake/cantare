@@ -5,9 +5,7 @@ interface Props {
   songs: CollectionEntry<'songs'>[];
 }
 
-const songs = [...Astro.props.songs].sort((a, b) =>
-  a.data.title.localeCompare(b.data.title),
-);
+const songs = [...Astro.props.songs].sort((a, b) => a.data.title.localeCompare(b.data.title));
 ---
 
 <ul class="song-list">

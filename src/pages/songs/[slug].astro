@@ -45,8 +45,8 @@ const initialDiagrams = chordNames.flatMap((name) => {
           </>
         )
       }
-      {key && <> · Key: {key}</>}
-      {capo !== undefined && <> · Capo: {capo}</>}
+      {key && <span class="key-info"> · Key: {key}</span>}
+      {capo !== undefined && <span class="key-info"> · Capo: {capo}</span>}
     </p>
     {
       tags.length > 0 && (
@@ -152,7 +152,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
       const tick = (timestamp: number) => {
         if (!playing) return;
         if (last) {
-          carry += (SPEEDS[level]! * (timestamp - last)) / 1000;
+          carry += ((SPEEDS[level] ?? 30) * (timestamp - last)) / 1000;
           const pixels = Math.floor(carry);
           if (pixels > 0) {
             window.scrollBy(0, pixels);

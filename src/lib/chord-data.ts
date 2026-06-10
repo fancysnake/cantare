@@ -12,7 +12,7 @@ const KEY_TO_CHORDS_MAP: Record<string, string> = {
   'F#': 'Fsharp',
 };
 
-type DbChord = {
+interface DbChord {
   suffix: string;
   positions: {
     frets: number[];
@@ -20,7 +20,7 @@ type DbChord = {
     baseFret: number;
     barres: number[];
   }[];
-};
+}
 
 const chords = guitar.chords as Record<string, DbChord[]>;
 

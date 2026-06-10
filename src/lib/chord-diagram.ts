@@ -28,15 +28,21 @@ export function chordDiagramSvg(name: string, position: ChordPosition): string {
 
   for (let s = 0; s < STRINGS; s += 1) {
     const x = LEFT + s * STRING_GAP;
-    parts.push(`<line x1="${x}" y1="${TOP}" x2="${x}" y2="${BOTTOM}" stroke="currentColor" stroke-width="1"/>`);
+    parts.push(
+      `<line x1="${x}" y1="${TOP}" x2="${x}" y2="${BOTTOM}" stroke="currentColor" stroke-width="1"/>`,
+    );
   }
   for (let f = 0; f <= FRETS; f += 1) {
     const y = TOP + f * FRET_GAP;
-    parts.push(`<line x1="${LEFT}" y1="${y}" x2="${RIGHT}" y2="${y}" stroke="currentColor" stroke-width="1"/>`);
+    parts.push(
+      `<line x1="${LEFT}" y1="${y}" x2="${RIGHT}" y2="${y}" stroke="currentColor" stroke-width="1"/>`,
+    );
   }
 
   if (baseFret === 1) {
-    parts.push(`<rect x="${LEFT - 0.5}" y="${TOP - 3}" width="${RIGHT - LEFT + 1}" height="3" fill="currentColor"/>`);
+    parts.push(
+      `<rect x="${LEFT - 0.5}" y="${TOP - 3}" width="${RIGHT - LEFT + 1}" height="3" fill="currentColor"/>`,
+    );
   } else {
     parts.push(
       `<text x="${RIGHT + 5}" y="${TOP + FRET_GAP / 2 + 3}" font-size="8" fill="currentColor">${baseFret}fr</text>`,

@@ -45,7 +45,12 @@ export function extractMeta(song: Song): SongMeta {
     album: single(meta.get('album')),
     key: single(meta.get('key')),
     capo: maybeNumber(single(meta.get('capo'))),
-    tags: tags ? tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
+    tags: tags
+      ? tags
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [],
   };
 }
 

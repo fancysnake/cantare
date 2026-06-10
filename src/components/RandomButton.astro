@@ -16,8 +16,8 @@ const { urls, label = 'Pick a random song' } = Astro.props;
     button.hidden = false;
     button.addEventListener('click', () => {
       const urls: string[] = JSON.parse(button.dataset.urls ?? '[]');
-      if (urls.length === 0) return;
-      window.location.href = urls[Math.floor(Math.random() * urls.length)]!;
+      const url = urls[Math.floor(Math.random() * urls.length)];
+      if (url) window.location.href = url;
     });
   });
 </script>

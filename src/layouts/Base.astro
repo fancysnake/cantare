@@ -41,7 +41,11 @@ const { title } = Astro.props;
       const toggle = document.getElementById('theme-toggle');
       if (toggle) {
         type Mode = 'system' | 'light' | 'dark';
-        const LABELS: Record<Mode, string> = { system: '🌓 Auto', light: '☀️ Light', dark: '🌙 Dark' };
+        const LABELS: Record<Mode, string> = {
+          system: '🌓 Auto',
+          light: '☀️ Light',
+          dark: '🌙 Dark',
+        };
         const NEXT: Record<Mode, Mode> = { system: 'light', light: 'dark', dark: 'system' };
         const stored = localStorage.getItem('theme');
         let mode: Mode = stored === 'light' || stored === 'dark' ? stored : 'system';
@@ -82,7 +86,10 @@ const { title } = Astro.props;
             chordsToggle.textContent = '🎸 Chords off';
           }
           chordsToggle.setAttribute('aria-pressed', String(chordsOn));
-          chordsToggle.setAttribute('aria-label', `Chords ${chordsOn ? 'shown' : 'hidden'}. Click to toggle.`);
+          chordsToggle.setAttribute(
+            'aria-label',
+            `Chords ${chordsOn ? 'shown' : 'hidden'}. Click to toggle.`,
+          );
         };
 
         chordsToggle.addEventListener('click', () => {

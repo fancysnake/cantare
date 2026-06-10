@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { parseSong, extractMeta } from './lib/song';

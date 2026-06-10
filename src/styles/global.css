@@ -115,10 +115,10 @@ h1 {
 :root:not([data-chords='on']) .chord-sheet .chord,
 :root:not([data-chords='on']) .chord-strip,
 :root:not([data-chords='on']) .transpose,
-:root:not([data-chords='on']) .chord-popover {
+:root:not([data-chords='on']) .chord-popover,
+:root:not([data-chords='on']) .key-info {
   display: none;
 }
-
 
 .song-meta {
   color: var(--color-muted);
