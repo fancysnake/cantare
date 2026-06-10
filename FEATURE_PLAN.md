@@ -58,20 +58,31 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   run preview`; searching a lyric fragment finds the song; search works without
   any server-side code._
 
-- [ ] 7. **Client-side transposition** — on the song page, +/− semitone buttons (and
+- [ ] 7. **Search-first home & random pick** — the homepage becomes the search
+  page (meetup use case: open site → search immediately), with a "Browse all
+  songs" link; the grouped alphabetical list moves to `/songs/`. Artist, album,
+  and tag pages get indexed by Pagefind (heading only, so they appear as
+  results leading to their subpages without duplicating song lyrics hits).
+  A "pick random song" button on the home page and on artist/album/tag pages
+  navigates to a random song from that page's set (JS enhancement).
+  — _Test: opening the site shows search; searching an artist name returns the
+  artist page as a result; the random button opens a song; on a tag page it
+  only picks songs with that tag._
+
+- [ ] 8. **Client-side transposition** — on the song page, +/− semitone buttons (and
   capo display) powered by a small client script that calls the shared
   `src/lib/song.ts` render function (raw ChordPro + semitone offset → HTML);
   default key from metadata; buttons get `aria-label`s and visible
   `:focus-visible` states.
   — _Test: pressing + shifts every chord up a semitone; reload restores original key._
 
-- [ ] 8. **Autoscroll** — Ultimate-Guitar-style autoscroll on song pages: a
+- [ ] 9. **Autoscroll** — Ultimate-Guitar-style autoscroll on song pages: a
   dependency-free client script (`requestAnimationFrame`) with play/pause and
   speed +/− controls in the song toolbar; controls hidden in print styles and
   absent without JS. — _Test: pressing play scrolls the sheet smoothly; speed
   controls change the rate; pause stops it._
 
-- [ ] 9. **Chord lookup (diagrams)** — add `@tombatossals/chords-db` (fingering
+- [ ] 10. **Chord lookup (diagrams)** — add `@tombatossals/chords-db` (fingering
   data) and `svguitar` (SVG diagram rendering) via aube; tapping/hovering a
   chord in the sheet shows its diagram in a popover, plus a "chords in this
   song" strip above the sheet; honor ChordPro `{define: ...}` overrides;
@@ -79,7 +90,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   shows its diagram; after transposing +2, the same position shows A7's
   diagram; a song with a custom {define} shows the custom shape._
 
-- [ ] 10. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
+- [ ] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
   (authoring a new song, running tasks), `mise run check` task running
   `astro check`. — _Test: `mise run check` passes; adding a new `.cho` file and
   rebuilding makes it appear in index and search with no other changes._
