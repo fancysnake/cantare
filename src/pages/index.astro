@@ -5,17 +5,31 @@ import Base from '../layouts/Base.astro';
 const songs = (await getCollection('songs')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
+
+const groups = new Map<string, typeof songs>();
+for (const song of songs) {
+  const letter = song.data.title[0]?.toUpperCase() ?? '#';
+  const group = groups.get(letter) ?? [];
+  group.push(song);
+  groups.set(letter, group);
+}
 ---
 
 <Base title="Cantare">
   <h1>Songs</h1>
-  <ul>
-    {
-      songs.map((song) => (
-        <li>
-          <a href={`/songs/${song.id}/`}>{song.data.title}</a> — {song.data.artist}
-        </li>
-      ))
-    }
-  </ul>
+  {
+    [...groups.entries()].map(([letter, group]) => (
+      <section>
+        <h2>{letter}</h2>
+        <ul class="song-list">
+          {group.map((song) => (
+            <li>
+              <a href={`/songs/${song.id}/`}>{song.data.title}</a>
+              <span class="song-meta"> — {song.data.artist}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
 </Base>

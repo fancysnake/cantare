@@ -1,0 +1,31 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SongList from '../../components/SongList.astro';
+import { slugify } from '../../lib/slug';
+
+export async function getStaticPaths() {
+  const songs = await getCollection('songs');
+  const byArtist = new Map<string, { name: string; songs: CollectionEntry<'songs'>[] }>();
+  for (const song of songs) {
+    const name = song.data.artist;
+    const slug = slugify(name);
+    const entry = byArtist.get(slug) ?? { name, songs: [] };
+    entry.songs.push(song);
+    byArtist.set(slug, entry);
+  }
+  return [...byArtist.entries()].map(([slug, props]) => ({ params: { slug }, props }));
+}
+
+interface Props {
+  name: string;
+  songs: CollectionEntry<'songs'>[];
+}
+
+const { name, songs } = Astro.props;
+---
+
+<Base title={`${name} | Cantare`}>
+  <h1>{name}</h1>
+  <SongList songs={songs} />
+</Base>

@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { parseSong, renderSong } from '../../lib/song';
+import { slugify } from '../../lib/slug';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -13,7 +14,7 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, key, capo } = song.data;
+const { title, artist, album, key, capo, tags } = song.data;
 const sheetHtml = renderSong(parseSong(song.data.source));
 ---
 
@@ -21,11 +22,22 @@ const sheetHtml = renderSong(parseSong(song.data.source));
   <header>
     <h1>{title}</h1>
     <p class="song-meta">
-      {artist}
-      {album && <> · {album}</>}
+      <a href={`/artists/${slugify(artist)}/`}>{artist}</a>
+      {album && <> · <a href={`/albums/${slugify(album)}/`}>{album}</a></>}
       {key && <> · Key: {key}</>}
       {capo !== undefined && <> · Capo: {capo}</>}
     </p>
+    {
+      tags.length > 0 && (
+        <p class="song-meta">
+          {tags.map((tag) => (
+            <a class="tag" href={`/tags/${slugify(tag)}/`}>
+              #{tag}
+            </a>
+          ))}
+        </p>
+      )
+    }
   </header>
   <article class="chord-sheet" set:html={sheetHtml} />
 </Base>

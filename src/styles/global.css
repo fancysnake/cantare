@@ -61,6 +61,19 @@ h1 {
   color: var(--color-muted);
 }
 
+.song-list {
+  list-style: none;
+  padding: 0;
+}
+
+.song-list li {
+  padding: 0.25rem 0;
+}
+
+.tag {
+  margin-right: 0.5rem;
+}
+
 /* Chord sheet — base rules from HtmlDivFormatter#cssString */
 .chord-sheet .chord:not(:last-child) {
   padding-right: 10px;
