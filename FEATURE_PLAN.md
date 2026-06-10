@@ -33,7 +33,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   link each song from the index. — _Test: click a song on the index; the chord
   sheet renders with chords aligned above lyrics._
 
-- [ ] 4. **Chord sheet styling** — a base layout (`src/layouts/Base.astro`) with
+- [x] 4. **Chord sheet styling** — a base layout (`src/layouts/Base.astro`) with
   site nav + global CSS (plain CSS with custom properties for colors/spacing;
   dark mode via `prefers-color-scheme`), plus the ChordSheetJS-recommended CSS
   for `HtmlDivFormatter` output (chord/lyrics columns, section labels,
