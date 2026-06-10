@@ -87,13 +87,24 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   absent without JS. — _Test: pressing play scrolls the sheet smoothly; speed
   controls change the rate; pause stops it._
 
-- [ ] 10. **Chord lookup (diagrams)** — fingering data from
+- [x] 10. **Chord lookup (diagrams)** — fingering data from
   `@tombatossals/chords-db`, rendered by our own small SVG chord-box module
   (svguitar was rejected by aube's low-download gate; hand-rolled renderer
   chosen instead); tapping/hovering a chord in the sheet shows its diagram in
   a popover, plus a "chords in this song" strip above the sheet; lookup uses
   the normalized (post-transpose) chord name. — _Test: hovering G7 shows its
   diagram; after transposing +2, the same position shows A7's diagram._
+
+- [ ] 10b. **Dark mode toggle** — theme inferred from OS setting by default,
+  switchable via a header toggle (light/dark/system), persisted in
+  localStorage, no flash on load. — _Test: toggle overrides the OS theme and
+  survives reload; "system" follows the OS again._
+
+- [ ] 10c. **Linting toolchain** — ESLint (flat config) with typescript-eslint
+  strict-type-checked + stylistic, eslint-plugin-astro; Prettier with
+  prettier-plugin-astro; `mise run lint` / `mise run format`; fix all
+  findings. — _Test: `mise run lint` exits clean; introducing an `any` or
+  unused variable makes it fail._
 
 - [ ] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
   (authoring a new song, running tasks), `mise run check` task running
