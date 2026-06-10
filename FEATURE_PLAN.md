@@ -11,7 +11,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
 
 ## Steps
 
-- [ ] 1. **Project scaffold** — `git init`; add `astro.config.mjs`, `tsconfig.json`,
+- [x] 1. **Project scaffold** — `git init`; add `astro.config.mjs`, `tsconfig.json`,
   `src/pages/index.astro` (placeholder), `.gitignore` (node_modules, dist,
   .astro); add `package.json` scripts (`dev`, `build`, `preview`) and mise
   tasks in `mise.toml` (`dev`, `build`, `preview`) that call `aube run <script>`.
