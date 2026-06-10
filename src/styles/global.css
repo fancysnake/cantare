@@ -47,6 +47,10 @@ h1 {
 }
 
 .site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1rem;
   border-bottom: 1px solid var(--color-border);
   padding: 0.75rem 1rem;
 }
@@ -66,8 +70,24 @@ h1 {
   padding: 0;
 }
 
+/* Comfortable touch targets on phones */
 .song-list li {
-  padding: 0.25rem 0;
+  padding: 0.4rem 0;
+}
+
+.song-list a,
+.tag {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+}
+
+@media (min-width: 40rem) {
+  .song-list a,
+  .tag {
+    min-height: 0;
+    line-height: inherit;
+  }
 }
 
 .tag {

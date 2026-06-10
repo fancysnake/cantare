@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SongList from '../../components/SongList.astro';
+import RandomButton from '../../components/RandomButton.astro';
 import { slugify } from '../../lib/slug';
 
 export async function getStaticPaths() {
@@ -27,6 +28,7 @@ const { name, songs } = Astro.props;
 ---
 
 <Base title={`Tag: ${name} | Cantare`}>
-  <h1>Tag: {name}</h1>
+  <h1 data-pagefind-body data-pagefind-meta={`title:Tag: ${name}`}>Tag: {name}</h1>
   <SongList songs={songs} />
+  <RandomButton urls={songs.map((song) => `/songs/${song.id}/`)} />
 </Base>

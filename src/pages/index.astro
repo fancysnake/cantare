@@ -1,35 +1,45 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import RandomButton from '../components/RandomButton.astro';
 
-const songs = (await getCollection('songs')).sort((a, b) =>
-  a.data.title.localeCompare(b.data.title),
-);
-
-const groups = new Map<string, typeof songs>();
-for (const song of songs) {
-  const letter = song.data.title[0]?.toUpperCase() ?? '#';
-  const group = groups.get(letter) ?? [];
-  group.push(song);
-  groups.set(letter, group);
-}
+const songs = await getCollection('songs');
+const songUrls = songs.map((song) => `/songs/${song.id}/`);
 ---
 
 <Base title="Cantare">
-  <h1>Songs</h1>
-  {
-    [...groups.entries()].map(([letter, group]) => (
-      <section>
-        <h2>{letter}</h2>
-        <ul class="song-list">
-          {group.map((song) => (
-            <li>
-              <a href={`/songs/${song.id}/`}>{song.data.title}</a>
-              <span class="song-meta"> — {song.data.artist}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  }
+  <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
+  <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
+
+  <pagefind-input instance="songs"></pagefind-input>
+  <div class="search-filters">
+    <pagefind-filter-dropdown filter="artist" label="Artist" instance="songs"></pagefind-filter-dropdown>
+    <pagefind-filter-dropdown filter="album" label="Album" instance="songs"></pagefind-filter-dropdown>
+    <pagefind-filter-dropdown filter="tag" label="Tag" instance="songs"></pagefind-filter-dropdown>
+  </div>
+  <pagefind-summary instance="songs" default-message="Type to search songs by title, lyrics, artist, album or tag."></pagefind-summary>
+  <pagefind-results instance="songs"></pagefind-results>
+  <noscript>Search requires JavaScript. You can still <a href="/songs/">browse all songs</a>.</noscript>
+
+  <p class="home-actions">
+    <RandomButton urls={songUrls} />
+    <a href="/songs/">Browse all songs</a>
+  </p>
 </Base>
+
+<style>
+  .search-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+</style>
