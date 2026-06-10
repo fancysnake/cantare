@@ -27,7 +27,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   `src/lib/song.ts` so build-time and client-side code share one path.
   — _Test: index page lists the sample song titles and artists, read from the collection._
 
-- [ ] 3. **Song pages** — dynamic route `src/pages/songs/[slug].astro` using
+- [x] 3. **Song pages** — dynamic route `src/pages/songs/[slug].astro` using
   `getStaticPaths` over the collection; render the parsed song with
   `HtmlDivFormatter` (chords above lyrics), show title/artist/key/capo header;
   link each song from the index. — _Test: click a song on the index; the chord
