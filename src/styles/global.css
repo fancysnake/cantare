@@ -94,6 +94,45 @@ h1 {
   margin-right: 0.5rem;
 }
 
+.transpose {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.transpose button {
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+
+.transpose button:hover {
+  border-color: var(--color-accent);
+}
+
+.transpose button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.transpose-state {
+  min-width: 4.5rem;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+@media print {
+  .transpose {
+    display: none;
+  }
+}
+
 /* Chord sheet — base rules from HtmlDivFormatter#cssString */
 .chord-sheet .chord:not(:last-child) {
   padding-right: 10px;

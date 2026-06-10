@@ -48,5 +48,45 @@ const sheetHtml = renderSong(parseSong(song.data.source));
       )
     }
   </header>
+  <div class="transpose" hidden>
+    <span>Transpose:</span>
+    <button data-transpose="-1" aria-label="Transpose down a semitone">−</button>
+    <output class="transpose-state" aria-live="polite">0</output>
+    <button data-transpose="+1" aria-label="Transpose up a semitone">+</button>
+    <button data-transpose="0" aria-label="Reset transposition">Reset</button>
+  </div>
   <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+
+  <script type="application/json" id="song-source" set:html={JSON.stringify(song.data.source).replace(/</g, '\\u003c')} />
+
+  <script>
+    import { renderTransposed } from '../../lib/song';
+
+    const sheet = document.querySelector<HTMLElement>('.chord-sheet');
+    const sourceEl = document.getElementById('song-source');
+    const toolbar = document.querySelector<HTMLElement>('.transpose');
+    const state = toolbar?.querySelector<HTMLOutputElement>('.transpose-state');
+
+    if (sheet && sourceEl && toolbar && state) {
+      const source: string = JSON.parse(sourceEl.textContent ?? '""');
+      let offset = 0;
+
+      const update = () => {
+        const { html, key } = renderTransposed(source, offset);
+        sheet.innerHTML = html;
+        const sign = offset > 0 ? `+${offset}` : `${offset}`;
+        state.textContent = key ? `${sign} (${key})` : sign;
+      };
+
+      toolbar.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-transpose]');
+        if (!button) return;
+        const step = Number(button.dataset.transpose);
+        offset = step === 0 ? 0 : Math.max(-11, Math.min(11, offset + step));
+        update();
+      });
+
+      toolbar.hidden = false;
+    }
+  </script>
 </Base>

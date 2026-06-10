@@ -17,6 +17,19 @@ export function renderSong(song: Song): string {
   return new HtmlDivFormatter().format(song);
 }
 
+export interface RenderedSheet {
+  html: string;
+  key?: string;
+}
+
+export function renderTransposed(source: string, semitones: number): RenderedSheet {
+  let song = parseSong(source);
+  if (semitones !== 0) {
+    song = song.transpose(semitones, { normalizeChordSuffix: true });
+  }
+  return { html: renderSong(song), key: song.key ?? undefined };
+}
+
 function single(value: string | string[] | null | undefined): string | undefined {
   if (Array.isArray(value)) return value[0];
   return value ?? undefined;
