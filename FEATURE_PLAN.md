@@ -126,6 +126,13 @@ run preview`; searching a lyric fragment finds the song; search works without
       — _Test: changing `name` in site.config.json rebrands the header and
       every page title after rebuild._
 
+- [ ] 12. **i18n (en/pl)** — all UI strings (nav, toggles, transpose/scroll
+      controls, search labels, counts, 404, aria-labels) move to
+      `src/lib/i18n.ts` with English and Polish dictionaries; locale chosen
+      per instance in `site.config.json`; `<html lang>` set from locale;
+      Polish plural rules for song counts. — _Test: with locale "pl" the whole
+      UI reads in Polish; switching config to "en" restores English._
+
 - [x] 11. **Polish & docs** — 404 page, HTML meta/titles per page, README.md
       (authoring a new song, running tasks), `mise run check` task running
       `astro check`. — _Test: `mise run check` passes; adding a new `.cho` file and

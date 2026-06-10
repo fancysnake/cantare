@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { slugify } from '../../lib/slug';
+import { t } from '../../lib/i18n';
 
 const songs = await getCollection('songs');
 
@@ -18,17 +19,14 @@ for (const song of songs) {
 const sorted = [...tags.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name));
 ---
 
-<Base title="Tags">
-  <h1>Tags</h1>
+<Base title={t.tagsTitle}>
+  <h1>{t.tagsTitle}</h1>
   <ul class="song-list">
     {
       sorted.map(([slug, { name, count }]) => (
         <li>
           <a href={`/tags/${slug}/`}>#{name}</a>
-          <span class="song-meta">
-            {' '}
-            — {count} {count === 1 ? 'song' : 'songs'}
-          </span>
+          <span class="song-meta"> — {t.songCount(count)}</span>
         </li>
       ))
     }

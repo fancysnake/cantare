@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { site } from '../lib/site';
+import { locale, t } from '../lib/i18n';
 
 interface Props {
   title?: string | undefined;
@@ -12,7 +13,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,9 +34,9 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
   <body>
     <header class="site-header">
       <a href="/" class="brand">{site.name}</a>
-      <a href="/songs/">All songs</a>
-      <a href="/artists/">Artists</a>
-      <a href="/tags/">Tags</a>
+      <a href="/songs/">{t.navAllSongs}</a>
+      <a href="/artists/">{t.navArtists}</a>
+      <a href="/tags/">{t.navTags}</a>
       <button id="chords-toggle" hidden>🎸</button>
       <button id="theme-toggle" hidden>🌓</button>
     </header>
@@ -43,13 +44,15 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       <slot />
     </main>
     <script>
+      import { t } from '../lib/i18n';
+
       const toggle = document.getElementById('theme-toggle');
       if (toggle) {
         type Mode = 'system' | 'light' | 'dark';
         const LABELS: Record<Mode, string> = {
-          system: '🌓 Auto',
-          light: '☀️ Light',
-          dark: '🌙 Dark',
+          system: t.themeAuto,
+          light: t.themeLight,
+          dark: t.themeDark,
         };
         const NEXT: Record<Mode, Mode> = { system: 'light', light: 'dark', dark: 'system' };
         const stored = localStorage.getItem('theme');
@@ -64,7 +67,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
             localStorage.setItem('theme', mode);
           }
           toggle.textContent = LABELS[mode];
-          toggle.setAttribute('aria-label', `Theme: ${mode}. Click to change.`);
+          toggle.setAttribute('aria-label', t.themeAria(LABELS[mode]));
         };
 
         toggle.addEventListener('click', () => {
@@ -84,17 +87,14 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
           if (chordsOn) {
             document.documentElement.dataset.chords = 'on';
             localStorage.setItem('chords', 'on');
-            chordsToggle.textContent = '🎸 With chords';
+            chordsToggle.textContent = t.withChords;
           } else {
             delete document.documentElement.dataset.chords;
             localStorage.setItem('chords', 'off');
-            chordsToggle.textContent = '🎸 Without chords';
+            chordsToggle.textContent = t.withoutChords;
           }
           chordsToggle.setAttribute('aria-pressed', String(chordsOn));
-          chordsToggle.setAttribute(
-            'aria-label',
-            `Chords ${chordsOn ? 'shown' : 'hidden'}. Click to toggle.`,
-          );
+          chordsToggle.setAttribute('aria-label', chordsOn ? t.chordsShown : t.chordsHidden);
         };
 
         chordsToggle.addEventListener('click', () => {

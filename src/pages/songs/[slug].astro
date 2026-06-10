@@ -6,6 +6,7 @@ import { slugify } from '../../lib/slug';
 import { diagramDataForChords } from '../../lib/chord-data';
 import { chordDiagramSvg } from '../../lib/chord-diagram';
 import { chordKey } from '../../lib/chord-lookup';
+import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -30,10 +31,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
 });
 ---
 
-<Base
-  title={`${title} — ${artist}`}
-  description={`Lyrics and chords for "${title}" by ${artist}.`}
->
+<Base title={`${title} — ${artist}`} description={`${title} — ${artist}`}>
   <header data-pagefind-body>
     <h1 data-pagefind-meta="title">{title}</h1>
     <p class="song-meta">
@@ -48,8 +46,8 @@ const initialDiagrams = chordNames.flatMap((name) => {
           </>
         )
       }
-      {key && <span class="key-info"> · Key: {key}</span>}
-      {capo !== undefined && <span class="key-info"> · Capo: {capo}</span>}
+      {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
+      {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
     </p>
     {
       tags.length > 0 && (
@@ -65,24 +63,24 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </header>
   <div class="sheet-controls">
     <div class="transpose" hidden>
-      <span>Transpose:</span>
-      <button data-transpose="-1" aria-label="Transpose down a semitone">−</button>
+      <span>{t.transposeLabel}</span>
+      <button data-transpose="-1" aria-label={t.transposeDown}>−</button>
       <output class="transpose-state" aria-live="polite">0</output>
-      <button data-transpose="+1" aria-label="Transpose up a semitone">+</button>
-      <button data-transpose="0" aria-label="Reset transposition">Reset</button>
+      <button data-transpose="+1" aria-label={t.transposeUp}>+</button>
+      <button data-transpose="0" aria-label={t.transposeReset}>{t.reset}</button>
     </div>
     <div class="autoscroll" hidden>
-      <span>Scroll:</span>
-      <button class="scroll-toggle" aria-pressed="false" aria-label="Start autoscroll">⏵</button>
-      <button data-speed="-1" aria-label="Scroll slower">−</button>
+      <span>{t.scrollLabel}</span>
+      <button class="scroll-toggle" aria-pressed="false" aria-label={t.scrollStart}>⏵</button>
+      <button data-speed="-1" aria-label={t.scrollSlower}>−</button>
       <output class="scroll-state" aria-live="polite">3/8</output>
-      <button data-speed="+1" aria-label="Scroll faster">+</button>
+      <button data-speed="+1" aria-label={t.scrollFaster}>+</button>
     </div>
   </div>
   {
     initialDiagrams.length > 0 && (
       <details class="chord-strip">
-        <summary>Chords in this song</summary>
+        <summary>{t.chordsInSong}</summary>
         <div class="chord-grid" id="chord-grid">
           {initialDiagrams.map((svg) => (
             <figure class="chord-card" set:html={svg} />
@@ -130,6 +128,8 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
+    import { t } from '../../lib/i18n';
+
     const autoscroll = document.querySelector<HTMLElement>('.autoscroll');
     const toggle = autoscroll?.querySelector<HTMLButtonElement>('.scroll-toggle');
     const scrollState = autoscroll?.querySelector<HTMLOutputElement>('.scroll-state');
@@ -149,7 +149,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
         last = 0;
         toggle.textContent = '⏵';
         toggle.setAttribute('aria-pressed', 'false');
-        toggle.setAttribute('aria-label', 'Start autoscroll');
+        toggle.setAttribute('aria-label', t.scrollStart);
       };
 
       const tick = (timestamp: number) => {
@@ -177,7 +177,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           playing = true;
           toggle.textContent = '⏸';
           toggle.setAttribute('aria-pressed', 'true');
-          toggle.setAttribute('aria-label', 'Pause autoscroll');
+          toggle.setAttribute('aria-label', t.scrollPause);
           requestAnimationFrame(tick);
         }
       });

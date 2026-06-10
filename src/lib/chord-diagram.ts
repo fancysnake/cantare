@@ -4,6 +4,7 @@
  * Uses currentColor throughout so it follows light/dark themes.
  */
 import type { ChordPosition } from './chord-lookup';
+import { t } from './i18n';
 
 const STRINGS = 6;
 const FRETS = 4;
@@ -86,5 +87,5 @@ export function chordDiagramSvg(name: string, position: ChordPosition): string {
     }
   });
 
-  return `<svg viewBox="0 0 ${RIGHT + 16} ${BOTTOM + 8}" role="img" aria-label="${escapeXml(name)} chord diagram" xmlns="http://www.w3.org/2000/svg">${parts.join('')}</svg>`;
+  return `<svg viewBox="0 0 ${RIGHT + 16} ${BOTTOM + 8}" role="img" aria-label="${escapeXml(name)} — ${t.chordDiagram}" xmlns="http://www.w3.org/2000/svg">${parts.join('')}</svg>`;
 }

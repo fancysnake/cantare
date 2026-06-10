@@ -1,5 +1,6 @@
 {
   "name": "Cantare",
-  "description": "A songbook for singing together.",
-  "url": "https://cantare.example.com"
+  "description": "Śpiewnik do wspólnego śpiewania.",
+  "url": "https://cantare.example.com",
+  "locale": "pl"
 }

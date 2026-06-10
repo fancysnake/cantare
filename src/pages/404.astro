@@ -1,12 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import { t } from '../lib/i18n';
 ---
 
-<Base title="Not found">
-  <h1>Page not found</h1>
+<Base title={t.notFoundTitle}>
+  <h1>{t.notFoundHeading}</h1>
   <p>
-    This song seems to have ended. Try the <a href="/">search</a> or <a href="/songs/"
-      >browse all songs</a
-    >.
+    {t.notFoundBefore}
+    <a href="/">{t.notFoundSearch}</a>
+    {t.notFoundOr}
+    <a href="/songs/">{t.notFoundBrowse}</a>.
   </p>
 </Base>

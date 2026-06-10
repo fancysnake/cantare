@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import RandomButton from '../components/RandomButton.astro';
+import { t } from '../lib/i18n';
 
 const songs = await getCollection('songs');
 const songUrls = songs.map((song) => `/songs/${song.id}/`);
@@ -13,24 +14,20 @@ const songUrls = songs.map((song) => `/songs/${song.id}/`);
 
   <pagefind-input instance="songs"></pagefind-input>
   <div class="search-filters">
-    <pagefind-filter-dropdown filter="artist" label="Artist" instance="songs"
+    <pagefind-filter-dropdown filter="artist" label={t.filterArtist} instance="songs"
     ></pagefind-filter-dropdown>
-    <pagefind-filter-dropdown filter="album" label="Album" instance="songs"
+    <pagefind-filter-dropdown filter="album" label={t.filterAlbum} instance="songs"
     ></pagefind-filter-dropdown>
-    <pagefind-filter-dropdown filter="tag" label="Tag" instance="songs"></pagefind-filter-dropdown>
+    <pagefind-filter-dropdown filter="tag" label={t.filterTag} instance="songs"
+    ></pagefind-filter-dropdown>
   </div>
-  <pagefind-summary
-    instance="songs"
-    default-message="Type to search songs by title, lyrics, artist, album or tag."
-  ></pagefind-summary>
+  <pagefind-summary instance="songs" default-message={t.searchDefault}></pagefind-summary>
   <pagefind-results instance="songs"></pagefind-results>
-  <noscript
-    >Search requires JavaScript. You can still <a href="/songs/">browse all songs</a>.</noscript
-  >
+  <noscript>{t.searchNoscript} <a href="/songs/">{t.browseAllSongs}</a>.</noscript>
 
   <p class="home-actions">
     <RandomButton urls={songUrls} />
-    <a href="/songs/">Browse all songs</a>
+    <a href="/songs/">{t.navAllSongs}</a>
   </p>
 </Base>
 
