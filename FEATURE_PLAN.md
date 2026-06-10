@@ -126,7 +126,7 @@ run preview`; searching a lyric fragment finds the song; search works without
       — _Test: changing `name` in site.config.json rebrands the header and
       every page title after rebuild._
 
-- [ ] 12. **i18n (en/pl)** — all UI strings (nav, toggles, transpose/scroll
+- [x] 12. **i18n (en/pl)** — all UI strings (nav, toggles, transpose/scroll
       controls, search labels, counts, 404, aria-labels) move to
       `src/lib/i18n.ts` with English and Polish dictionaries; locale chosen
       per instance in `site.config.json`; `<html lang>` set from locale;
