@@ -113,7 +113,7 @@ run preview`; searching a lyric fragment finds the song; search works without
       and accents in both themes. — _Test: both themes use the new palette and
       body/chord text stays readable (AA contrast)._
 
-- [ ] 10c. **Linting toolchain** — ESLint (flat config) with typescript-eslint
+- [x] 10c. **Linting toolchain** — ESLint (flat config) with typescript-eslint
       strict-type-checked + stylistic, eslint-plugin-astro; Prettier with
       prettier-plugin-astro; `mise run lint` / `mise run format`; fix all
       findings. — _Test: `mise run lint` exits clean; introducing an `any` or
