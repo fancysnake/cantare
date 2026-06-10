@@ -92,8 +92,18 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
   <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
 
-  <script type="application/json" id="song-source" set:html={JSON.stringify(song.data.source).replace(/</g, '\\u003c')} />
-  <script type="application/json" id="chord-data" set:html={JSON.stringify(diagramData).replace(/</g, '\\u003c')} />
+  <script
+    is:inline
+    type="application/json"
+    id="song-source"
+    set:html={JSON.stringify(song.data.source).replace(/</g, '\\u003c')}
+  />
+  <script
+    is:inline
+    type="application/json"
+    id="chord-data"
+    set:html={JSON.stringify(diagramData).replace(/</g, '\\u003c')}
+  />
 
   <script>
     import { renderTransposed } from '../../lib/song';
