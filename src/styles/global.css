@@ -236,10 +236,15 @@ h1 {
 
 :root[data-sheet-mode='multi'] body.song-page .chord-sheet {
   height: 100%;
-  font-size: 0.8rem;
   columns: 24em;
   column-gap: 2.5rem;
   column-fill: auto;
+}
+
+/* Fallback when even the minimum font size overflows: let the columns
+   scroll horizontally instead of clipping them. */
+:root[data-sheet-mode='multi'] body.song-page .sheet-viewport.sheet-viewport-overflow {
+  overflow-x: auto;
 }
 
 /* Vertical space is precious on one screen: collapse the chord strip and

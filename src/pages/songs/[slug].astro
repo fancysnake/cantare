@@ -266,8 +266,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
     const modeToggle = document.getElementById('sheet-mode-toggle');
     const viewport = document.querySelector<HTMLElement>('.sheet-viewport');
+    const modeSheet = document.querySelector<HTMLElement>('.chord-sheet');
 
-    if (modeToggle && viewport) {
+    if (modeToggle && viewport && modeSheet) {
       let multi = document.documentElement.dataset.sheetMode === 'multi';
 
       // In multi mode the viewport gets the remaining screen height below
@@ -279,6 +280,43 @@ const initialDiagrams = chordNames.flatMap((name) => {
         } else {
           viewport.style.removeProperty('height');
         }
+      };
+
+      // Binary-search the largest font size (min 9px, max the base size)
+      // whose columns don't overflow the viewport horizontally. Column width
+      // is em-based, so the column count adapts as the font shrinks.
+      const MIN_FONT_PX = 9;
+      const fitSheet = () => {
+        viewport.classList.remove('sheet-viewport-overflow');
+        modeSheet.style.removeProperty('font-size');
+        if (!multi) return;
+        const base = parseFloat(getComputedStyle(modeSheet).fontSize);
+        const fitsAt = (px: number) => {
+          modeSheet.style.fontSize = `${px}px`;
+          return viewport.scrollWidth <= viewport.clientWidth;
+        };
+        if (fitsAt(base)) {
+          modeSheet.style.removeProperty('font-size');
+          return;
+        }
+        let lo = Math.min(MIN_FONT_PX, base);
+        let hi = base;
+        if (!fitsAt(lo)) {
+          // Even the minimum overflows: keep it and let the columns scroll.
+          viewport.classList.add('sheet-viewport-overflow');
+          return;
+        }
+        while (hi - lo > 0.5) {
+          const mid = (lo + hi) / 2;
+          if (fitsAt(mid)) lo = mid;
+          else hi = mid;
+        }
+        modeSheet.style.fontSize = `${lo}px`;
+      };
+
+      const refit = () => {
+        sizeViewport();
+        fitSheet();
       };
 
       const applyMode = () => {
@@ -295,7 +333,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
         modeToggle.textContent = multi ? '▤' : '▥';
         modeToggle.setAttribute('aria-pressed', String(multi));
         modeToggle.setAttribute('aria-label', multi ? t.viewSingle : t.viewMulti);
-        sizeViewport();
+        refit();
       };
 
       modeToggle.addEventListener('click', () => {
@@ -303,9 +341,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
         applyMode();
       });
 
-      window.addEventListener('resize', sizeViewport);
+      let resizeRaf = 0;
+      window.addEventListener('resize', () => {
+        cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(refit);
+      });
       // Focus mode changes the toolbar height, which moves the viewport's top.
-      new MutationObserver(sizeViewport).observe(document.documentElement, {
+      new MutationObserver(refit).observe(document.documentElement, {
         attributes: true,
         attributeFilter: ['data-focus'],
       });
