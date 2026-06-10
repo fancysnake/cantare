@@ -31,7 +31,12 @@ const initialDiagrams = chordNames.flatMap((name) => {
 });
 ---
 
-<Base title={`${title} — ${artist}`} description={`${title} — ${artist}`} fullWidth>
+<Base
+  title={`${title} — ${artist}`}
+  description={`${title} — ${artist}`}
+  fullWidth
+  pageClass="song-page"
+>
   <div class="song-toolbar">
     <header data-pagefind-body>
       <h1 data-pagefind-meta="title">{title}</h1>
@@ -83,6 +88,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
       <output class="scroll-state" aria-live="polite">3/8</output>
       <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
     </div>
+    <button id="focus-toggle" class="btn" aria-pressed="false" aria-label={t.focusEnter} hidden>
+      ⛶
+    </button>
     </div>
   </div>
   {
@@ -209,6 +217,42 @@ const initialDiagrams = chordNames.flatMap((name) => {
       });
 
       autoscroll.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { t } from '../../lib/i18n';
+
+    const focusToggle = document.getElementById('focus-toggle');
+    if (focusToggle) {
+      let focusOn = document.documentElement.dataset.focus === 'on';
+
+      const applyFocus = () => {
+        if (focusOn) {
+          document.documentElement.dataset.focus = 'on';
+          localStorage.setItem('focus', 'on');
+        } else {
+          delete document.documentElement.dataset.focus;
+          localStorage.setItem('focus', 'off');
+        }
+        focusToggle.setAttribute('aria-pressed', String(focusOn));
+        focusToggle.setAttribute('aria-label', focusOn ? t.focusExit : t.focusEnter);
+      };
+
+      focusToggle.addEventListener('click', () => {
+        focusOn = !focusOn;
+        applyFocus();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && focusOn) {
+          focusOn = false;
+          applyFocus();
+        }
+      });
+
+      applyFocus();
+      focusToggle.hidden = false;
     }
   </script>
 

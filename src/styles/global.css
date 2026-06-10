@@ -222,6 +222,12 @@ h1 {
   margin: 0;
 }
 
+/* Focus mode (song pages only): hide site chrome so the song owns the screen. */
+:root[data-focus='on'] body.song-page .site-header,
+:root[data-focus='on'] body.song-page .song-toolbar .song-meta {
+  display: none;
+}
+
 .transpose,
 .autoscroll {
   display: flex;

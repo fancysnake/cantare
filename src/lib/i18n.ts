@@ -51,6 +51,8 @@ interface Strings {
   scrollFaster: string;
   chordsInSong: string;
   chordDiagram: string;
+  focusEnter: string;
+  focusExit: string;
   notFoundTitle: string;
   notFoundHeading: string;
   notFoundBefore: string;
@@ -109,6 +111,8 @@ const en: Strings = {
   scrollFaster: 'Scroll faster',
   chordsInSong: 'Chords in this song',
   chordDiagram: 'chord diagram',
+  focusEnter: 'Enter focus mode (hides site navigation)',
+  focusExit: 'Exit focus mode (Esc)',
   notFoundTitle: 'Not found',
   notFoundHeading: 'Page not found',
   notFoundBefore: 'This song seems to have ended. Try the',
@@ -169,6 +173,8 @@ const pl: Strings = {
   scrollFaster: 'Przewijaj szybciej',
   chordsInSong: 'Akordy w tej piosence',
   chordDiagram: 'diagram akordu',
+  focusEnter: 'Włącz tryb skupienia (ukrywa nawigację)',
+  focusExit: 'Wyłącz tryb skupienia (Esc)',
   notFoundTitle: 'Nie znaleziono',
   notFoundHeading: 'Strona nie istnieje',
   notFoundBefore: 'Ta piosenka chyba już się skończyła. Skorzystaj z',
