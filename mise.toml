@@ -1,0 +1,18 @@
+[tools]
+aube = "1.16.1"
+node = "25.6.1"
+
+[hooks]
+enter = "aube install"
+
+[tasks.dev]
+description = "Start the Astro dev server"
+run = "aube run dev"
+
+[tasks.build]
+description = "Build the static site"
+run = "aube run build"
+
+[tasks.preview]
+description = "Preview the built site"
+run = "aube run preview"

@@ -1,0 +1,24 @@
+{
+  "name": "cantare",
+  "version": "1.0.0",
+  "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "astro": "^6.4.5",
+    "chordsheetjs": "^15.3.1",
+    "pagefind": "^1.5.2"
+  },
+  "aube": {
+    "allowBuilds": {
+      "esbuild": true,
+      "sharp": true
+    }
+  }
+}
