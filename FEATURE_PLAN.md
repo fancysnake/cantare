@@ -17,7 +17,7 @@ searchable with Pagefind. Tasks run through mise; packages managed with aube.
   tasks in `mise.toml` (`dev`, `build`, `preview`) that call `aube run <script>`.
   — _Test: `mise run dev` serves a placeholder page at localhost:4321._
 
-- [ ] 2. **Song sources + content collection** — create `songs/` with 2–3 sample
+- [x] 2. **Song sources + content collection** — create `songs/` with 2–3 sample
   ChordPro (`.cho`) files (title, artist, key directives + verse/chorus). Define
   a `songs` collection in `src/content.config.ts` with a custom loader that
   reads `songs/*.cho` and delegates to a shared `src/lib/song.ts` module
