@@ -133,7 +133,7 @@ run preview`; searching a lyric fragment finds the song; search works without
       Polish plural rules for song counts. — _Test: with locale "pl" the whole
       UI reads in Polish; switching config to "en" restores English._
 
-- [ ] 13. **Frontend review fixes** — keyboard-accessible chord popovers
+- [x] 13. **Frontend review fixes** — keyboard-accessible chord popovers
       (tabindex, focus, Esc, hoverable popover, viewport clamp), nav landmark,
       touch-target fixes, grouped toolbars with aria-labelledby, stronger
       border token, locale-aware sorting, shared .btn class, popover
