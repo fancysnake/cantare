@@ -24,3 +24,7 @@ run = ["aube run lint", "aube run format:check"]
 [tasks.format]
 description = "Format with Prettier"
 run = "aube run format"
+
+[tasks.check]
+description = "Type-check templates with astro check"
+run = "aube run check"
