@@ -192,6 +192,70 @@ h1 {
   margin: 0.75rem 0;
 }
 
+/* Compact song-page toolbar: title, meta and controls share one wrapping row. */
+.song-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.5rem;
+}
+
+.song-toolbar header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+}
+
+.song-toolbar h1 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.song-toolbar .song-meta {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.song-toolbar .sheet-controls {
+  margin: 0;
+}
+
+/* Focus mode (song pages only): hide site chrome so the song owns the screen. */
+:root[data-focus='on'] body.song-page .site-header,
+:root[data-focus='on'] body.song-page .song-toolbar .song-meta {
+  display: none;
+}
+
+/* Multi-column mode: the sheet folds into columns inside a screen-height
+   viewport (height set in JS); overflowing columns are clipped for now. */
+:root[data-sheet-mode='multi'] body.song-page .sheet-viewport {
+  overflow: hidden;
+}
+
+:root[data-sheet-mode='multi'] body.song-page .chord-sheet {
+  height: 100%;
+  columns: 24em;
+  column-gap: 2.5rem;
+  column-fill: auto;
+}
+
+/* Fallback when even the minimum font size overflows: let the columns
+   scroll horizontally instead of clipping them. */
+:root[data-sheet-mode='multi'] body.song-page .sheet-viewport.sheet-viewport-overflow {
+  overflow-x: auto;
+}
+
+/* Vertical space is precious on one screen: collapse the chord strip and
+   the copyright line (both return in single mode and in print). The
+   autoscroll controls disappear too — nothing scrolls in multi mode. */
+:root[data-sheet-mode='multi'] body.song-page .chord-strip,
+:root[data-sheet-mode='multi'] body.song-page .copyright-notice,
+:root[data-sheet-mode='multi'] body.song-page .autoscroll {
+  display: none;
+}
+
 .transpose,
 .autoscroll {
   display: flex;
@@ -345,5 +409,27 @@ h1 {
 
   .chord-sheet .paragraph {
     break-inside: avoid;
+  }
+
+  /* Focus and multi-column modes are screen-only: print the normal
+     single-column sheet whatever the on-screen state. */
+  :root[data-focus='on'] body.song-page .song-toolbar .song-meta {
+    display: block;
+  }
+
+  :root[data-sheet-mode='multi'] body.song-page .chord-strip,
+  :root[data-sheet-mode='multi'] body.song-page .copyright-notice {
+    display: block;
+  }
+
+  /* The JS sets height and font-size inline; !important wins over them. */
+  body.song-page .sheet-viewport {
+    height: auto !important;
+    overflow: visible;
+  }
+
+  :root[data-sheet-mode='multi'] body.song-page .chord-sheet {
+    columns: auto;
+    font-size: inherit !important;
   }
 }

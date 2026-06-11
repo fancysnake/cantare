@@ -7,9 +7,15 @@ interface Props {
   title?: string | undefined;
   description?: string | undefined;
   fullWidth?: boolean | undefined;
+  pageClass?: string | undefined;
 }
 
-const { title, description = `${site.name} — ${site.description}`, fullWidth } = Astro.props;
+const {
+  title,
+  description = `${site.name} — ${site.description}`,
+  fullWidth,
+  pageClass,
+} = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : site.name;
 ---
 
@@ -30,15 +36,22 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       if (localStorage.getItem('chords') === 'on') {
         document.documentElement.dataset.chords = 'on';
       }
+      if (localStorage.getItem('focus') === 'on') {
+        document.documentElement.dataset.focus = 'on';
+      }
+      if (localStorage.getItem('sheet-mode') === 'multi') {
+        document.documentElement.dataset.sheetMode = 'multi';
+      }
     </script>
   </head>
-  <body>
+  <body class:list={[pageClass]}>
     <header class="site-header">
       <a href="/" class="brand">{site.name}</a>
       <nav aria-label={t.navLabel}>
         <a href="/songs/">{t.navAllSongs}</a>
         <a href="/artists/">{t.navArtists}</a>
         <a href="/tags/">{t.navTags}</a>
+        <a href="/languages/">{t.navLanguages}</a>
       </nav>
       <button id="chords-toggle" class="btn" hidden>🎸</button>
       <button id="theme-toggle" class="btn" hidden>🌓</button>

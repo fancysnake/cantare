@@ -1,0 +1,147 @@
+{title: Lorem Ipsum}
+{artist: Cicero}
+{album: De Finibus}
+{meta: language Lorem Ipsum}
+{key: Am}
+{meta: tags test, long}
+{copyright: Placeholder text. Public domain.}
+
+{start_of_verse}
+[Am]Lorem ipsum dolor [F]sit amet consectetur
+[C]Adipiscing elit sed [G]do eiusmod tempor
+[Dm]Incididunt ut labore [Am]et dolore magna
+[E7]Aliqua ut enim ad [Am]minim veniam quis
+{end_of_verse}
+
+{start_of_verse}
+[Am]Nostrud exercitation [F]ullamco laboris nisi
+[C]Ut aliquip ex ea [G]commodo consequat duis
+[Dm]Aute irure dolor in [Am]reprehenderit in
+[E7]Voluptate velit esse [Am]cillum dolore eu
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Unde omnis iste natus [F]error sit voluptatem
+[C]Accusantium doloremque [G]laudantium totam rem
+[Dm]Aperiam eaque ipsa quae [Am]ab illo inventore
+[E7]Veritatis et quasi [Am]architecto beatae vitae
+{end_of_verse}
+
+{start_of_verse}
+[Am]Dicta sunt explicabo [F]nemo enim ipsam
+[C]Voluptatem quia voluptas [G]sit aspernatur
+[Dm]Aut odit aut fugit sed [Am]quia consequuntur
+[E7]Magni dolores eos qui [Am]ratione voluptatem
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Sequi nesciunt neque [F]porro quisquam est
+[C]Qui dolorem ipsum quia [G]dolor sit amet
+[Dm]Consectetur adipisci [Am]velit sed quia non
+[E7]Numquam eius modi [Am]tempora incidunt ut
+{end_of_verse}
+
+{start_of_verse}
+[Am]Labore et dolore magnam [F]aliquam quaerat
+[C]Voluptatem ut enim ad [G]minima veniam quis
+[Dm]Nostrum exercitationem [Am]ullam corporis
+[E7]Suscipit laboriosam nisi [Am]ut aliquid ex ea
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Commodi consequatur [F]quis autem vel eum
+[C]Iure reprehenderit qui [G]in ea voluptate
+[Dm]Velit esse quam nihil [Am]molestiae consequatur
+[E7]Vel illum qui dolorem [Am]eum fugiat quo
+{end_of_verse}
+
+{start_of_verse}
+[Am]Voluptas nulla pariatur [F]at vero eos et
+[C]Accusamus et iusto odio [G]dignissimos ducimus
+[Dm]Qui blanditiis [Am]praesentium voluptatum
+[E7]Deleniti atque corrupti [Am]quos dolores et
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Quas molestias excepturi [F]sint occaecati
+[C]Cupiditate non provident [G]similique sunt
+[Dm]In culpa qui officia [Am]deserunt mollitia
+[E7]Animi id est laborum [Am]et dolorum fuga
+{end_of_verse}
+
+{start_of_verse}
+[Am]Et harum quidem rerum [F]facilis est et
+[C]Expedita distinctio nam [G]libero tempore
+[Dm]Cum soluta nobis est [Am]eligendi optio
+[E7]Cumque nihil impedit [Am]quo minus id quod
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Maxime placeat facere [F]possimus omnis
+[C]Voluptas assumenda est [G]omnis dolor quem
+[Dm]Repellendus temporibus [Am]autem quibusdam
+[E7]Et aut officiis debitis [Am]aut rerum bonae
+{end_of_verse}
+
+{start_of_verse}
+[Am]Necessitatibus saepe [F]eveniet ut et hic
+[C]Voluptates repudiandae [G]sint et molestiae
+[Dm]Non recusandae itaque [Am]earum rerum hic
+[E7]Tenetur a sapiente [Am]delectus ut aut
+{end_of_verse}
+
+{start_of_chorus}
+[F]Fugiat nulla pariatur [C]excepteur sint
+[G]Occaecat cupidatat [Am]non proident sunt
+[F]In culpa qui officia [C]deserunt mollit
+[G]Anim id est laborum [E7]sed ut per[Am]spiciatis
+{end_of_chorus}
+
+{start_of_verse}
+[Am]Reiciendis voluptatibus [F]maiores alias
+[C]Consequatur aut [G]perferendis doloribus
+[Dm]Asperiores repellat [Am]lorem ipsum dolor
+[E7]Sit amet consectetur [Am]adipiscing elit
+{end_of_verse}
+
+{start_of_verse}
+[Am]Sed do eiusmod tempor [F]incididunt ut hoc
+[C]Labore et dolore magna [G]aliqua ut enim
+[Dm]Ad minim veniam quis [Am]nostrud ullamco
+[E7]Laboris nisi ut aliquip [Am]ex ea commodo
+{end_of_verse}

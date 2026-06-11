@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, key, capo, copyright, tags } = song.data;
+const { title, artist, album, language, key, capo, copyright, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 
@@ -31,37 +31,49 @@ const initialDiagrams = chordNames.flatMap((name) => {
 });
 ---
 
-<Base title={`${title} — ${artist}`} description={`${title} — ${artist}`} fullWidth>
-  <header data-pagefind-body>
-    <h1 data-pagefind-meta="title">{title}</h1>
-    <p class="song-meta">
-      <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
-      {
-        album && (
-          <>
-            {' '}
-            · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
-              {album}
-            </a>
-          </>
-        )
-      }
-      {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
-      {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
-    </p>
-    {
-      tags.length > 0 && (
-        <p class="song-meta">
-          {tags.map((tag) => (
+<Base
+  title={`${title} — ${artist}`}
+  description={`${title} — ${artist}`}
+  fullWidth
+  pageClass="song-page"
+>
+  <div class="song-toolbar">
+    <header data-pagefind-body>
+      <h1 data-pagefind-meta="title">{title}</h1>
+      <p class="song-meta">
+        <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
+        {
+          album && (
+            <>
+              {' '}
+              · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
+                {album}
+              </a>
+            </>
+          )
+        }
+        {
+          language && (
+            <>
+              {' '}
+              · <a href={`/languages/${slugify(language)}/`} data-pagefind-filter="language">
+                {language}
+              </a>
+            </>
+          )
+        }
+        {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
+        {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
+        {
+          tags.map((tag) => (
             <a class="tag" href={`/tags/${slugify(tag)}/`} data-pagefind-filter="tag">
               #{tag}
             </a>
-          ))}
-        </p>
-      )
-    }
-  </header>
-  <div class="sheet-controls">
+          ))
+        }
+      </p>
+    </header>
+    <div class="sheet-controls">
     <div class="transpose" role="group" aria-labelledby="transpose-label" hidden>
       <span id="transpose-label">{t.transposeLabel}</span>
       <button class="btn" data-transpose="-1" aria-label={t.transposeDown}>−</button>
@@ -75,6 +87,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
       <button class="btn" data-speed="-1" aria-label={t.scrollSlower}>−</button>
       <output class="scroll-state" aria-live="polite">3/8</output>
       <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
+    </div>
+    <button id="sheet-mode-toggle" class="btn" aria-pressed="false" aria-label={t.viewMulti} hidden>
+      ▥
+    </button>
+    <button id="focus-toggle" class="btn" aria-pressed="false" aria-label={t.focusEnter} hidden>
+      ⛶
+    </button>
     </div>
   </div>
   {
@@ -90,7 +109,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
     )
   }
 
-  <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  <div class="sheet-viewport">
+    <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  </div>
   {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
 
   <script
@@ -200,7 +221,163 @@ const initialDiagrams = chordNames.flatMap((name) => {
         scrollState.textContent = `${level + 1}/${SPEEDS.length}`;
       });
 
+      // Multi-column mode has nothing to scroll: stop a running autoscroll
+      // when it is switched on (the control group is hidden via CSS).
+      new MutationObserver(() => {
+        if (document.documentElement.dataset.sheetMode === 'multi' && playing) stop();
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-sheet-mode'],
+      });
+
       autoscroll.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { t } from '../../lib/i18n';
+
+    const focusToggle = document.getElementById('focus-toggle');
+    if (focusToggle) {
+      let focusOn = document.documentElement.dataset.focus === 'on';
+
+      const applyFocus = () => {
+        if (focusOn) {
+          document.documentElement.dataset.focus = 'on';
+          localStorage.setItem('focus', 'on');
+        } else {
+          delete document.documentElement.dataset.focus;
+          localStorage.setItem('focus', 'off');
+        }
+        focusToggle.setAttribute('aria-pressed', String(focusOn));
+        focusToggle.setAttribute('aria-label', focusOn ? t.focusExit : t.focusEnter);
+      };
+
+      focusToggle.addEventListener('click', () => {
+        focusOn = !focusOn;
+        applyFocus();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || !focusOn) return;
+        // An open chord popover claims the first Escape press.
+        if (document.querySelector('.chord-popover:not([hidden])')) return;
+        focusOn = false;
+        applyFocus();
+      });
+
+      applyFocus();
+      focusToggle.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { t } from '../../lib/i18n';
+
+    const modeToggle = document.getElementById('sheet-mode-toggle');
+    const viewport = document.querySelector<HTMLElement>('.sheet-viewport');
+    const modeSheet = document.querySelector<HTMLElement>('.chord-sheet');
+
+    if (modeToggle && viewport && modeSheet) {
+      let multi = document.documentElement.dataset.sheetMode === 'multi';
+
+      // In multi mode the viewport gets the remaining screen height below
+      // its top edge; in single mode it has no explicit height at all.
+      const sizeViewport = () => {
+        if (multi) {
+          const top = viewport.getBoundingClientRect().top + window.scrollY;
+          viewport.style.height = `${Math.max(160, window.innerHeight - top)}px`;
+        } else {
+          viewport.style.removeProperty('height');
+        }
+      };
+
+      // Binary-search the largest font size (min 9px, max the base size)
+      // whose columns don't overflow the viewport horizontally. Column width
+      // is em-based, so the column count adapts as the font shrinks.
+      const MIN_FONT_PX = 9;
+      const fitSheet = () => {
+        viewport.classList.remove('sheet-viewport-overflow');
+        modeSheet.style.removeProperty('font-size');
+        if (!multi) return;
+        const base = parseFloat(getComputedStyle(modeSheet).fontSize);
+        const fitsAt = (px: number) => {
+          modeSheet.style.fontSize = `${px}px`;
+          return viewport.scrollWidth <= viewport.clientWidth;
+        };
+        if (fitsAt(base)) {
+          modeSheet.style.removeProperty('font-size');
+          return;
+        }
+        let lo = Math.min(MIN_FONT_PX, base);
+        let hi = base;
+        if (!fitsAt(lo)) {
+          // Even the minimum overflows: keep it and let the columns scroll.
+          viewport.classList.add('sheet-viewport-overflow');
+          return;
+        }
+        while (hi - lo > 0.5) {
+          const mid = (lo + hi) / 2;
+          if (fitsAt(mid)) lo = mid;
+          else hi = mid;
+        }
+        modeSheet.style.fontSize = `${lo}px`;
+      };
+
+      const refit = () => {
+        sizeViewport();
+        fitSheet();
+      };
+
+      const applyMode = () => {
+        if (multi) {
+          document.documentElement.dataset.sheetMode = 'multi';
+          localStorage.setItem('sheet-mode', 'multi');
+          const strip = document.querySelector<HTMLDetailsElement>('.chord-strip');
+          if (strip) strip.open = false;
+          window.scrollTo(0, 0);
+        } else {
+          delete document.documentElement.dataset.sheetMode;
+          localStorage.setItem('sheet-mode', 'single');
+        }
+        modeToggle.textContent = multi ? '▤' : '▥';
+        modeToggle.setAttribute('aria-pressed', String(multi));
+        modeToggle.setAttribute('aria-label', multi ? t.viewSingle : t.viewMulti);
+        refit();
+      };
+
+      modeToggle.addEventListener('click', () => {
+        multi = !multi;
+        applyMode();
+      });
+
+      let resizeRaf = 0;
+      window.addEventListener('resize', () => {
+        cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(refit);
+      });
+      // Transposing replaces the sheet markup; refit the new content.
+      document.addEventListener('song:rerendered', refit);
+      // Focus mode moves the viewport's top edge; chord visibility changes
+      // line widths — both need a refit. Entering focus mode also switches
+      // to multi-column (leaving it keeps whatever mode is active).
+      new MutationObserver((mutations) => {
+        const focusTurnedOn =
+          mutations.some((m) => m.attributeName === 'data-focus') &&
+          document.documentElement.dataset.focus === 'on';
+        if (focusTurnedOn && !multi) {
+          multi = true;
+          applyMode();
+        } else {
+          refit();
+        }
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-focus', 'data-chords'],
+      });
+
+      applyMode();
+      modeToggle.hidden = false;
     }
   </script>
 
