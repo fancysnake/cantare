@@ -23,6 +23,7 @@ const songs = defineCollection({
     title: z.string(),
     artist: z.string(),
     album: z.string().optional(),
+    language: z.string().optional(),
     key: z.string().optional(),
     capo: z.number().optional(),
     copyright: z.string().optional(),

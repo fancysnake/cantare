@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-11
+
+### Added
+
+- **Language metadata.** Songs can declare a language via
+  `{meta: language ...}`. Generated `/languages/` index and per-language pages,
+  a header nav link, a Pagefind search facet, and the language shown on each
+  song's meta line — mirroring the artist/album/tag taxonomy.
+
 ## [0.1.0] - 2026-06-11
 
 First public release. Static songbook for singing meetups: search, sing along,
@@ -55,5 +64,6 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/fancysnake/cantare/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/fancysnake/cantare/releases/tag/v0.1.0

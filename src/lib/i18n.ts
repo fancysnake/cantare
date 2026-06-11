@@ -8,6 +8,7 @@ interface Strings {
   navAllSongs: string;
   navArtists: string;
   navTags: string;
+  navLanguages: string;
   withChords: string;
   withoutChords: string;
   chordsShown: string;
@@ -26,12 +27,16 @@ interface Strings {
   filterArtist: string;
   filterAlbum: string;
   filterTag: string;
+  filterLanguage: string;
   allSongsTitle: string;
   artistsTitle: string;
   tagsTitle: string;
+  languagesTitle: string;
   tagPrefix: string;
+  languagePrefix: string;
   artistMeta: string;
   albumMeta: string;
+  languageMeta: string;
   keyLabel: string;
   capoLabel: string;
   transposeLabel: string;
@@ -61,6 +66,7 @@ const en: Strings = {
   navAllSongs: 'All songs',
   navArtists: 'Artists',
   navTags: 'Tags',
+  navLanguages: 'Languages',
   withChords: '🎸 With chords',
   withoutChords: '🎸 Without chords',
   chordsShown: 'Chords shown. Click to toggle.',
@@ -79,12 +85,16 @@ const en: Strings = {
   filterArtist: 'Artist',
   filterAlbum: 'Album',
   filterTag: 'Tag',
+  filterLanguage: 'Language',
   allSongsTitle: 'All songs',
   artistsTitle: 'Artists',
   tagsTitle: 'Tags',
+  languagesTitle: 'Languages',
   tagPrefix: 'Tag',
+  languagePrefix: 'Language',
   artistMeta: 'Artist',
   albumMeta: 'Album',
+  languageMeta: 'Language',
   keyLabel: 'Key',
   capoLabel: 'Capo',
   transposeLabel: 'Transpose:',
@@ -116,6 +126,7 @@ const pl: Strings = {
   navAllSongs: 'Wszystkie piosenki',
   navArtists: 'Wykonawcy',
   navTags: 'Tagi',
+  navLanguages: 'Języki',
   withChords: '🎸 Z akordami',
   withoutChords: '🎸 Bez akordów',
   chordsShown: 'Akordy widoczne. Kliknij, aby przełączyć.',
@@ -134,12 +145,16 @@ const pl: Strings = {
   filterArtist: 'Wykonawca',
   filterAlbum: 'Album',
   filterTag: 'Tag',
+  filterLanguage: 'Język',
   allSongsTitle: 'Wszystkie piosenki',
   artistsTitle: 'Wykonawcy',
   tagsTitle: 'Tagi',
+  languagesTitle: 'Języki',
   tagPrefix: 'Tag',
+  languagePrefix: 'Język',
   artistMeta: 'Wykonawca',
   albumMeta: 'Album',
+  languageMeta: 'Język',
   keyLabel: 'Tonacja',
   capoLabel: 'Kapodaster',
   transposeLabel: 'Transpozycja:',

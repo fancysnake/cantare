@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, key, capo, copyright, tags } = song.data;
+const { title, artist, album, language, key, capo, copyright, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 
@@ -42,6 +42,16 @@ const initialDiagrams = chordNames.flatMap((name) => {
             {' '}
             · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
               {album}
+            </a>
+          </>
+        )
+      }
+      {
+        language && (
+          <>
+            {' '}
+            · <a href={`/languages/${slugify(language)}/`} data-pagefind-filter="language">
+              {language}
             </a>
           </>
         )

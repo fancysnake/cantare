@@ -20,6 +20,8 @@ const songUrls = songs.map((song) => `/songs/${song.id}/`);
     ></pagefind-filter-dropdown>
     <pagefind-filter-dropdown filter="tag" label={t.filterTag} instance="songs"
     ></pagefind-filter-dropdown>
+    <pagefind-filter-dropdown filter="language" label={t.filterLanguage} instance="songs"
+    ></pagefind-filter-dropdown>
   </div>
   <pagefind-summary instance="songs" default-message={t.searchDefault}></pagefind-summary>
   <pagefind-results instance="songs"></pagefind-results>
