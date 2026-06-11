@@ -14,7 +14,16 @@ and this project adheres to [Semantic Versioning].
 - **Language metadata.** Songs can declare a language via
   `{meta: language ...}`. Generated `/languages/` index and per-language pages,
   a header nav link, a Pagefind search facet, and the language shown on each
-  song's meta line — mirroring the artist/album/tag taxonomy.
+  song's meta line — mirroring the artist/album/tag taxonomy. Values are
+  free-form — any label works, consistency is the author's call.
+- **Focus + multi-column modes.** Focus strips the page to the sheet (hides
+  site nav, Esc exits); the single/multi column switch reflows long songs and
+  shrinks the font to fit the screen. Focus auto-enables multi-column;
+  autoscroll adapts to the active mode; print ignores both.
+- **Compact song toolbar.** Title, metadata, and the transpose/autoscroll/focus
+  controls share one row above the sheet.
+- **Lorem-ipsum fixture.** Long multi-section placeholder song for exercising
+  rendering, columns, autoscroll, and the diagram subset.
 
 ## [0.1.0] - 2026-06-11
 
