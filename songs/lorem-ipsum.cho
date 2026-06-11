@@ -1,0 +1,78 @@
+{title: Lorem Ipsum}
+{artist: Cicero}
+{album: De Finibus}
+{meta: language Lorem Ipsum}
+{meta: tags stress test, filler}
+{key: C}
+{capo: 0}
+{copyright: Placeholder text. Public domain.}
+
+{start_of_verse}
+[C]Lorem ipsum [G]dolor sit a[Am]met, conse[F]ctetur
+A[C]dipiscing e[G]lit, sed do [F]eiusmod [C]tempor
+In[Dm]cididunt ut [G7]labore et do[C]lore magna
+A[Am]liqua ut e[D]nim ad mi[G]nim ve[C]niam
+{end_of_verse}
+
+{start_of_chorus}
+[F]Quis nostrud [C]exercitation
+[G]Ullamco la[Am]boris nisi
+[F]Ut aliquip [C]ex ea com[G]modo
+Con[F]sequat du[G]is aute i[C]rure
+{end_of_chorus}
+
+{start_of_verse}
+[C]Dolor in repre[G]henderit in vo[Am]luptate ve[F]lit
+Esse [C]cillum do[G]lore eu fu[F]giat nulla [C]pariatur
+Ex[Dm]cepteur sint oc[G7]caecat cupi[C]datat non
+Pro[Am]ident sunt in [D]culpa qui of[G]ficia de[C]serunt
+{end_of_verse}
+
+{start_of_chorus}
+[F]Quis nostrud [C]exercitation
+[G]Ullamco la[Am]boris nisi
+[F]Ut aliquip [C]ex ea com[G]modo
+Con[F]sequat du[G]is aute i[C]rure
+{end_of_chorus}
+
+{start_of_bridge}
+[Em]Mollit anim [Bm]id est la[C]borum sed ut per[D]spiciatis
+[Em]Unde omnis [Bm]iste natus [C]error sit volu[D]ptatem
+[Am]Accusantium do[E7]loremque lau[Am]dantium totam
+[F]Rem ape[G]riam ea[C]que ipsa
+{end_of_bridge}
+
+{start_of_verse}
+[C]Quae ab il[G]lo inven[Am]tore veri[F]tatis
+Et [C]quasi archi[G]tecto bea[F]tae vi[C]tae
+[Dm]Dicta sunt ex[G7]plicabo nemo e[C]nim ipsam
+Volu[Am]ptatem quia vo[D]luptas sit as[G]perna[C]tur
+{end_of_verse}
+
+{start_of_chorus}
+[F]Quis nostrud [C]exercitation
+[G]Ullamco la[Am]boris nisi
+[F]Ut aliquip [C]ex ea com[G]modo
+Con[F]sequat du[G]is aute i[C]rure
+{end_of_chorus}
+
+{start_of_verse}
+[C]Neque porro [G]quisquam est [Am]qui dolo[F]rem ipsum
+Quia [C]dolor sit a[G]met conse[F]ctetur a[C]dipisci
+[Dm]Velit sed quia [G7]non numquam [C]eius modi
+Tem[Am]pora inci[D]dunt ut la[G]bore et do[C]lore
+{end_of_verse}
+
+{start_of_bridge}
+[Em]Magnam ali[Bm]quam quaerat [C]volupta[D]tem
+[Em]Ut enim ad [Bm]minima ve[C]niam quis nos[D]trum
+[Am]Exercita[E7]tionem ullam [Am]corporis suscipit
+[F]Laborio[G]sam nisi ut a[C]liquid
+{end_of_bridge}
+
+{start_of_chorus}
+[F]Quis nostrud [C]exercitation
+[G]Ullamco la[Am]boris nisi
+[F]Ut aliquip [C]ex ea com[G]modo
+Con[F]sequat du[G]is aute i[C]rure
+{end_of_chorus}
