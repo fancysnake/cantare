@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../lib/i18n';
+---
+
+<Base title={t.notFoundTitle}>
+  <h1>{t.notFoundHeading}</h1>
+  <p>
+    {t.notFoundBefore}
+    <a href="/">{t.notFoundSearch}</a>
+    {t.notFoundOr}
+    <a href="/songs/">{t.notFoundBrowse}</a>.
+  </p>
+</Base>

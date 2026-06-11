@@ -1,0 +1,345 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { parseSong, renderSong } from '../../lib/song';
+import { slugify } from '../../lib/slug';
+import { diagramDataForChords } from '../../lib/chord-data';
+import { chordDiagramSvg } from '../../lib/chord-diagram';
+import { chordKey } from '../../lib/chord-lookup';
+import { t } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  const songs = await getCollection('songs');
+  return songs.map((song) => ({ params: { slug: song.id }, props: { song } }));
+}
+
+interface Props {
+  song: CollectionEntry<'songs'>;
+}
+
+const { song } = Astro.props;
+const { title, artist, album, key, capo, copyright, tags } = song.data;
+const parsed = parseSong(song.data.source);
+const sheetHtml = renderSong(parsed);
+
+const chordNames = [...new Set(parsed.getChords())];
+const diagramData = diagramDataForChords(chordNames);
+const initialDiagrams = chordNames.flatMap((name) => {
+  const dataKey = chordKey(name);
+  const position = dataKey ? diagramData[dataKey] : undefined;
+  return position ? [chordDiagramSvg(name, position)] : [];
+});
+---
+
+<Base title={`${title} — ${artist}`} description={`${title} — ${artist}`} fullWidth>
+  <header data-pagefind-body>
+    <h1 data-pagefind-meta="title">{title}</h1>
+    <p class="song-meta">
+      <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
+      {
+        album && (
+          <>
+            {' '}
+            · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
+              {album}
+            </a>
+          </>
+        )
+      }
+      {key && <span class="key-info"> · {t.keyLabel}: {key}</span>}
+      {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
+    </p>
+    {
+      tags.length > 0 && (
+        <p class="song-meta">
+          {tags.map((tag) => (
+            <a class="tag" href={`/tags/${slugify(tag)}/`} data-pagefind-filter="tag">
+              #{tag}
+            </a>
+          ))}
+        </p>
+      )
+    }
+  </header>
+  <div class="sheet-controls">
+    <div class="transpose" role="group" aria-labelledby="transpose-label" hidden>
+      <span id="transpose-label">{t.transposeLabel}</span>
+      <button class="btn" data-transpose="-1" aria-label={t.transposeDown}>−</button>
+      <output class="transpose-state" aria-live="polite">0</output>
+      <button class="btn" data-transpose="+1" aria-label={t.transposeUp}>+</button>
+      <button class="btn" data-transpose="0" aria-label={t.transposeReset}>{t.reset}</button>
+    </div>
+    <div class="autoscroll" role="group" aria-labelledby="autoscroll-label" hidden>
+      <span id="autoscroll-label">{t.scrollLabel}</span>
+      <button class="btn scroll-toggle" aria-pressed="false" aria-label={t.scrollStart}>⏵</button>
+      <button class="btn" data-speed="-1" aria-label={t.scrollSlower}>−</button>
+      <output class="scroll-state" aria-live="polite">3/8</output>
+      <button class="btn" data-speed="+1" aria-label={t.scrollFaster}>+</button>
+    </div>
+  </div>
+  {
+    initialDiagrams.length > 0 && (
+      <details class="chord-strip">
+        <summary>{t.chordsInSong}</summary>
+        <div class="chord-grid" id="chord-grid">
+          {initialDiagrams.map((svg) => (
+            <figure class="chord-card" set:html={svg} />
+          ))}
+        </div>
+      </details>
+    )
+  }
+
+  <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+  {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
+
+  <script
+    is:inline
+    type="application/json"
+    id="song-source"
+    set:html={JSON.stringify(song.data.source).replace(/</g, '\\u003c')}
+  />
+  <script
+    is:inline
+    type="application/json"
+    id="chord-data"
+    set:html={JSON.stringify(diagramData).replace(/</g, '\\u003c')}
+  />
+
+  <script>
+    import { renderTransposed } from '../../lib/song';
+
+    const sheet = document.querySelector<HTMLElement>('.chord-sheet');
+    const sourceEl = document.getElementById('song-source');
+    const toolbar = document.querySelector<HTMLElement>('.transpose');
+    const state = toolbar?.querySelector<HTMLOutputElement>('.transpose-state');
+
+    if (sheet && sourceEl && toolbar && state) {
+      const source: string = JSON.parse(sourceEl.textContent ?? '""');
+      let offset = 0;
+
+      const update = () => {
+        const { html, key } = renderTransposed(source, offset);
+        sheet.innerHTML = html;
+        const sign = offset > 0 ? `+${offset}` : `${offset}`;
+        state.textContent = key ? `${sign} (${key})` : sign;
+        document.dispatchEvent(new CustomEvent('song:rerendered'));
+      };
+
+      toolbar.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-transpose]');
+        if (!button) return;
+        const step = Number(button.dataset.transpose);
+        offset = step === 0 ? 0 : Math.max(-11, Math.min(11, offset + step));
+        update();
+      });
+
+      toolbar.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { t } from '../../lib/i18n';
+
+    const autoscroll = document.querySelector<HTMLElement>('.autoscroll');
+    const toggle = autoscroll?.querySelector<HTMLButtonElement>('.scroll-toggle');
+    const scrollState = autoscroll?.querySelector<HTMLOutputElement>('.scroll-state');
+
+    if (autoscroll && toggle && scrollState) {
+      const SPEEDS = [10, 20, 30, 45, 60, 85, 120, 160]; // px per second
+      let level = 2;
+      let playing = false;
+      let last = 0;
+      let carry = 0;
+
+      const atBottom = () =>
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
+
+      const stop = () => {
+        playing = false;
+        last = 0;
+        toggle.textContent = '⏵';
+        toggle.setAttribute('aria-pressed', 'false');
+        toggle.setAttribute('aria-label', t.scrollStart);
+      };
+
+      const tick = (timestamp: number) => {
+        if (!playing) return;
+        if (last) {
+          carry += ((SPEEDS[level] ?? 30) * (timestamp - last)) / 1000;
+          const pixels = Math.floor(carry);
+          if (pixels > 0) {
+            window.scrollBy(0, pixels);
+            carry -= pixels;
+          }
+          if (atBottom()) {
+            stop();
+            return;
+          }
+        }
+        last = timestamp;
+        requestAnimationFrame(tick);
+      };
+
+      toggle.addEventListener('click', () => {
+        if (playing) {
+          stop();
+        } else if (!atBottom()) {
+          playing = true;
+          toggle.textContent = '⏸';
+          toggle.setAttribute('aria-pressed', 'true');
+          toggle.setAttribute('aria-label', t.scrollPause);
+          requestAnimationFrame(tick);
+        }
+      });
+
+      autoscroll.addEventListener('click', (event) => {
+        const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-speed]');
+        if (!button) return;
+        level = Math.max(0, Math.min(SPEEDS.length - 1, level + Number(button.dataset.speed)));
+        scrollState.textContent = `${level + 1}/${SPEEDS.length}`;
+      });
+
+      autoscroll.hidden = false;
+    }
+  </script>
+
+  <script>
+    import { chordDiagramSvg } from '../../lib/chord-diagram';
+    import { chordKey, type DiagramData } from '../../lib/chord-lookup';
+
+    const dataEl = document.getElementById('chord-data');
+    const sheetEl = document.querySelector<HTMLElement>('.chord-sheet');
+
+    if (dataEl && sheetEl) {
+      const data: DiagramData = JSON.parse(dataEl.textContent ?? '{}');
+
+      const svgFor = (name: string): string | null => {
+        const dataKey = chordKey(name);
+        const position = dataKey ? data[dataKey] : undefined;
+        return position ? chordDiagramSvg(name, position) : null;
+      };
+
+      const grid = document.getElementById('chord-grid');
+      const refreshGrid = () => {
+        if (!grid) return;
+        const names = [
+          ...new Set(
+            [...sheetEl.querySelectorAll('.chord')]
+              .map((el) => el.textContent?.trim() ?? '')
+              .filter(Boolean),
+          ),
+        ];
+        grid.innerHTML = names
+          .map((name) => {
+            const svg = svgFor(name);
+            return svg ? `<figure class="chord-card">${svg}</figure>` : '';
+          })
+          .join('');
+      };
+      document.addEventListener('song:rerendered', refreshGrid);
+
+      const popover = document.createElement('div');
+      popover.className = 'chord-popover';
+      popover.setAttribute('role', 'tooltip');
+      popover.hidden = true;
+      document.body.appendChild(popover);
+
+      let shownFor: HTMLElement | null = null;
+      let hoverTimer = 0;
+
+      const chordTarget = (event: Event): HTMLElement | null =>
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>('.chord-sheet .chord')
+          : null;
+
+      const show = (chordEl: HTMLElement, svg: string) => {
+        popover.innerHTML = svg;
+        popover.hidden = false;
+        const rect = chordEl.getBoundingClientRect();
+        const maxLeft = document.documentElement.clientWidth - popover.offsetWidth - 8;
+        const left = Math.max(8, Math.min(rect.left, maxLeft));
+        popover.style.left = `${window.scrollX + left}px`;
+        popover.style.top = `${window.scrollY + rect.bottom + 4}px`;
+        shownFor = chordEl;
+      };
+
+      const hide = () => {
+        window.clearTimeout(hoverTimer);
+        popover.hidden = true;
+        shownFor = null;
+      };
+
+      // Chords are focusable so keyboard users can reach the diagrams.
+      const makeFocusable = () => {
+        for (const el of sheetEl.querySelectorAll<HTMLElement>('.chord')) {
+          if (el.textContent?.trim()) el.tabIndex = 0;
+        }
+      };
+      makeFocusable();
+      document.addEventListener('song:rerendered', () => {
+        hide();
+        makeFocusable();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !popover.hidden) hide();
+      });
+
+      document.addEventListener('focusin', (event) => {
+        const chordEl = chordTarget(event);
+        const name = chordEl?.textContent?.trim();
+        const svg = name ? svgFor(name) : null;
+        if (chordEl && svg) show(chordEl, svg);
+        else if (shownFor) hide();
+      });
+
+      document.addEventListener('focusout', (event) => {
+        if (chordTarget(event) === shownFor) hide();
+      });
+
+      if (window.matchMedia('(hover: hover)').matches) {
+        // Desktop: show after hovering a chord for 0.5s; the popover itself
+        // stays open while hovered (WCAG 1.4.13) and Esc dismisses it.
+        document.addEventListener('mouseover', (event) => {
+          const chordEl = chordTarget(event);
+          if (!chordEl || chordEl === shownFor) return;
+          const name = chordEl.textContent?.trim();
+          const svg = name ? svgFor(name) : null;
+          if (!svg) return;
+          window.clearTimeout(hoverTimer);
+          hoverTimer = window.setTimeout(() => {
+            show(chordEl, svg);
+          }, 500);
+        });
+
+        document.addEventListener('mouseout', (event) => {
+          const chordEl = chordTarget(event);
+          if (!chordEl) return;
+          const next = event.relatedTarget;
+          if (next instanceof Node && (chordEl.contains(next) || popover.contains(next))) return;
+          window.clearTimeout(hoverTimer);
+          if (shownFor === chordEl) hide();
+        });
+
+        popover.addEventListener('mouseleave', (event) => {
+          const next = event.relatedTarget;
+          if (next instanceof Node && shownFor?.contains(next)) return;
+          hide();
+        });
+      } else {
+        // Touch: tap a chord to toggle, tap elsewhere to dismiss.
+        document.addEventListener('click', (event) => {
+          const chordEl = chordTarget(event);
+          const name = chordEl?.textContent?.trim();
+          const svg = name ? svgFor(name) : null;
+          if (chordEl && svg && popover.hidden) {
+            show(chordEl, svg);
+          } else {
+            hide();
+          }
+        });
+      }
+    }
+  </script>
+</Base>

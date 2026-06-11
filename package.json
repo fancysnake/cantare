@@ -1,0 +1,48 @@
+{
+  "name": "cantare",
+  "version": "1.0.0",
+  "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,astro}": "eslint --fix",
+    "*": "prettier --write --ignore-unknown"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tombatossals/chords-db": "^0.5.1",
+    "astro": "^6.4.5",
+    "astro-pagefind": "^2.0.0",
+    "chordsheetjs": "^15.3.1",
+    "pagefind": "^1.5.2"
+  },
+  "aube": {
+    "allowBuilds": {
+      "esbuild": true,
+      "sharp": true
+    }
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.9.2",
+    "eslint": "^10.4.1",
+    "eslint-plugin-astro": "^1.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0"
+  }
+}

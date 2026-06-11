@@ -1,0 +1,118 @@
+---
+import '../styles/global.css';
+import { site } from '../lib/site';
+import { locale, t } from '../lib/i18n';
+
+interface Props {
+  title?: string | undefined;
+  description?: string | undefined;
+  fullWidth?: boolean | undefined;
+}
+
+const { title, description = `${site.name} — ${site.description}`, fullWidth } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : site.name;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <script is:inline>
+      // Apply forced theme and chord visibility before first paint.
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        document.documentElement.dataset.theme = storedTheme;
+      }
+      if (localStorage.getItem('chords') === 'on') {
+        document.documentElement.dataset.chords = 'on';
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">{site.name}</a>
+      <nav aria-label={t.navLabel}>
+        <a href="/songs/">{t.navAllSongs}</a>
+        <a href="/artists/">{t.navArtists}</a>
+        <a href="/tags/">{t.navTags}</a>
+      </nav>
+      <button id="chords-toggle" class="btn" hidden>🎸</button>
+      <button id="theme-toggle" class="btn" hidden>🌓</button>
+    </header>
+    <main class:list={[{ 'full-width': fullWidth }]}>
+      <slot />
+    </main>
+    <script>
+      import { t } from '../lib/i18n';
+
+      const toggle = document.getElementById('theme-toggle');
+      if (toggle) {
+        type Mode = 'system' | 'light' | 'dark';
+        const LABELS: Record<Mode, string> = {
+          system: t.themeAuto,
+          light: t.themeLight,
+          dark: t.themeDark,
+        };
+        const WORDS: Record<Mode, string> = {
+          system: t.themeAutoWord,
+          light: t.themeLightWord,
+          dark: t.themeDarkWord,
+        };
+        const NEXT: Record<Mode, Mode> = { system: 'light', light: 'dark', dark: 'system' };
+        const stored = localStorage.getItem('theme');
+        let mode: Mode = stored === 'light' || stored === 'dark' ? stored : 'system';
+
+        const apply = () => {
+          if (mode === 'system') {
+            delete document.documentElement.dataset.theme;
+            localStorage.removeItem('theme');
+          } else {
+            document.documentElement.dataset.theme = mode;
+            localStorage.setItem('theme', mode);
+          }
+          toggle.textContent = LABELS[mode];
+          toggle.setAttribute('aria-label', t.themeAria(WORDS[mode]));
+        };
+
+        toggle.addEventListener('click', () => {
+          mode = NEXT[mode];
+          apply();
+        });
+
+        apply();
+        toggle.hidden = false;
+      }
+
+      const chordsToggle = document.getElementById('chords-toggle');
+      if (chordsToggle) {
+        let chordsOn = localStorage.getItem('chords') === 'on';
+
+        const applyChords = () => {
+          if (chordsOn) {
+            document.documentElement.dataset.chords = 'on';
+            localStorage.setItem('chords', 'on');
+            chordsToggle.textContent = t.withChords;
+          } else {
+            delete document.documentElement.dataset.chords;
+            localStorage.setItem('chords', 'off');
+            chordsToggle.textContent = t.withoutChords;
+          }
+          chordsToggle.setAttribute('aria-pressed', String(chordsOn));
+          chordsToggle.setAttribute('aria-label', chordsOn ? t.chordsShown : t.chordsHidden);
+        };
+
+        chordsToggle.addEventListener('click', () => {
+          chordsOn = !chordsOn;
+          applyChords();
+        });
+
+        applyChords();
+        chordsToggle.hidden = false;
+      }
+    </script>
+  </body>
+</html>

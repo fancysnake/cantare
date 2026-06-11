@@ -1,0 +1,349 @@
+/*
+ * Brand palette: green #008000, purple #47066B, gold #A06B00.
+ * Purple carries links/accents, green carries chords, gold tints
+ * backgrounds and borders. Dark-theme variants are lightened for AA contrast.
+ */
+:root {
+  --color-bg: #faf5e9;
+  --color-surface: #ffffff;
+  --color-text: #241f2b;
+  --color-muted: #5d564a;
+  --color-border: #e7dfc8;
+  --color-border-strong: #8a7a55; /* >=3:1 on surface for component boundaries */
+  --color-accent: #47066b;
+  --color-chord: #008000;
+}
+
+/* Dark palette applies when the OS prefers dark (unless forced light),
+   or when the user forces dark via the header toggle. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: #191322;
+    --color-surface: #251c31;
+    --color-text: #ece7db;
+    --color-muted: #aaa295;
+    --color-border: #403653;
+    --color-border-strong: #8e84a8;
+    --color-accent: #c89ce4;
+    --color-chord: #58c958;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #191322;
+  --color-surface: #251c31;
+  --color-text: #ece7db;
+  --color-muted: #aaa295;
+  --color-border: #403653;
+  --color-border-strong: #8e84a8;
+  --color-accent: #c89ce4;
+  --color-chord: #58c958;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+main.full-width {
+  max-width: none;
+  padding: 1rem 1.5rem;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+h1 {
+  line-height: 1.2;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 1rem;
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.site-header .brand {
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+#chords-toggle {
+  margin-left: auto;
+}
+
+/* When the header wraps on phones: center rows, grow touch targets */
+@media (max-width: 40rem) {
+  .site-header {
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  .site-header nav {
+    justify-content: center;
+  }
+
+  .site-header a {
+    display: inline-block;
+    padding: 0.5rem 0.25rem;
+  }
+
+  #chords-toggle,
+  #theme-toggle {
+    padding: 0.55rem 0.8rem;
+    margin-left: 0;
+  }
+}
+
+/* Shared button surface */
+.btn {
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--color-accent);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Chords are opt-in: without data-chords="on" the songbook is lyrics-only */
+:root:not([data-chords='on']) .chord-sheet .chord,
+:root:not([data-chords='on']) .chord-strip,
+:root:not([data-chords='on']) .transpose,
+:root:not([data-chords='on']) .chord-popover,
+:root:not([data-chords='on']) .key-info {
+  display: none;
+}
+
+.song-meta {
+  color: var(--color-muted);
+}
+
+.copyright-notice {
+  font-size: 0.85rem;
+}
+
+.song-list {
+  list-style: none;
+  padding: 0;
+}
+
+/* Comfortable touch targets on phones (padding, so wrapped titles stay tight) */
+.song-list a,
+.tag {
+  display: inline-block;
+  padding: 0.55rem 0;
+}
+
+@media (min-width: 40rem) {
+  .song-list li {
+    padding: 0.25rem 0;
+  }
+
+  .song-list a,
+  .tag {
+    padding: 0;
+  }
+}
+
+.tag {
+  margin-right: 0.5rem;
+}
+
+.sheet-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.transpose,
+.autoscroll {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.transpose .btn,
+.autoscroll .btn {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
+.transpose-state,
+.scroll-state {
+  min-width: 4.5rem;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+@media print {
+  .sheet-controls {
+    display: none;
+  }
+}
+
+/* Chord sheet — base rules from HtmlDivFormatter#cssString */
+.chord-sheet .chord:not(:last-child) {
+  padding-right: 10px;
+}
+
+.chord-sheet .paragraph {
+  margin-bottom: 1em;
+}
+
+.chord-sheet .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chord-sheet .chord:after {
+  content: '\200b';
+}
+
+.chord-sheet .lyrics:after {
+  content: '\200b';
+}
+
+.chord-sheet {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+
+/* Tighter type on phones so chord/lyric lines fit without wrapping.
+   Only with chords on — lyrics-only lines are narrow enough at full size. */
+@media (max-width: 40rem) {
+  .chord-sheet {
+    padding: 0.75rem;
+  }
+
+  :root[data-chords='on'] .chord-sheet {
+    font-size: 0.85rem;
+  }
+
+  .chord-sheet .chord:not(:last-child) {
+    padding-right: 6px;
+  }
+}
+
+.chord-sheet .chord {
+  font-weight: 600;
+  color: var(--color-chord);
+  cursor: pointer;
+}
+
+.chord-sheet .chord:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.chord-sheet .paragraph.chorus {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 0.75rem;
+}
+
+.chord-sheet .comment {
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* The formatter repeats the title inside the sheet; the page header owns it */
+.chord-sheet h1.title {
+  display: none;
+}
+
+/* Chord diagrams */
+.chord-strip {
+  margin: 0.75rem 0;
+}
+
+.chord-strip summary {
+  cursor: pointer;
+  color: var(--color-accent);
+}
+
+.chord-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.chord-card {
+  margin: 0;
+  width: 5.5rem;
+}
+
+.chord-card svg {
+  width: 100%;
+  height: auto;
+}
+
+.chord-popover {
+  position: absolute;
+  z-index: 20;
+  width: 6.5rem;
+  padding: 0.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+
+@media print {
+  .site-header,
+  nav {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .chord-sheet {
+    border: none;
+    padding: 0;
+  }
+
+  .chord-sheet .paragraph {
+    break-inside: avoid;
+  }
+}
