@@ -140,8 +140,11 @@ h1 {
   outline-offset: 2px;
 }
 
-/* Chords are opt-in: without data-chords="on" the songbook is lyrics-only */
+/* Chords are opt-in: without data-chords="on" the songbook is lyrics-only.
+   Grid paragraphs are pure chord/bar notation (no lyrics), so the whole
+   block is hidden rather than an empty frame left behind. */
 :root:not([data-chords='on']) .chord-sheet .chord,
+:root:not([data-chords='on']) .chord-sheet .grid,
 :root:not([data-chords='on']) .chord-strip,
 :root:not([data-chords='on']) .transpose,
 :root:not([data-chords='on']) .chord-popover,
