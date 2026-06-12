@@ -11,8 +11,29 @@ export interface SongMeta {
   tags: string[];
 }
 
+const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
+const GRID_CLOSE = /^\s*\{\s*(?:end_of_grid|eog)\b/i;
+
+// chordsheetjs tags a paragraph as `grid` only when every line in it is a grid
+// line. A grid not separated from adjacent content by a blank line merges into
+// a mixed paragraph whose type collapses to INDETERMINATE, dropping the `grid`
+// class — so it can't be hidden in lyrics-only mode. Isolate each grid into its
+// own paragraph so the class is always emitted.
+function isolateGrids(source: string): string {
+  const lines = source.split('\n');
+  const out: string[] = [];
+  lines.forEach((line, i) => {
+    const prev = out[out.length - 1];
+    if (GRID_OPEN.test(line) && prev !== undefined && prev.trim() !== '') out.push('');
+    out.push(line);
+    const next = lines[i + 1];
+    if (GRID_CLOSE.test(line) && next !== undefined && next.trim() !== '') out.push('');
+  });
+  return out.join('\n');
+}
+
 export function parseSong(source: string): Song {
-  return new ChordProParser().parse(source);
+  return new ChordProParser().parse(isolateGrids(source));
 }
 
 export function renderSong(song: Song): string {
