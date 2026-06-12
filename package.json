@@ -1,6 +1,6 @@
 {
   "name": "cantare",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
   "type": "module",
   "private": true,
