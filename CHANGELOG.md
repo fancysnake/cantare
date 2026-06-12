@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-12
+
+### Added
+
+- **Installable engine.** cantare can now be used as a git-installed package: a
+  consumer repo is just `package.json` + `cantare.config.json` + `songs/`, built
+  with `npx cantare build ./songs`. A `cantare` CLI (`build`/`dev`/`preview`)
+  resolves the songs directory, config, and output directory from the consumer's
+  cwd and drives Astro's programmatic API against the bundled engine. Engine
+  updates come by re-installing — no code to merge. Cloning and building from
+  source still works unchanged.
+- **Config from `cantare.config.json`.** The site config is read at build start
+  and exposed to both server and browser bundles as a baked-in literal
+  (`virtual:cantare-config`). The repo's `site.config.json` remains the default
+  config for the clone/dev path.
+- **Theming from config.** Optional `theme` and `themeDark` maps override the
+  `--color-*` palette (keys without the prefix); `themeDark` applies in dark
+  mode. Omitted properties keep the engine default.
+- **Consumer starter + deploy docs.** `examples/consumer/` is a copy-paste
+  starter; `DEPLOY.md` documents the Coolify (Nixpacks static) recipe, and the
+  README covers both the package and develop-from-source paths.
+
 ## [0.2.0] - 2026-06-11
 
 ### Added
@@ -73,6 +95,7 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/fancysnake/cantare/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/fancysnake/cantare/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/fancysnake/cantare/releases/tag/v0.1.0

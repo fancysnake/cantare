@@ -13,11 +13,79 @@ search). Tooling: [mise](https://mise.jdx.dev) for tasks and tool versions,
 
 ## Running your own instance
 
-The site name, description, and canonical URL live in `site.config.json` at
-the repo root. To host another songbook from this codebase, change that file
-and replace the contents of `songs/` — nothing else references the brand.
+There are two ways to run a songbook on cantare, from the same repo:
 
-## Getting started
+1. **Use it as a package** — your songbook is just content plus a config file;
+   the engine is an installed dependency you update by re-installing. This is
+   the path most people want.
+2. **Develop from source** — clone the repo and edit templates and styles
+   directly. This is the "eject" hatch for structural changes; it is simply the
+   repo as you see it.
+
+### Use as a package
+
+A consumer songbook is a `package.json`, a `cantare.config.json`, and a
+`songs/` folder — nothing else. See [`examples/consumer/`](examples/consumer)
+for a copy-paste starter.
+
+```jsonc
+// package.json
+{
+  "name": "my-songbook",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "cantare build ./songs" },
+  "dependencies": { "cantare": "github:fancysnake/cantare" },
+}
+```
+
+```sh
+npm install
+npx cantare build ./songs   # static site into ./dist
+```
+
+The CLI:
+
+| Command                    | What it does                                       |
+| -------------------------- | -------------------------------------------------- |
+| `cantare build [songsDir]` | Build into `./dist` (songsDir defaults to `songs`) |
+| `cantare dev [songsDir]`   | Dev server at http://localhost:4321                |
+| `cantare preview`          | Serve the production build                         |
+
+Options: `-c, --config <file>` (defaults to `./cantare.config.json`, falling
+back to the engine's bundled config) and `-o, --out <dir>` (defaults to
+`./dist`). Engine updates arrive by re-installing the dependency — no code to
+merge.
+
+`cantare.config.json` carries the brand and, optionally, a theme:
+
+```json
+{
+  "name": "My Songbook",
+  "description": "A small collection of songs.",
+  "url": "https://songs.example.com",
+  "locale": "en",
+  "theme": { "accent": "#0a7d6b" },
+  "themeDark": { "accent": "#3fd6b8" }
+}
+```
+
+#### Theming
+
+`theme` (always applied) and `themeDark` (applied in dark mode — forced or via
+`prefers-color-scheme`) override the palette. Keys are the `--color-*` custom
+properties **without** the prefix; anything you omit keeps the engine default.
+The full set lives in [`src/styles/global.css`](src/styles/global.css):
+
+`bg`, `surface`, `text`, `muted`, `border`, `border-strong`, `accent`, `chord`.
+
+See [DEPLOY.md](DEPLOY.md) for hosting (e.g. Coolify) the built `dist/`.
+
+### Develop / customize from source
+
+Clone the repo and work with the tooling directly. The repo's own
+`site.config.json` is the **default config** and `songs/` the default content,
+so a fresh clone builds the demo site with no extra setup.
 
 ```sh
 mise install   # installs node + aube, then `aube install` runs on enter

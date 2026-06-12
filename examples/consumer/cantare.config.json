@@ -1,0 +1,12 @@
+{
+  "name": "My Songbook",
+  "description": "A small collection of songs.",
+  "url": "https://songs.example.com",
+  "locale": "en",
+  "theme": {
+    "accent": "#0a7d6b"
+  },
+  "themeDark": {
+    "accent": "#3fd6b8"
+  }
+}
