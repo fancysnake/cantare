@@ -4,6 +4,16 @@
   "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
   "type": "module",
   "private": true,
+  "bin": {
+    "cantare": "./bin/cantare.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "astro.config.mjs",
+    "site.config.json",
+    "tsconfig.json"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,7 +22,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "lint-staged": {
     "*.{js,mjs,ts,astro}": "eslint --fix",

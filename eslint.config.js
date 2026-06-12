@@ -24,6 +24,14 @@ export default defineConfig(
     },
   },
   {
+    // Node entry points (the CLI and the Astro config) run in Node, not the
+    // browser, so expose the Node globals they rely on.
+    files: ['bin/**/*.js', 'astro.config.mjs'],
+    languageOptions: {
+      globals: { process: 'readonly', console: 'readonly' },
+    },
+  },
+  {
     // Type-aware linting is not supported inside .astro files and their
     // extracted <script> blocks; fall back to untyped rules there.
     files: ['**/*.astro', '**/*.astro/*.ts', '**/*.astro/*.js'],

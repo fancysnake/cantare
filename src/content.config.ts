@@ -4,7 +4,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { parseSong, extractMeta } from './lib/song';
 
-const SONGS_DIR = 'songs';
+const SONGS_DIR = process.env.CANTARE_SONGS_DIR ?? 'songs';
 
 const songs = defineCollection({
   loader: async () => {

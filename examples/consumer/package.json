@@ -1,0 +1,14 @@
+{
+  "name": "my-songbook",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "cantare build ./songs",
+    "dev": "cantare dev ./songs",
+    "preview": "cantare preview"
+  },
+  "dependencies": {
+    "cantare": "github:fancysnake/cantare"
+  }
+}
