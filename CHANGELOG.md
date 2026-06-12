@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-06-12
+
+### Fixed
+
+- **Grids adjacent to other content stayed visible in lyrics-only mode.**
+  chordsheetjs only tags a paragraph as `grid` when every line in it is a grid
+  line, so a grid not separated from neighbouring lines by a blank line merged
+  into a mixed paragraph that lost the `grid` class — and with it the 0.3.3
+  hiding rule. Grid environments are now isolated into their own paragraph
+  before parsing, so the class is always emitted and the grid hides reliably.
+
 ## [0.3.3] - 2026-06-12
 
 ### Fixed
@@ -125,7 +136,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.3...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/fancysnake/cantare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/fancysnake/cantare/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/fancysnake/cantare/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/fancysnake/cantare/compare/v0.3.0...v0.3.1
