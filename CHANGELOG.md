@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.7] - 2026-06-13
+
+### Fixed
+
+- **`{chorus}` recall directive rendered as an empty block** instead of
+  reprinting the referenced chorus. Enabled chordsheetjs's
+  `expandChorusDirective` so a bare `{chorus}` expands in place, in both the
+  static build and client-side transposition re-rendering.
+
 ## [0.3.6] - 2026-06-13
 
 ### Fixed
