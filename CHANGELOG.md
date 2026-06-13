@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-06-13
+
+### Fixed
+
+- **Grids next to whitespace-only lines still stayed visible in lyrics-only
+  mode.** 0.3.4 isolated grids separated by a blank line, but chordsheetjs
+  treats a whitespace-only line (e.g. a stray `" "`) as content, not a
+  paragraph break, so such a line next to a grid was absorbed as an empty
+  lyric row — making the paragraph mixed-type and dropping the `grid` class
+  again. Whitespace-only lines are now normalized to empty before parsing, so
+  the grid keeps its class and hides reliably.
+
 ## [0.3.4] - 2026-06-12
 
 ### Fixed
@@ -136,7 +148,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.4...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/fancysnake/cantare/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/fancysnake/cantare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/fancysnake/cantare/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/fancysnake/cantare/compare/v0.3.1...v0.3.2
