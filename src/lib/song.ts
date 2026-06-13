@@ -15,19 +15,24 @@ const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
 const GRID_CLOSE = /^\s*\{\s*(?:end_of_grid|eog)\b/i;
 
 // chordsheetjs tags a paragraph as `grid` only when every line in it is a grid
-// line. A grid not separated from adjacent content by a blank line merges into
-// a mixed paragraph whose type collapses to INDETERMINATE, dropping the `grid`
-// class — so it can't be hidden in lyrics-only mode. Isolate each grid into its
-// own paragraph so the class is always emitted.
+// line. Two things break that, leaving the grid without its class (and so
+// unhidable in lyrics-only mode):
+//   1. chordsheetjs treats a whitespace-only line as content, not a paragraph
+//      break, so a stray " " line next to a grid is absorbed as an empty lyric
+//      row — making the paragraph mixed-type (INDETERMINATE).
+//   2. A grid not separated from neighbouring content by a blank line at all
+//      merges into that content's paragraph.
+// Normalize whitespace-only lines to truly empty, then ensure a blank line
+// around the grid delimiters, so every grid is its own paragraph.
 function isolateGrids(source: string): string {
-  const lines = source.split('\n');
+  const lines = source.split('\n').map((line) => (line.trim() === '' ? '' : line));
   const out: string[] = [];
   lines.forEach((line, i) => {
     const prev = out[out.length - 1];
-    if (GRID_OPEN.test(line) && prev !== undefined && prev.trim() !== '') out.push('');
+    if (GRID_OPEN.test(line) && prev !== undefined && prev !== '') out.push('');
     out.push(line);
     const next = lines[i + 1];
-    if (GRID_CLOSE.test(line) && next !== undefined && next.trim() !== '') out.push('');
+    if (GRID_CLOSE.test(line) && next !== undefined && next !== '') out.push('');
   });
   return out.join('\n');
 }
