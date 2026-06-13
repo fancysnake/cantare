@@ -41,8 +41,47 @@ export function parseSong(source: string): Song {
   return new ChordProParser().parse(isolateGrids(source));
 }
 
+// HtmlDivFormatter splits a word into one `.column` per chord anchor, and each
+// column is an independently-wrappable flex item — so a mid-word chord
+// (`e[A]xist`) lets the word break across lines/columns. Wrap each run of
+// columns that belong to one word in a `.word` span (kept together via CSS) so
+// lines still wrap between words but never inside one. A word ends at the
+// column whose lyrics end in whitespace, or at a row/paragraph boundary (any
+// non-column markup between two columns).
+const COLUMN =
+  /<div class="column"><div class="chord">(.*?)<\/div><div class="lyrics">(.*?)<\/div><\/div>/g;
+
+function groupWords(html: string): string {
+  let result = '';
+  let pos = 0;
+  let inWord = false;
+  let match: RegExpExecArray | null;
+  COLUMN.lastIndex = 0;
+  while ((match = COLUMN.exec(html)) !== null) {
+    const between = html.slice(pos, match.index);
+    if (between.length > 0 && inWord) {
+      result += '</span>';
+      inWord = false;
+    }
+    result += between;
+    if (!inWord) {
+      result += '<span class="word">';
+      inWord = true;
+    }
+    result += match[0];
+    if (/\s$/.test(match[2] ?? '')) {
+      result += '</span>';
+      inWord = false;
+    }
+    pos = match.index + match[0].length;
+  }
+  if (inWord) result += '</span>';
+  result += html.slice(pos);
+  return result;
+}
+
 export function renderSong(song: Song): string {
-  return new HtmlDivFormatter().format(song);
+  return groupWords(new HtmlDivFormatter().format(song));
 }
 
 export interface RenderedSheet {

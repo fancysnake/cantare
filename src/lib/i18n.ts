@@ -22,6 +22,8 @@ interface Strings {
   themeAria: (mode: string) => string;
   searchDefault: string;
   searchNoscript: string;
+  /** Overrides for Pagefind's own UI strings (keys are Pagefind's). */
+  searchUi: Record<string, string>;
   browseAllSongs: string;
   randomSong: string;
   filterArtist: string;
@@ -84,6 +86,21 @@ const en: Strings = {
   themeAria: (mode) => `Theme: ${mode}. Click to change.`,
   searchDefault: 'Type to search songs by title, lyrics, artist, album or tag.',
   searchNoscript: 'Search requires JavaScript. You can still',
+  searchUi: {
+    placeholder: 'Search songs',
+    clear_search: 'Clear',
+    search_label: 'Search this site',
+    load_more: 'Load more results',
+    input_hint: 'Results will appear as you type',
+    searching: 'Searching for [SEARCH_TERM]…',
+    results_label: 'Search results',
+    zero_results: 'No results for [SEARCH_TERM]',
+    one_result: '[COUNT] result for [SEARCH_TERM]',
+    many_results: '[COUNT] results for [SEARCH_TERM]',
+    total_zero_results: 'No results',
+    total_one_result: '[COUNT] result',
+    total_many_results: '[COUNT] results',
+  },
   browseAllSongs: 'browse all songs',
   randomSong: 'Pick a random song',
   filterArtist: 'Artist',
@@ -148,6 +165,21 @@ const pl: Strings = {
   themeAria: (mode) => `Motyw: ${mode}. Kliknij, aby zmienić.`,
   searchDefault: 'Szukaj piosenek po tytule, słowach, wykonawcy, albumie lub tagu.',
   searchNoscript: 'Wyszukiwarka wymaga JavaScriptu. Możesz nadal',
+  searchUi: {
+    placeholder: 'Szukaj piosenek',
+    clear_search: 'Wyczyść',
+    search_label: 'Przeszukaj tę stronę',
+    load_more: 'Załaduj więcej wyników',
+    input_hint: 'Wyniki pojawią się w trakcie pisania',
+    searching: 'Szukam „[SEARCH_TERM]”…',
+    results_label: 'Wyniki wyszukiwania',
+    zero_results: 'Brak wyników dla „[SEARCH_TERM]”',
+    one_result: '[COUNT] wynik dla „[SEARCH_TERM]”',
+    many_results: 'Wyniki dla „[SEARCH_TERM]”: [COUNT]',
+    total_zero_results: 'Brak wyników',
+    total_one_result: '[COUNT] wynik',
+    total_many_results: 'Liczba wyników: [COUNT]',
+  },
   browseAllSongs: 'przeglądać wszystkie piosenki',
   randomSong: 'Wylosuj piosenkę',
   filterArtist: 'Wykonawca',

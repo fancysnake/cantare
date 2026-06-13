@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import RandomButton from '../components/RandomButton.astro';
-import { t } from '../lib/i18n';
+import { t, locale } from '../lib/i18n';
 
 const songs = await getCollection('songs');
 const songUrls = songs.map((song) => `/songs/${song.id}/`);
@@ -11,8 +11,22 @@ const songUrls = songs.map((song) => `/songs/${song.id}/`);
 <Base>
   <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
   <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
+  {
+    /* Pagefind ships only sparse translations for many locales, so override its
+      UI strings from our own i18n table (keys are Pagefind's). The component
+      exposes the instance on the element once it has initialised. */
+  }
+  <script is:inline type="module" define:vars={{ searchUi: t.searchUi }}>
+    await customElements.whenDefined('pagefind-input');
+    const el = document.querySelector('pagefind-input[instance="songs"]');
+    for (let i = 0; i < 60 && !el?.instance; i += 1) {
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    el?.instance?.setTranslations(searchUi);
+  </script>
 
-  <pagefind-input instance="songs"></pagefind-input>
+  <pagefind-input instance="songs" lang={locale} placeholder={t.searchUi.placeholder}
+  ></pagefind-input>
   <div class="search-filters">
     <pagefind-filter-dropdown filter="artist" label={t.filterArtist} instance="songs"
     ></pagefind-filter-dropdown>
