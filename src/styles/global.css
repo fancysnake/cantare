@@ -63,6 +63,13 @@ main.full-width {
   padding: 1rem 1.5rem;
 }
 
+/* Song pages go full-width so columns/focus mode can use the whole screen.
+   In ordinary single-column reading, cap the line to a comfortable width and
+   re-centre it (main keeps margin:auto) instead of hugging the left edge. */
+:root:not([data-sheet-mode='multi']) body.song-page main.full-width {
+  max-width: 60rem;
+}
+
 a {
   color: var(--color-accent);
 }
@@ -262,6 +269,7 @@ h1 {
 .transpose,
 .autoscroll {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
 }
@@ -299,6 +307,21 @@ h1 {
   flex-wrap: wrap;
 }
 
+/* A word is one or more chord-anchored columns (see groupWords in song.ts).
+   Keeping them in an inline-flex unit lets lines wrap between words but never
+   split a word mid-way — in flex wrapping or multi-column mode. */
+.chord-sheet .word {
+  display: inline-flex;
+  break-inside: avoid;
+}
+
+/* Lyrics-only mode: the inter-word gap normally comes from chord padding, which
+   vanishes when chords are hidden. Preserve the lyric's own trailing space so
+   words stay separated (and mid-word splits like "e"+"xist" stay joined). */
+:root:not([data-chords='on']) .chord-sheet .lyrics {
+  white-space: pre-wrap;
+}
+
 .chord-sheet .chord:after {
   content: '\200b';
 }
@@ -317,6 +340,16 @@ h1 {
 /* Tighter type on phones so chord/lyric lines fit without wrapping.
    Only with chords on — lyrics-only lines are narrow enough at full size. */
 @media (max-width: 40rem) {
+  /* Tighten the control row so the transpose/scroll groups never overflow. */
+  .sheet-controls {
+    gap: 0.5rem 0.75rem;
+  }
+
+  .transpose-state,
+  .scroll-state {
+    min-width: 3.5rem;
+  }
+
   .chord-sheet {
     padding: 0.75rem;
   }
@@ -392,6 +425,13 @@ h1 {
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+
+/* Pagefind renders a per-facet clear button that sits disabled (and useless)
+   until something is selected. Hide it until the facet has a value. Pagefind's
+   own rule uses an :is() specificity hack, so !important is needed to win. */
+.pf-dropdown-clear[aria-disabled='true'] {
+  display: none !important;
 }
 
 @media print {

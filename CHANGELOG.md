@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-06-13
+
+### Fixed
+
+- **Space between chord-separated words dropped in lyrics-only mode**
+  ("my friend" → "myfriend"): gap came only from chord padding, gone when
+  chords hidden. Trailing space now preserved; mid-word splits (`e[A]xist`)
+  stay joined.
+- **Words split mid-word in column/focus mode**: each chord-anchored syllable
+  was a separately-wrappable column. Syllables now grouped non-breaking; lines
+  wrap only between words.
+- **Control bar overflowed horizontally on phones**, clipping Reset.
+  Transpose/autoscroll groups now wrap; row tightens on narrow screens.
+- **Search UI showed English on non-English sites**: Pagefind ships sparse
+  per-locale translations. Placeholder, hint, clear and result-count strings
+  now come from the site's i18n table.
+- **Per-facet "clear" buttons shown disabled before filtering**: now hidden
+  until the facet has a value.
+
+### Changed
+
+- **Song pages cap and center reading width in single-column mode** (was
+  full-screen); column/focus modes still full width.
+
 ## [0.3.5] - 2026-06-13
 
 ### Fixed
