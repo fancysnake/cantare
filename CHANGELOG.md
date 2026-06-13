@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.8] - 2026-06-13
+
+### Added
+
+- **Bridge sections get a neutral left border**, setting them apart from
+  verses while staying distinct from the accent-coloured chorus.
+
+### Fixed
+
+- **Labelled `{chorus: Label}` recall lost its accent border.** The labelled
+  recall line stays type `none`, so once expanded in place the paragraph
+  became indeterminate and dropped the `chorus` class. Recall lines are now
+  retagged as chorus, so the border renders while the label still shows.
+- **Section headings were oversized**: emitted as bare `<h3>`, they fell back
+  to the browser's default heading size and margins. Now a tight 1rem caption
+  sitting just above its lines.
+
 ## [0.3.7] - 2026-06-13
 
 ### Fixed
@@ -181,7 +198,10 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.5...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.8...HEAD
+[0.3.8]: https://github.com/fancysnake/cantare/compare/v0.3.7...v0.3.8
+[0.3.7]: https://github.com/fancysnake/cantare/compare/v0.3.6...v0.3.7
+[0.3.6]: https://github.com/fancysnake/cantare/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/fancysnake/cantare/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/fancysnake/cantare/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/fancysnake/cantare/compare/v0.3.2...v0.3.3
