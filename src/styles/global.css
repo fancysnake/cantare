@@ -379,6 +379,23 @@ h1 {
   padding-left: 0.75rem;
 }
 
+/* The bridge is a set-apart section too, but secondary to the repeated chorus:
+   mark it with a neutral border (strong enough to read on the surface) so it
+   stays distinct from the accent-coloured chorus. */
+.chord-sheet .paragraph.bridge {
+  border-left: 3px solid var(--color-border-strong);
+  padding-left: 0.75rem;
+}
+
+/* Section headings (`{start_of_chorus: Label}` etc.) come out of the formatter
+   as <h3>; the UA heading size/margins read as page headings, so scale them
+   down to a tight section caption sitting just above its lines. */
+.chord-sheet .label {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .chord-sheet .comment {
   color: var(--color-muted);
   font-style: italic;
