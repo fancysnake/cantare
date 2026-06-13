@@ -81,7 +81,10 @@ function groupWords(html: string): string {
 }
 
 export function renderSong(song: Song): string {
-  return groupWords(new HtmlDivFormatter().format(song));
+  // expandChorusDirective re-prints the referenced chorus where a bare
+  // `{chorus}` recall directive appears; without it chordsheetjs emits an
+  // empty paragraph there.
+  return groupWords(new HtmlDivFormatter({ expandChorusDirective: true }).format(song));
 }
 
 export interface RenderedSheet {
