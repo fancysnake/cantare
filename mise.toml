@@ -1,5 +1,5 @@
 [tools]
-aube = "1.19.0"
+aube = "1.21.0"
 node = "25.9.0"
 
 [hooks]
