@@ -1,4 +1,4 @@
-import { ChordProParser, HtmlDivFormatter, type Song } from 'chordsheetjs';
+import { ChordProParser, HtmlDivFormatter, Tag, CHORUS, type Song } from 'chordsheetjs';
 
 export interface SongMeta {
   title: string;
@@ -37,8 +37,24 @@ function isolateGrids(source: string): string {
   return out.join('\n');
 }
 
+// A bare `{chorus}` recall line carries no renderable item, so the paragraph it
+// expands into (see renderSong's expandChorusDirective) is all-chorus lines and
+// keeps the `chorus` type/class. A labelled recall (`{chorus: Chorus}`) instead
+// renders its label, so the recall line stays type `none`; mixed with the
+// expanded chorus lines the paragraph becomes INDETERMINATE and loses the
+// `chorus` class (and its accent border). Retag the recall line itself as chorus
+// so the expanded paragraph is homogeneous either way.
+function retagChorusRecalls(song: Song): Song {
+  for (const line of song.lines) {
+    if (line.items.some((item) => item instanceof Tag && item.name === CHORUS)) {
+      line.type = CHORUS;
+    }
+  }
+  return song;
+}
+
 export function parseSong(source: string): Song {
-  return new ChordProParser().parse(isolateGrids(source));
+  return retagChorusRecalls(new ChordProParser().parse(isolateGrids(source)));
 }
 
 // HtmlDivFormatter splits a word into one `.column` per chord anchor, and each
