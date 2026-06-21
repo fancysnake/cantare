@@ -1,4 +1,4 @@
-import { ChordProParser, HtmlDivFormatter, Tag, CHORUS, type Song } from 'chordsheetjs';
+import { ChordProParser, HtmlDivFormatter, Tag, CHORUS, type Line, type Song } from 'chordsheetjs';
 
 export interface SongMeta {
   title: string;
@@ -37,24 +37,63 @@ function isolateGrids(source: string): string {
   return out.join('\n');
 }
 
-// A bare `{chorus}` recall line carries no renderable item, so the paragraph it
-// expands into (see renderSong's expandChorusDirective) is all-chorus lines and
-// keeps the `chorus` type/class. A labelled recall (`{chorus: Chorus}`) instead
-// renders its label, so the recall line stays type `none`; mixed with the
-// expanded chorus lines the paragraph becomes INDETERMINATE and loses the
-// `chorus` class (and its accent border). Retag the recall line itself as chorus
-// so the expanded paragraph is homogeneous either way.
-function retagChorusRecalls(song: Song): Song {
+// chordsheetjs's own `expandChorusDirective` only ever replays the LAST chorus
+// block, and the `{chorus: Label}` argument is treated as decoration, not a
+// selector — so when pre-choruses are written as `{soc: Pre-chorus}` blocks the
+// recall grabs the wrong one, and a second recall collides with the first. We
+// expand recalls ourselves instead: `{chorus: Label}` replays the chorus block
+// whose `{soc: Label}` matches (bare `{chorus}`, or an unmatched label, falls
+// back to the last chorus before the recall). The recall line keeps rendering
+// its label and is retagged chorus so the recall paragraph (label + replayed
+// lyrics) stays homogeneous and keeps its accent border.
+function recallLabel(line: Line): string | undefined {
+  const tag = line.items.find((item): item is Tag => item instanceof Tag && item.name === CHORUS);
+  return tag?.value;
+}
+
+function expandChorusRecalls(song: Song): Song {
+  // Build the chorus blocks (label + lyric lines between soc/eoc) as we walk, so
+  // a recall only ever sees blocks defined before it.
+  const blocks: { label: string; lines: Line[] }[] = [];
+  let current: { label: string; lines: Line[] } | null = null;
+  const expanded: Line[] = [];
   for (const line of song.lines) {
+    const soc = line.items.find(
+      (item): item is Tag => item instanceof Tag && item.name === 'start_of_chorus',
+    );
+    const eoc = line.items.some((item) => item instanceof Tag && item.name === 'end_of_chorus');
+    if (soc) {
+      current = { label: soc.value, lines: [] };
+      blocks.push(current);
+    } else if (eoc) {
+      current = null;
+    } else if (current && line.type === CHORUS && line.hasRenderableItems()) {
+      current.lines.push(line);
+    }
+
+    expanded.push(line);
     if (line.items.some((item) => item instanceof Tag && item.name === CHORUS)) {
-      line.type = CHORUS;
+      const label = recallLabel(line);
+      const target =
+        (label && [...blocks].reverse().find((b) => b.label === label)) ??
+        blocks[blocks.length - 1];
+      if (target) {
+        line.type = CHORUS;
+        for (const source of target.lines) {
+          const clone = source.clone();
+          clone.type = CHORUS;
+          expanded.push(clone);
+        }
+      }
     }
   }
+
+  song.lines = expanded;
   return song;
 }
 
 export function parseSong(source: string): Song {
-  return retagChorusRecalls(new ChordProParser().parse(isolateGrids(source)));
+  return expandChorusRecalls(new ChordProParser().parse(isolateGrids(source)));
 }
 
 // HtmlDivFormatter splits a word into one `.column` per chord anchor, and each
@@ -97,10 +136,10 @@ function groupWords(html: string): string {
 }
 
 export function renderSong(song: Song): string {
-  // expandChorusDirective re-prints the referenced chorus where a bare
-  // `{chorus}` recall directive appears; without it chordsheetjs emits an
-  // empty paragraph there.
-  return groupWords(new HtmlDivFormatter({ expandChorusDirective: true }).format(song));
+  // Recalls are already expanded in parseSong (see expandChorusRecalls), so
+  // chordsheetjs's own expandChorusDirective stays off — it only replays the
+  // last chorus and ignores the `{chorus: Label}` selector.
+  return groupWords(new HtmlDivFormatter().format(song));
 }
 
 export interface RenderedSheet {
