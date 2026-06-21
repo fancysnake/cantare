@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.3.9] - 2026-06-21
+
+### Fixed
+
+- **`{chorus: Label}` recall replayed the wrong chorus, or only its title.**
+  chordsheetjs replays only the last chorus block and treats the label as
+  decoration, so `{soc: Pre-chorus}` blocks recalled the pre-chorus, and a
+  second `{chorus}` rendered the label alone. Recalls are now expanded in-house:
+  `{chorus: Label}` replays the chorus whose `{soc: Label}` matches; bare or
+  unmatched falls back to the last chorus before it.
+
 ## [0.3.8] - 2026-06-13
 
 ### Added
@@ -198,7 +209,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.8...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.9...HEAD
+[0.3.9]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/fancysnake/cantare/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/fancysnake/cantare/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/fancysnake/cantare/compare/v0.3.5...v0.3.6
