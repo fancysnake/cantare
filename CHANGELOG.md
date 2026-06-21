@@ -12,12 +12,11 @@ and this project adheres to [Semantic Versioning].
 ### Fixed
 
 - **`{chorus: Label}` recall replayed the wrong chorus, or only its title.**
-  chordsheetjs only ever replays the _last_ chorus block and treats the label
-  as decoration, so songs whose pre-choruses are `{soc: Pre-chorus}` blocks
-  recalled the pre-chorus, and a second `{chorus}` collided with the first and
-  rendered the label alone. Recalls are now expanded in-house: `{chorus: Label}`
-  replays the chorus whose `{soc: Label}` matches (bare `{chorus}` or an
-  unmatched label still falls back to the last chorus before it).
+  chordsheetjs replays only the last chorus block and treats the label as
+  decoration, so `{soc: Pre-chorus}` blocks recalled the pre-chorus, and a
+  second `{chorus}` rendered the label alone. Recalls are now expanded in-house:
+  `{chorus: Label}` replays the chorus whose `{soc: Label}` matches; bare or
+  unmatched falls back to the last chorus before it.
 
 ## [0.3.8] - 2026-06-13
 

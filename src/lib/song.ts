@@ -37,23 +37,20 @@ function isolateGrids(source: string): string {
   return out.join('\n');
 }
 
-// chordsheetjs's own `expandChorusDirective` only ever replays the LAST chorus
-// block, and the `{chorus: Label}` argument is treated as decoration, not a
-// selector — so when pre-choruses are written as `{soc: Pre-chorus}` blocks the
-// recall grabs the wrong one, and a second recall collides with the first. We
-// expand recalls ourselves instead: `{chorus: Label}` replays the chorus block
-// whose `{soc: Label}` matches (bare `{chorus}`, or an unmatched label, falls
-// back to the last chorus before the recall). The recall line keeps rendering
-// its label and is retagged chorus so the recall paragraph (label + replayed
-// lyrics) stays homogeneous and keeps its accent border.
+// chordsheetjs's expandChorusDirective replays only the last chorus block and
+// treats `{chorus: Label}` as decoration — so `{soc: Pre-chorus}` blocks get
+// recalled wrongly, and a second recall collides with the first. Expand here
+// instead: `{chorus: Label}` replays the chorus whose `{soc: Label}` matches;
+// bare/unmatched falls back to the last chorus before the recall. Recall line
+// retagged chorus so its paragraph (label + lyrics) keeps the accent border.
 function recallLabel(line: Line): string | undefined {
   const tag = line.items.find((item): item is Tag => item instanceof Tag && item.name === CHORUS);
   return tag?.value;
 }
 
 function expandChorusRecalls(song: Song): Song {
-  // Build the chorus blocks (label + lyric lines between soc/eoc) as we walk, so
-  // a recall only ever sees blocks defined before it.
+  // Build blocks (label + lyrics between soc/eoc) as we walk, so a recall sees
+  // only blocks defined before it.
   const blocks: { label: string; lines: Line[] }[] = [];
   let current: { label: string; lines: Line[] } | null = null;
   const expanded: Line[] = [];
@@ -136,9 +133,8 @@ function groupWords(html: string): string {
 }
 
 export function renderSong(song: Song): string {
-  // Recalls are already expanded in parseSong (see expandChorusRecalls), so
-  // chordsheetjs's own expandChorusDirective stays off — it only replays the
-  // last chorus and ignores the `{chorus: Label}` selector.
+  // Recalls already expanded in parseSong; chordsheetjs's expandChorusDirective
+  // stays off — it replays only the last chorus, ignores `{chorus: Label}`.
   return groupWords(new HtmlDivFormatter().format(song));
 }
 
