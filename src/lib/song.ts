@@ -98,8 +98,9 @@ export function parseSong(source: string): Song {
 // (`e[A]xist`) lets the word break across lines/columns. Wrap each run of
 // columns that belong to one word in a `.word` span (kept together via CSS) so
 // lines still wrap between words but never inside one. A word ends at the
-// column whose lyrics end in whitespace, or at a row/paragraph boundary (any
-// non-column markup between two columns).
+// column whose lyrics contain whitespace (the space marks the word boundary —
+// trailing for `[C]be `, mid-string for jammed `worry,[C]`), or at a
+// row/paragraph boundary (any non-column markup between two columns).
 const COLUMN =
   /<div class="column"><div class="chord">(.*?)<\/div><div class="lyrics">(.*?)<\/div><\/div>/g;
 
@@ -121,7 +122,7 @@ function groupWords(html: string): string {
       inWord = true;
     }
     result += match[0];
-    if (/\s$/.test(match[2] ?? '')) {
+    if (/\s/.test(match[2] ?? '')) {
       result += '</span>';
       inWord = false;
     }

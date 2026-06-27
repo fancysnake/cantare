@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- **Word wrapping broke inside jammed lyrics like `worry,[C]`.** `groupWords`
+  ended a word only on a trailing space, so lyrics with a mid-string space
+  stayed one unbreakable `.word`. It now ends a word on any whitespace in the
+  column's lyrics.
+
 ## [0.3.9] - 2026-06-21
 
 ### Fixed
