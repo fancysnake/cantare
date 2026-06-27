@@ -104,6 +104,14 @@ h1 {
   margin-left: auto;
 }
 
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
 /* When the header wraps on phones: center rows, grow touch targets */
 @media (max-width: 40rem) {
   .site-header {
@@ -234,6 +242,7 @@ h1 {
 
 /* Focus mode (song pages only): hide site chrome so the song owns the screen. */
 :root[data-focus='on'] body.song-page .site-header,
+:root[data-focus='on'] body.song-page .site-footer,
 :root[data-focus='on'] body.song-page .song-toolbar .song-meta {
   display: none;
 }
@@ -453,6 +462,7 @@ h1 {
 
 @media print {
   .site-header,
+  .site-footer,
   nav {
     display: none;
   }

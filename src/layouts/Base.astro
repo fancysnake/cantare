@@ -62,6 +62,9 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
     <main class:list={[{ 'full-width': fullWidth }]}>
       <slot />
     </main>
+    <footer class="site-footer">
+      <a href="https://github.com/fancysnake/cantare" rel="noopener">cantare</a> · {t.footerLicense}
+    </footer>
     <script>
       import { t } from '../lib/i18n';
 
