@@ -415,7 +415,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
         attributeFilter: ['data-focus', 'data-chords'],
       });
 
-      applyMode();
+      // Focus restored from storage is set before first paint, so the observer
+      // above never sees it — borrow multi-column here as a live toggle would.
+      if (document.documentElement.dataset.focus === 'on' && !multi) {
+        multi = true;
+        forcedByFocus = true;
+      }
+      applyMode(!forcedByFocus);
       modeToggle.hidden = false;
     }
   </script>
