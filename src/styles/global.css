@@ -344,8 +344,12 @@ h1 {
   align-items: flex-end;
 }
 
+/* `em`, not `rem`: multi-column mode shrinks the sheet's font to fit the
+   columns (which are sized in `em` too), and a gap pinned to the root font
+   size would grow relative to the line until it pushed the run onto a row of
+   its own. */
 :root[data-chords='on'] .chord-sheet.trailing-chords .word:has(.lyrics:empty) {
-  margin-left: 1.5rem;
+  margin-left: 1.5em;
 }
 
 /* A column ends at a word boundary, so the lyric's own trailing space is the

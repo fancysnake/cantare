@@ -334,17 +334,22 @@ const initialDiagrams = chordNames.flatMap((name) => {
         fitSheet();
       };
 
-      const applyMode = () => {
+      // True while focus mode is holding multi-column on. Such a switch is the
+      // page's doing, not the reader's, so it neither persists nor outlives
+      // focus mode — otherwise one glance at focus mode leaves every later song
+      // in column view with focus long gone.
+      let forcedByFocus = false;
+
+      const applyMode = (persist = true) => {
         if (multi) {
           document.documentElement.dataset.sheetMode = 'multi';
-          localStorage.setItem('sheet-mode', 'multi');
           const strip = document.querySelector<HTMLDetailsElement>('.chord-strip');
           if (strip) strip.open = false;
           window.scrollTo(0, 0);
         } else {
           delete document.documentElement.dataset.sheetMode;
-          localStorage.setItem('sheet-mode', 'single');
         }
+        if (persist) localStorage.setItem('sheet-mode', multi ? 'multi' : 'single');
         modeToggle.textContent = multi ? '▤' : '▥';
         modeToggle.setAttribute('aria-pressed', String(multi));
         modeToggle.setAttribute('aria-label', multi ? t.viewSingle : t.viewMulti);
@@ -353,6 +358,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       modeToggle.addEventListener('click', () => {
         multi = !multi;
+        forcedByFocus = false;
         applyMode();
       });
 
@@ -364,15 +370,19 @@ const initialDiagrams = chordNames.flatMap((name) => {
       // Transposing replaces the sheet markup; refit the new content.
       document.addEventListener('song:rerendered', refit);
       // Focus mode moves the viewport's top edge; chord visibility changes
-      // line widths — both need a refit. Entering focus mode also switches
-      // to multi-column (leaving it keeps whatever mode is active).
+      // line widths — both need a refit. Focus mode also borrows multi-column
+      // for as long as it lasts, and hands it back on the way out.
       new MutationObserver((mutations) => {
-        const focusTurnedOn =
-          mutations.some((m) => m.attributeName === 'data-focus') &&
-          document.documentElement.dataset.focus === 'on';
-        if (focusTurnedOn && !multi) {
+        const focusChanged = mutations.some((m) => m.attributeName === 'data-focus');
+        const focusOn = document.documentElement.dataset.focus === 'on';
+        if (focusChanged && focusOn && !multi) {
           multi = true;
-          applyMode();
+          forcedByFocus = true;
+          applyMode(false);
+        } else if (focusChanged && !focusOn && forcedByFocus) {
+          multi = false;
+          forcedByFocus = false;
+          applyMode(false);
         } else {
           refit();
         }
