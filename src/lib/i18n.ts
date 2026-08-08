@@ -64,7 +64,6 @@ interface Strings {
   notFoundOr: string;
   notFoundBrowse: string;
   songCount: (n: number) => string;
-  footerLicense: string;
 }
 
 const en: Strings = {
@@ -142,7 +141,6 @@ const en: Strings = {
   notFoundOr: 'or',
   notFoundBrowse: 'browse all songs',
   songCount: (n) => (n === 1 ? '1 song' : `${n} songs`),
-  footerLicense: 'MIT License',
 };
 
 const plPlural = new Intl.PluralRules('pl');
@@ -231,7 +229,6 @@ const pl: Strings = {
         return `${n} piosenek`;
     }
   },
-  footerLicense: 'Licencja MIT',
 };
 
 const STRINGS: Record<Locale, Strings> = { en, pl };

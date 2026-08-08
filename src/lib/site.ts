@@ -9,6 +9,8 @@ export interface SiteConfig {
   theme?: Record<string, string>;
   /** Same, applied in dark mode (forced or via prefers-color-scheme). */
   themeDark?: Record<string, string>;
+  /** Footer line; omitted entirely when unset, linked when `href` is given. */
+  footer?: { text: string; href?: string };
 }
 
 export const site: SiteConfig = config;

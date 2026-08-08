@@ -7,12 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-## [0.4.0] - 2026-06-23
+## [0.4.0] - 2026-08-08
 
 ### Added
 
-- **Site footer** with the project name linking to the cantare repository and
-  the MIT license.
+- **Optional site footer**, configured with `footer` in the site config
+  (`{ "text": …, "href": … }`) and left out entirely when unset.
+
+### Fixed
+
+- **Lines could not wrap between words that shared a chord anchor.** A chord
+  anchors one column holding every word up to the next chord (`my fears re`
+  before `[D]lieved`), and a column is an atomic flex item — so those words
+  wrapped as one block. Columns are now split at word boundaries in the parsed
+  song, before the formatter loses them.
+
+## [0.3.9] - 2026-06-21
 
 ### Fixed
 
@@ -22,10 +32,6 @@ and this project adheres to [Semantic Versioning].
   second `{chorus}` rendered the label alone. Recalls are now expanded in-house:
   `{chorus: Label}` replays the chorus whose `{soc: Label}` matches; bare or
   unmatched falls back to the last chorus before it.
-- **Word wrapping broke inside jammed lyrics like `worry,[C]`.** `groupWords`
-  ended a word only on a trailing space, so lyrics with a mid-string space
-  stayed one unbreakable `.word`. It now ends a word on any whitespace in the
-  column's lyrics.
 
 ## [0.3.8] - 2026-06-13
 
@@ -219,7 +225,8 @@ toggle away.
 <!-- Versions -->
 
 [unreleased]: https://github.com/fancysnake/cantare/compare/v0.4.0...HEAD
-[0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.4.0
+[0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.9...v0.4.0
+[0.3.9]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/fancysnake/cantare/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/fancysnake/cantare/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/fancysnake/cantare/compare/v0.3.5...v0.3.6

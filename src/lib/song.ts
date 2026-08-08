@@ -1,4 +1,12 @@
-import { ChordProParser, HtmlDivFormatter, Tag, CHORUS, type Line, type Song } from 'chordsheetjs';
+import {
+  ChordLyricsPair,
+  ChordProParser,
+  HtmlDivFormatter,
+  Tag,
+  CHORUS,
+  type Line,
+  type Song,
+} from 'chordsheetjs';
 
 export interface SongMeta {
   title: string;
@@ -89,18 +97,59 @@ function expandChorusRecalls(song: Song): Song {
   return song;
 }
 
-export function parseSong(source: string): Song {
-  return expandChorusRecalls(new ChordProParser().parse(isolateGrids(source)));
+// A pair carries every word up to the next chord anchor (`my fears re` before
+// `[D]lieved`), and HtmlDivFormatter turns each pair into one `.column` — an
+// atomic flex item. So those words end up glued into a unit the line can only
+// wrap around, and the boundaries between them are gone from the output.
+// They are still here in the AST: split each pair after every run of
+// whitespace, chords and annotation staying on the head so alignment is
+// unchanged. Afterwards a column ends a word or continues one, never both.
+const WORD_BOUNDARY = /(?<=\s)(?=\S)/;
+
+function splitWords(song: Song): Song {
+  for (const line of song.lines) {
+    const items: Line['items'] = [];
+    for (const item of line.items) {
+      if (!(item instanceof ChordLyricsPair)) {
+        items.push(item);
+        continue;
+      }
+      const parts = (item.lyrics ?? '').split(WORD_BOUNDARY);
+      // Leading whitespace (`[C] be happy`) is the tail of the preceding word,
+      // and the formatter drops it from the head of a column — hand it back so
+      // the boundary survives as trailing whitespace on the word it closes.
+      const previous = items[items.length - 1];
+      const first = parts[0] ?? '';
+      if (first !== '' && !/\S/.test(first) && previous instanceof ChordLyricsPair) {
+        previous.lyrics = (previous.lyrics ?? '') + first;
+        parts.shift();
+        if (parts.length === 0) parts.push('');
+      }
+      parts.forEach((lyrics, index) => {
+        if (index > 0) {
+          items.push(new ChordLyricsPair('', lyrics));
+          return;
+        }
+        const head = item.clone();
+        head.lyrics = lyrics;
+        items.push(head);
+      });
+    }
+    line.items = items;
+  }
+  return song;
 }
 
-// HtmlDivFormatter splits a word into one `.column` per chord anchor, and each
-// column is an independently-wrappable flex item — so a mid-word chord
-// (`e[A]xist`) lets the word break across lines/columns. Wrap each run of
-// columns that belong to one word in a `.word` span (kept together via CSS) so
-// lines still wrap between words but never inside one. A word ends at the
-// column whose lyrics contain whitespace (the space marks the word boundary —
-// trailing for `[C]be `, mid-string for jammed `worry,[C]`), or at a
-// row/paragraph boundary (any non-column markup between two columns).
+export function parseSong(source: string): Song {
+  return splitWords(expandChorusRecalls(new ChordProParser().parse(isolateGrids(source))));
+}
+
+// A mid-word chord (`e[A]xist`) still splits one word across columns, and each
+// column wraps independently. Wrap each run of columns belonging to one word in
+// a `.word` span (kept together via CSS) so lines wrap between words but never
+// inside one. Given splitWords' invariant, a word ends at the column whose
+// lyrics end in whitespace, or at a row/paragraph boundary (any non-column
+// markup between two columns).
 const COLUMN =
   /<div class="column"><div class="chord">(.*?)<\/div><div class="lyrics">(.*?)<\/div><\/div>/g;
 
@@ -108,9 +157,7 @@ function groupWords(html: string): string {
   let result = '';
   let pos = 0;
   let inWord = false;
-  let match: RegExpExecArray | null;
-  COLUMN.lastIndex = 0;
-  while ((match = COLUMN.exec(html)) !== null) {
+  for (const match of html.matchAll(COLUMN)) {
     const between = html.slice(pos, match.index);
     if (between.length > 0 && inWord) {
       result += '</span>';
@@ -122,7 +169,7 @@ function groupWords(html: string): string {
       inWord = true;
     }
     result += match[0];
-    if (/\s/.test(match[2] ?? '')) {
+    if (/\s$/.test(match[2] ?? '')) {
       result += '</span>';
       inWord = false;
     }
@@ -133,10 +180,24 @@ function groupWords(html: string): string {
   return result;
 }
 
+function hasColumns(song: Song): boolean {
+  return song.lines.some((line) =>
+    line.items.some((item) => item instanceof ChordLyricsPair && item.isRenderable()),
+  );
+}
+
 export function renderSong(song: Song): string {
   // Recalls already expanded in parseSong; chordsheetjs's expandChorusDirective
   // stays off — it replays only the last chorus, ignores `{chorus: Label}`.
-  return groupWords(new HtmlDivFormatter().format(song));
+  const html = new HtmlDivFormatter().format(song);
+  const grouped = groupWords(html);
+  // COLUMN hardcodes HtmlDivFormatter's div nesting: a chordsheetjs bump that
+  // changes it would match nothing and silently drop word grouping altogether.
+  // Grouping always inserts a span, so an untouched string means zero matches.
+  if (grouped === html && hasColumns(song)) {
+    throw new Error('groupWords matched no columns — HtmlDivFormatter markup changed');
+  }
+  return grouped;
 }
 
 export interface RenderedSheet {

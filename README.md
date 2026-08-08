@@ -57,7 +57,7 @@ back to the engine's bundled config) and `-o, --out <dir>` (defaults to
 `./dist`). Engine updates arrive by re-installing the dependency — no code to
 merge.
 
-`cantare.config.json` carries the brand and, optionally, a theme:
+`cantare.config.json` carries the brand and, optionally, a footer and a theme:
 
 ```json
 {
@@ -65,10 +65,17 @@ merge.
   "description": "A small collection of songs.",
   "url": "https://songs.example.com",
   "locale": "en",
+  "footer": { "text": "© 2026 Me", "href": "https://example.com" },
   "theme": { "accent": "#0a7d6b" },
   "themeDark": { "accent": "#3fd6b8" }
 }
 ```
+
+#### Footer
+
+`footer` renders a single line under the page, linked when `href` is set. Omit
+it and no footer is rendered — the engine asserts nothing about your songbook's
+name or licence, which is rarely the engine's own.
 
 #### Theming
 

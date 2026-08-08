@@ -17,6 +17,8 @@ mise run check     # astro check (type-checks .astro templates)
 
 No test suite. Quality gates: `mise run lint` + `mise run check` (also CI). Husky + lint-staged run `eslint --fix` and Prettier on commit.
 
+`node src/lib/song.check.ts` asserts the word-grouping rules in `src/lib/song.ts`, which read the formatter's own HTML back and so are invisible to both gates. Run it when touching that path.
+
 Dev server serves Pagefind index from **last build** — run `mise run build` after adding songs to make them searchable in dev.
 
 ## Two usage paths
