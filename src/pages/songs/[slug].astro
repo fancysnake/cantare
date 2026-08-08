@@ -21,6 +21,7 @@ const { song } = Astro.props;
 const { title, artist, album, language, key, capo, copyright, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
+const trailingChords = parsed.metadata.get('chord_style') === 'trailing';
 
 const chordNames = [...new Set(parsed.getChords())];
 const diagramData = diagramDataForChords(chordNames);
@@ -110,7 +111,11 @@ const initialDiagrams = chordNames.flatMap((name) => {
   }
 
   <div class="sheet-viewport">
-    <article class="chord-sheet" set:html={sheetHtml} data-pagefind-body />
+    <article
+      class:list={['chord-sheet', { 'trailing-chords': trailingChords }]}
+      set:html={sheetHtml}
+      data-pagefind-body
+    />
   </div>
   {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
 
