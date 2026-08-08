@@ -2,5 +2,9 @@
   "name": "Cantare",
   "description": "Śpiewnik do wspólnego śpiewania.",
   "url": "https://cantare.example.com",
-  "locale": "pl"
+  "locale": "pl",
+  "footer": {
+    "text": "cantare · MIT License",
+    "href": "https://github.com/fancysnake/cantare"
+  }
 }

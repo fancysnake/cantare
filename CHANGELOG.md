@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-08
+
+### Added
+
+- **Optional site footer**, configured with `footer` in the site config
+  (`{ "text": …, "href": … }`) and left out entirely when unset.
+
+### Fixed
+
+- **A word split by a chord held its whole line together.** A pair carries
+  every word up to the next chord anchor, so `my fears re` before `[D]lieved`
+  had to stay in one unbreakable run to keep `relieved` intact. The trailing
+  fragment is now split off in the parsed song, while the AST still marks
+  where it starts, so only the word itself is held together.
+- **Column view sized its columns to a guess rather than to the song**, so
+  lines written to fit wrapped anyway and a trailing chord run landed under
+  its own lyrics. Columns are now measured from the widest line; a line too
+  long for the screen scrolls, as it already did.
+- **The trailing chord run's gap was pinned to the root font size**, so it
+  grew relative to the line as the sheet shrank to fit.
+- **Focus mode's switch to column view outlived it**, and was saved as a
+  preference, leaving later songs in column view with focus long gone.
+
 ## [0.3.9] - 2026-06-21
 
 ### Fixed
@@ -209,7 +232,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.3.9...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/fancysnake/cantare/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/fancysnake/cantare/compare/v0.3.6...v0.3.7
