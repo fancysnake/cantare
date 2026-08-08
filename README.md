@@ -138,6 +138,17 @@ Notes:
   optional. A `{copyright: ...}` notice is displayed under the chord sheet.
 - Tags are comma-separated in a `{meta: tags ...}` directive.
 - Chord names use English notation (C D E F G A B).
+- `{chord_style: trailing}` suits songbooks converted from documents, where a
+  line's chords are listed after the lyrics instead of anchored to a syllable:
+
+  ```text
+  {chord_style: trailing}
+
+  Are you going to Scarborough Fair	[Am] [G] [Am]
+  ```
+
+  Those chords render on the lyric line rather than in a row above it, and are
+  still real chords — transposition and diagrams work as usual.
 
 ## Licensing
 
