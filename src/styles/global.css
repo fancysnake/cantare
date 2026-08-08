@@ -315,6 +315,21 @@ h1 {
   break-inside: avoid;
 }
 
+/* Legacy songbooks (`{chord_style: trailing}`) list a line's chords after the
+   lyrics instead of anchoring them to a syllable, so those columns hold a chord
+   and no lyric. Drop the empty lyric box and drop the run to the lyric baseline
+   so the line reads "lyrics    Bm E G" instead of stacking a chord row above
+   nothing. Chords still parse as chords — transposition and diagrams are
+   unaffected. */
+.chord-sheet.trailing-chords .lyrics:empty {
+  display: none;
+}
+
+.chord-sheet.trailing-chords .word:has(.lyrics:empty) {
+  align-self: flex-end;
+  margin-left: 1.5rem;
+}
+
 /* Lyrics-only mode: the inter-word gap normally comes from chord padding, which
    vanishes when chords are hidden. Preserve the lyric's own trailing space so
    words stay separated (and mid-word splits like "e"+"xist" stay joined). */
