@@ -21,9 +21,12 @@ and this project adheres to [Semantic Versioning].
   had to stay in one unbreakable run to keep `relieved` intact. The trailing
   fragment is now split off in the parsed song, while the AST still marks
   where it starts, so only the word itself is held together.
-- **Column view kept the trailing chord run's gap at the root font size**,
-  so it grew relative to the line as the sheet shrank to fit, eventually
-  displacing the run onto a row of its own.
+- **Column view sized its columns to a guess rather than to the song**, so
+  lines written to fit wrapped anyway and a trailing chord run landed under
+  its own lyrics. Columns are now measured from the widest line; a line too
+  long for the screen scrolls, as it already did.
+- **The trailing chord run's gap was pinned to the root font size**, so it
+  grew relative to the line as the sheet shrank to fit.
 - **Focus mode's switch to column view outlived it**, and was saved as a
   preference, leaving later songs in column view with focus long gone.
 

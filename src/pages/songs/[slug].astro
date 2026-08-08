@@ -297,21 +297,44 @@ const initialDiagrams = chordNames.flatMap((name) => {
         }
       };
 
-      // Binary-search the largest font size (min 9px, max the base size)
-      // whose columns don't overflow the viewport horizontally. Column width
-      // is em-based, so the column count adapts as the font shrinks.
+      // A column has to hold the song's widest line whole — anything narrower
+      // wraps lines that were written to fit, and a trailing chord run ends up
+      // under its own lyrics. The CSS length is only a guess at that width, so
+      // measure it: unconstrain the sheet, take the widest row, and make that
+      // the column width. A line too long for the screen is the songbook's
+      // problem, and the horizontal scroll below is its answer.
+      const sizeColumns = () => {
+        modeSheet.style.columnWidth = 'auto';
+        modeSheet.style.width = 'max-content';
+        let widest = 0;
+        for (const row of modeSheet.querySelectorAll<HTMLElement>('.row')) {
+          widest = Math.max(widest, row.getBoundingClientRect().width);
+        }
+        modeSheet.style.removeProperty('width');
+        if (widest > 0) modeSheet.style.columnWidth = `${Math.ceil(widest)}px`;
+      };
+
+      // Binary-search the largest font size (min 9px, max the base size) whose
+      // columns don't overflow the viewport horizontally. Both the line and the
+      // column it sets scale with the font, so what shrinking buys is columns
+      // short enough to stop spilling into further ones.
       const MIN_FONT_PX = 9;
       const fitSheet = () => {
         viewport.classList.remove('sheet-viewport-overflow');
         modeSheet.style.removeProperty('font-size');
-        if (!multi) return;
+        if (!multi) {
+          modeSheet.style.removeProperty('column-width');
+          return;
+        }
         const base = parseFloat(getComputedStyle(modeSheet).fontSize);
         const fitsAt = (px: number) => {
           modeSheet.style.fontSize = `${px}px`;
+          sizeColumns();
           return viewport.scrollWidth <= viewport.clientWidth;
         };
         if (fitsAt(base)) {
           modeSheet.style.removeProperty('font-size');
+          sizeColumns();
           return;
         }
         let lo = Math.min(MIN_FONT_PX, base);
@@ -327,6 +350,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           else hi = mid;
         }
         modeSheet.style.fontSize = `${lo}px`;
+        sizeColumns();
       };
 
       const refit = () => {
