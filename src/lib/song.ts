@@ -106,6 +106,12 @@ function expandChorusRecalls(song: Song): Song {
 // unchanged. Afterwards a column ends a word or continues one, never both.
 const WORD_BOUNDARY = /(?<=\s)(?=\S)/;
 
+// A column's trailing whitespace is now rendered rather than collapsed (it is
+// the inter-word gap), so a run has to be one space wide — a source tab, which
+// legacy songbooks use to push a trailing chord run clear of the lyrics, would
+// otherwise open up to a full tab stop.
+const WHITESPACE_RUN = /\s+/g;
+
 function splitWords(song: Song): Song {
   for (const line of song.lines) {
     const items: Line['items'] = [];
@@ -114,14 +120,15 @@ function splitWords(song: Song): Song {
         items.push(item);
         continue;
       }
-      const parts = (item.lyrics ?? '').split(WORD_BOUNDARY);
+      const parts = (item.lyrics ?? '').replace(WHITESPACE_RUN, ' ').split(WORD_BOUNDARY);
       // Leading whitespace (`[C] be happy`) is the tail of the preceding word,
       // and the formatter drops it from the head of a column — hand it back so
       // the boundary survives as trailing whitespace on the word it closes.
       const previous = items[items.length - 1];
       const first = parts[0] ?? '';
       if (first !== '' && !/\S/.test(first) && previous instanceof ChordLyricsPair) {
-        previous.lyrics = (previous.lyrics ?? '') + first;
+        const lyrics = previous.lyrics ?? '';
+        previous.lyrics = /\s$/.test(lyrics) ? lyrics : lyrics + first;
         parts.shift();
         if (parts.length === 0) parts.push('');
       }
