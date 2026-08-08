@@ -302,8 +302,11 @@ h1 {
   }
 }
 
-/* Chord sheet — base rules from HtmlDivFormatter#cssString */
-.chord-sheet .chord:not(:last-child) {
+/* Chord sheet — base rules from HtmlDivFormatter#cssString.
+   The padding keeps a chord clear of the next one, so it applies only where
+   there is a chord: every word is its own column (see splitWords in song.ts),
+   and padding empty chord boxes would widen a line by 10px per word. */
+.chord-sheet .chord:not(:empty):not(:last-child) {
   padding-right: 10px;
 }
 
@@ -345,10 +348,10 @@ h1 {
   margin-left: 1.5rem;
 }
 
-/* Lyrics-only mode: the inter-word gap normally comes from chord padding, which
-   vanishes when chords are hidden. Preserve the lyric's own trailing space so
-   words stay separated (and mid-word splits like "e"+"xist" stay joined). */
-:root:not([data-chords='on']) .chord-sheet .lyrics {
+/* A column ends at a word boundary, so the lyric's own trailing space is the
+   inter-word gap — keep it from collapsing at the end of the column. Mid-word
+   splits like "e"+"xist" carry no space and so stay joined. */
+.chord-sheet .lyrics {
   white-space: pre-wrap;
 }
 
