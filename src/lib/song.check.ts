@@ -18,13 +18,13 @@ function words(source: string): string[] {
   );
 }
 
-// A chord landing mid-word must not let the word wrap apart, and the words
-// before it must still wrap freely.
+// A chord landing mid-word must not let the word wrap apart — and only that
+// word is split off, so the complete words before it stay in one reflowable
+// column rather than becoming atomic boxes of their own.
 assert.deepEqual(words('And [G]grace my fears re[D]lieved'), [
   'And',
   'grace',
-  'my',
-  'fears',
+  'my fears',
   'relieved',
 ]);
 

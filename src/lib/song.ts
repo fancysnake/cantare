@@ -97,19 +97,21 @@ function expandChorusRecalls(song: Song): Song {
   return song;
 }
 
-// A pair carries every word up to the next chord anchor (`my fears re` before
-// `[D]lieved`), and HtmlDivFormatter turns each pair into one `.column` — an
-// atomic flex item. So those words end up glued into a unit the line can only
-// wrap around, and the boundaries between them are gone from the output.
-// They are still here in the AST: split each pair after every run of
-// whitespace, chords and annotation staying on the head so alignment is
-// unchanged. Afterwards a column ends a word or continues one, never both.
-const WORD_BOUNDARY = /(?<=\s)(?=\S)/;
+// A pair carries every word up to the next chord anchor, so its last word may
+// be a fragment continuing into the next column (`my fears re` before
+// `[D]lieved`) — and groupWords, which can only decide per column, then has to
+// hold the whole run together to keep that word intact.
+//
+// Split off just that fragment, while the AST still marks where it starts:
+// afterwards a column ends at a word boundary or continues a word, never both,
+// so the rule holds per column. Complete words stay in one column on purpose —
+// as a box that reflows internally, which is what lets a narrow multi-column
+// layout wrap the lyrics rather than displace what follows them.
+const TRAILING_FRAGMENT = /^(.*\s)(\S+)$/;
 
-// A column's trailing whitespace is now rendered rather than collapsed (it is
-// the inter-word gap), so a run has to be one space wide — a source tab, which
-// legacy songbooks use to push a trailing chord run clear of the lyrics, would
-// otherwise open up to a full tab stop.
+// Lyrics-only mode renders a column's whitespace rather than collapsing it, so
+// a run has to be one space wide — a source tab, which legacy songbooks use to
+// push a trailing chord run clear of the lyrics, would open to a full tab stop.
 const WHITESPACE_RUN = /\s+/g;
 
 function splitWords(song: Song): Song {
@@ -120,18 +122,18 @@ function splitWords(song: Song): Song {
         items.push(item);
         continue;
       }
-      const parts = (item.lyrics ?? '').replace(WHITESPACE_RUN, ' ').split(WORD_BOUNDARY);
+      let lyrics = (item.lyrics ?? '').replace(WHITESPACE_RUN, ' ');
       // Leading whitespace (`[C] be happy`) is the tail of the preceding word,
       // and the formatter drops it from the head of a column — hand it back so
       // the boundary survives as trailing whitespace on the word it closes.
       const previous = items[items.length - 1];
-      const first = parts[0] ?? '';
-      if (first !== '' && !/\S/.test(first) && previous instanceof ChordLyricsPair) {
-        const lyrics = previous.lyrics ?? '';
-        previous.lyrics = /\s$/.test(lyrics) ? lyrics : lyrics + first;
-        parts.shift();
-        if (parts.length === 0) parts.push('');
+      if (lyrics.startsWith(' ') && previous instanceof ChordLyricsPair) {
+        const before = previous.lyrics ?? '';
+        if (!/\s$/.test(before)) previous.lyrics = `${before} `;
+        lyrics = lyrics.slice(1);
       }
+      const fragment = TRAILING_FRAGMENT.exec(lyrics);
+      const parts = fragment ? [fragment[1] ?? '', fragment[2] ?? ''] : [lyrics];
       parts.forEach((lyrics, index) => {
         if (index > 0) {
           items.push(new ChordLyricsPair('', lyrics));

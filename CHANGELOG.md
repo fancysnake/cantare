@@ -16,11 +16,16 @@ and this project adheres to [Semantic Versioning].
 
 ### Fixed
 
-- **Lines could not wrap between words that shared a chord anchor.** A chord
-  anchors one column holding every word up to the next chord (`my fears re`
-  before `[D]lieved`), and a column is an atomic flex item — so those words
-  wrapped as one block. Columns are now split at word boundaries in the parsed
-  song, before the formatter loses them.
+- **A word split by a chord held its whole line together.** A pair carries
+  every word up to the next chord anchor, so `my fears re` before `[D]lieved`
+  had to stay in one unbreakable run to keep `relieved` intact. The trailing
+  fragment is now split off in the parsed song, while the AST still marks
+  where it starts, so only the word itself is held together.
+- **Column view kept the trailing chord run's gap at the root font size**,
+  so it grew relative to the line as the sheet shrank to fit, eventually
+  displacing the run onto a row of its own.
+- **Focus mode's switch to column view outlived it**, and was saved as a
+  preference, leaving later songs in column view with focus long gone.
 
 ## [0.3.9] - 2026-06-21
 
