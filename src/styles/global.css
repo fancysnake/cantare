@@ -321,12 +321,18 @@ h1 {
    so the line reads "lyrics    Bm E G" instead of stacking a chord row above
    nothing. Chords still parse as chords — transposition and diagrams are
    unaffected. */
+.chord-sheet.trailing-chords .chord:empty,
 .chord-sheet.trailing-chords .lyrics:empty {
   display: none;
 }
 
+/* Bottom-align so the trailing run sits on the lyric baseline — and so a line
+   that does carry an inline chord keeps its lyrics level with the rest. */
+.chord-sheet.trailing-chords .row {
+  align-items: flex-end;
+}
+
 .chord-sheet.trailing-chords .word:has(.lyrics:empty) {
-  align-self: flex-end;
   margin-left: 1.5rem;
 }
 
