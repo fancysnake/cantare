@@ -43,7 +43,7 @@ for a copy-paste starter.
   "private": true,
   "type": "module",
   "scripts": { "build": "cantare build ./songs" },
-  "dependencies": { "cantare": "github:fancysnake/cantare#v0.3.9" },
+  "dependencies": { "cantare": "github:fancysnake/cantare#v0.4.0" },
 }
 ```
 
@@ -72,7 +72,7 @@ writes the commit into `package-lock.json`, and reuses that commit forever.
 So pin the tag you want and treat it as the version:
 
 ```json
-{ "dependencies": { "cantare": "github:fancysnake/cantare#v0.3.9" } }
+{ "dependencies": { "cantare": "github:fancysnake/cantare#v0.4.0" } }
 ```
 
 Leave the ref off and you are not on the latest engine, you are on whatever
@@ -83,7 +83,7 @@ and went.
 To move to a new release, bump the tag and re-install:
 
 ```sh
-npm install cantare@github:fancysnake/cantare#v0.4.0
+npm install cantare@github:fancysnake/cantare#v0.5.0
 ```
 
 Naming the spec is the reliable form. A bare `npm install` is happy with a
@@ -96,7 +96,7 @@ building the old engine. Released versions are the
 [tags](https://github.com/fancysnake/cantare/tags); what changed is in the
 [changelog](https://github.com/fancysnake/cantare/blob/main/CHANGELOG.md).
 
-`cantare.config.json` carries the brand and, optionally, a theme:
+`cantare.config.json` carries the brand and, optionally, a footer and a theme:
 
 ```json
 {
@@ -104,10 +104,17 @@ building the old engine. Released versions are the
   "description": "A small collection of songs.",
   "url": "https://songs.example.com",
   "locale": "en",
+  "footer": { "text": "© 2026 Me", "href": "https://example.com" },
   "theme": { "accent": "#0a7d6b" },
   "themeDark": { "accent": "#3fd6b8" }
 }
 ```
+
+#### Footer
+
+`footer` renders a single line under the page, linked when `href` is set. Omit
+it and no footer is rendered — the engine asserts nothing about your songbook's
+name or licence, which is rarely the engine's own.
 
 #### Theming
 

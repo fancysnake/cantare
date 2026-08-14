@@ -2,5 +2,9 @@
   "name": "Cantare",
   "description": "A songbook for singing together.",
   "url": "https://cantare.fancysnake.dev",
-  "locale": "en"
+  "locale": "en",
+  "footer": {
+    "text": "cantare · MIT License",
+    "href": "https://github.com/fancysnake/cantare"
+  }
 }

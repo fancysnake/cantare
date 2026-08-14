@@ -298,21 +298,44 @@ const initialDiagrams = chordNames.flatMap((name) => {
         }
       };
 
-      // Binary-search the largest font size (min 9px, max the base size)
-      // whose columns don't overflow the viewport horizontally. Column width
-      // is em-based, so the column count adapts as the font shrinks.
+      // A column has to hold the song's widest line whole — anything narrower
+      // wraps lines that were written to fit, and a trailing chord run ends up
+      // under its own lyrics. The CSS length is only a guess at that width, so
+      // measure it: unconstrain the sheet, take the widest row, and make that
+      // the column width. A line too long for the screen is the songbook's
+      // problem, and the horizontal scroll below is its answer.
+      const sizeColumns = () => {
+        modeSheet.style.columnWidth = 'auto';
+        modeSheet.style.width = 'max-content';
+        let widest = 0;
+        for (const row of modeSheet.querySelectorAll<HTMLElement>('.row')) {
+          widest = Math.max(widest, row.getBoundingClientRect().width);
+        }
+        modeSheet.style.removeProperty('width');
+        if (widest > 0) modeSheet.style.columnWidth = `${Math.ceil(widest)}px`;
+      };
+
+      // Binary-search the largest font size (min 9px, max the base size) whose
+      // columns don't overflow the viewport horizontally. Both the line and the
+      // column it sets scale with the font, so what shrinking buys is columns
+      // short enough to stop spilling into further ones.
       const MIN_FONT_PX = 9;
       const fitSheet = () => {
         viewport.classList.remove('sheet-viewport-overflow');
         modeSheet.style.removeProperty('font-size');
-        if (!multi) return;
+        if (!multi) {
+          modeSheet.style.removeProperty('column-width');
+          return;
+        }
         const base = parseFloat(getComputedStyle(modeSheet).fontSize);
         const fitsAt = (px: number) => {
           modeSheet.style.fontSize = `${px}px`;
+          sizeColumns();
           return viewport.scrollWidth <= viewport.clientWidth;
         };
         if (fitsAt(base)) {
           modeSheet.style.removeProperty('font-size');
+          sizeColumns();
           return;
         }
         let lo = Math.min(MIN_FONT_PX, base);
@@ -328,6 +351,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           else hi = mid;
         }
         modeSheet.style.fontSize = `${lo}px`;
+        sizeColumns();
       };
 
       const refit = () => {
@@ -335,17 +359,22 @@ const initialDiagrams = chordNames.flatMap((name) => {
         fitSheet();
       };
 
-      const applyMode = () => {
+      // True while focus mode is holding multi-column on. Such a switch is the
+      // page's doing, not the reader's, so it neither persists nor outlives
+      // focus mode — otherwise one glance at focus mode leaves every later song
+      // in column view with focus long gone.
+      let forcedByFocus = false;
+
+      const applyMode = (persist = true) => {
         if (multi) {
           document.documentElement.dataset.sheetMode = 'multi';
-          localStorage.setItem('sheet-mode', 'multi');
           const strip = document.querySelector<HTMLDetailsElement>('.chord-strip');
           if (strip) strip.open = false;
           window.scrollTo(0, 0);
         } else {
           delete document.documentElement.dataset.sheetMode;
-          localStorage.setItem('sheet-mode', 'single');
         }
+        if (persist) localStorage.setItem('sheet-mode', multi ? 'multi' : 'single');
         modeToggle.textContent = multi ? '▤' : '▥';
         modeToggle.setAttribute('aria-pressed', String(multi));
         modeToggle.setAttribute('aria-label', multi ? t.viewSingle : t.viewMulti);
@@ -354,6 +383,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       modeToggle.addEventListener('click', () => {
         multi = !multi;
+        forcedByFocus = false;
         applyMode();
       });
 
@@ -365,15 +395,19 @@ const initialDiagrams = chordNames.flatMap((name) => {
       // Transposing replaces the sheet markup; refit the new content.
       document.addEventListener('song:rerendered', refit);
       // Focus mode moves the viewport's top edge; chord visibility changes
-      // line widths — both need a refit. Entering focus mode also switches
-      // to multi-column (leaving it keeps whatever mode is active).
+      // line widths — both need a refit. Focus mode also borrows multi-column
+      // for as long as it lasts, and hands it back on the way out.
       new MutationObserver((mutations) => {
-        const focusTurnedOn =
-          mutations.some((m) => m.attributeName === 'data-focus') &&
-          document.documentElement.dataset.focus === 'on';
-        if (focusTurnedOn && !multi) {
+        const focusChanged = mutations.some((m) => m.attributeName === 'data-focus');
+        const focusOn = document.documentElement.dataset.focus === 'on';
+        if (focusChanged && focusOn && !multi) {
           multi = true;
-          applyMode();
+          forcedByFocus = true;
+          applyMode(false);
+        } else if (focusChanged && !focusOn && forcedByFocus) {
+          multi = false;
+          forcedByFocus = false;
+          applyMode(false);
         } else {
           refit();
         }
@@ -382,7 +416,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
         attributeFilter: ['data-focus', 'data-chords'],
       });
 
-      applyMode();
+      // Focus restored from storage is set before first paint, so the observer
+      // above never sees it — borrow multi-column here as a live toggle would.
+      if (document.documentElement.dataset.focus === 'on' && !multi) {
+        multi = true;
+        forcedByFocus = true;
+      }
+      applyMode(!forcedByFocus);
       modeToggle.hidden = false;
     }
   </script>
