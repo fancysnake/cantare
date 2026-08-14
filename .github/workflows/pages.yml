@@ -33,16 +33,9 @@ jobs:
         env:
           CANTARE_BASE: /demo
 
-      - uses: actions/configure-pages@v6
-
       - name: Build the docs
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./docs
-          destination: ./_site
+        run: mkdocs build --strict --site-dir _site
 
-      # After Jekyll, so its `_astro/` directory is never treated as a Jekyll
-      # special dir; deploy-pages ships the artifact as-is.
       - name: Add the demo at /demo/
         run: mv dist _site/demo
 

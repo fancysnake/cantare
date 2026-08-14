@@ -1,0 +1,34 @@
+site_name: Cantare
+site_url: https://cantare.fancysnake.dev
+site_description: A static songbook for singing meetups — search, chords, transposition.
+repo_url: https://github.com/fancysnake/cantare
+repo_name: fancysnake/cantare
+copyright: MIT
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.top
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: yellow
+      accent: amber
+      toggle: { icon: material/weather-night, name: Switch to dark mode }
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: yellow
+      accent: amber
+      toggle: { icon: material/weather-sunny, name: Switch to light mode }
+
+markdown_extensions:
+  - admonition
+  - toc: { permalink: true }
+  - pymdownx.highlight: { anchor_linenums: true }
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - index.md
+  - deploy.md

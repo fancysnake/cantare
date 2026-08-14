@@ -1,6 +1,12 @@
 [tools]
 aube = "1.38.0"
 node = "25.9.0"
+# Docs only. The site is MkDocs; the songbook engine stays Node-only.
+python = "3.14"
+pipx = "1.15.0"
+# --include-deps: the `mkdocs` binary belongs to a dependency, not to
+# mkdocs-material itself, and pipx will not expose it otherwise.
+"pipx:mkdocs-material" = { version = "latest", pipx_args = "--include-deps" }
 
 [hooks]
 enter = "aube install"
@@ -28,6 +34,14 @@ run = "aube run format"
 [tasks.check]
 description = "Type-check templates with astro check"
 run = "aube run check"
+
+[tasks."site:serve"]
+description = "Serve the docs at http://localhost:8000"
+run = "mkdocs serve"
+
+[tasks."site:check"]
+description = "Build the docs, failing on a broken link"
+run = "mkdocs build --strict"
 
 [tasks.sync]
 description = "Generate Astro types (astro sync)"

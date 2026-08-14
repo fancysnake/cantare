@@ -1,7 +1,4 @@
----
-layout: default
-title: Deploying a cantare songbook
----
+# Deploying a cantare songbook
 
 This covers deploying a **consumer** songbook (the package path) as a static
 site. The build emits a plain `dist/` directory of HTML/CSS/JS plus a Pagefind

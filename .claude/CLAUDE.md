@@ -13,9 +13,15 @@ mise run preview   # serve the production build
 mise run lint      # ESLint (strict, type-checked) + Prettier check
 mise run format    # Prettier write
 mise run check     # astro check (type-checks .astro templates)
+mise run site:serve # MkDocs docs at http://localhost:8000
+mise run site:check # mkdocs build --strict (fails on a broken link)
 ```
 
 No test suite. Quality gates: `mise run lint` + `mise run check` (also CI). Husky + lint-staged run `eslint --fix` and Prettier on commit.
+
+The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency). Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, ESLint, Prettier and tsconfig.
+
+`.github/workflows/pages.yml` publishes to GitHub Pages on push to main: docs at `cantare.fancysnake.dev` (from `mkdocs build --site-dir _site`), the repo's own songbook built with `CANTARE_BASE=/demo` and moved to `_site/demo`. `docs/CNAME` holds the custom domain.
 
 Dev server serves Pagefind index from **last build** — run `mise run build` after adding songs to make them searchable in dev.
 

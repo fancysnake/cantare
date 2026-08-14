@@ -1,15 +1,12 @@
----
-layout: default
-title: Cantare
----
+# Cantare
 
 A static songbook for singing meetups: open the site, search for the song
 being sung (by title, lyrics, artist, album, or tag), and sing along.
 Lyrics-only by default; flip on chords to get transposition, autoscroll,
 and chord diagrams.
 
-**[Try the demo songbook](/demo/)** — the fixtures in this repo, built and
-published alongside these docs.
+**[Try the demo songbook](https://cantare.fancysnake.dev/demo/)** — the fixtures
+in this repo, built and published alongside these docs.
 
 Built with [Astro](https://astro.build) (static site generation),
 [ChordSheetJS](https://github.com/martijnversluis/ChordSheetJS) (ChordPro
@@ -17,7 +14,7 @@ parsing and rendering), and [Pagefind](https://pagefind.app) (client-side
 search). Tooling: [mise](https://mise.jdx.dev) for tasks and tool versions,
 [aube](https://aube.jdx.dev) as the package manager.
 
-- [Deploying a songbook](deploy.html)
+- [Deploying a songbook](deploy.md)
 - [Source on GitHub](https://github.com/fancysnake/cantare)
 - [Changelog](https://github.com/fancysnake/cantare/blob/main/CHANGELOG.md)
 
@@ -91,7 +88,7 @@ The full set lives in
 
 `bg`, `surface`, `text`, `muted`, `border`, `border-strong`, `accent`, `chord`.
 
-See [Deploying a songbook](deploy.html) for hosting (e.g. Coolify) the built
+See [Deploying a songbook](deploy.md) for hosting (e.g. Coolify) the built
 `dist/`.
 
 #### Hosting under a sub-path
@@ -117,14 +114,16 @@ mise install   # installs node + aube, then `aube install` runs on enter
 mise run dev   # dev server at http://localhost:4321
 ```
 
-| Task               | What it does                                        |
-| ------------------ | --------------------------------------------------- |
-| `mise run dev`     | Dev server with hot reload                          |
-| `mise run build`   | Static production build into `dist/` + search index |
-| `mise run preview` | Serve the production build locally                  |
-| `mise run lint`    | ESLint (strict, type-checked) + Prettier check      |
-| `mise run format`  | Format the codebase with Prettier                   |
-| `mise run check`   | `astro check` type-checks the templates             |
+| Task                  | What it does                                        |
+| --------------------- | --------------------------------------------------- |
+| `mise run dev`        | Dev server with hot reload                          |
+| `mise run build`      | Static production build into `dist/` + search index |
+| `mise run preview`    | Serve the production build locally                  |
+| `mise run lint`       | ESLint (strict, type-checked) + Prettier check      |
+| `mise run format`     | Format the codebase with Prettier                   |
+| `mise run check`      | `astro check` type-checks the templates             |
+| `mise run site:serve` | These docs at http://localhost:8000                 |
+| `mise run site:check` | Build the docs, failing on a broken link            |
 
 Search needs a Pagefind index. The production build always has one; the dev
 server serves the index from the **last build**, so run `mise run build` once

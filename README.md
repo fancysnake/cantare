@@ -33,7 +33,8 @@ mise run dev   # dev server at http://localhost:4321
 ```
 
 Everything else — the CLI, config and theming, adding songs, deploying — is in
-the [docs](https://cantare.fancysnake.dev) (source in [`docs/`](docs)).
+the [docs](https://cantare.fancysnake.dev) (MkDocs sources in [`docs/`](docs);
+`mise run site:serve` to preview them).
 
 ## Licensing
 
