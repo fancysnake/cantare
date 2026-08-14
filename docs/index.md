@@ -43,7 +43,7 @@ for a copy-paste starter.
   "private": true,
   "type": "module",
   "scripts": { "build": "cantare build ./songs" },
-  "dependencies": { "cantare": "github:fancysnake/cantare" },
+  "dependencies": { "cantare": "github:fancysnake/cantare#v0.3.9" },
 }
 ```
 
@@ -64,6 +64,37 @@ Options: `-c, --config <file>` (defaults to `./cantare.config.json`, falling
 back to the engine's bundled config) and `-o, --out <dir>` (defaults to
 `./dist`). Engine updates arrive by re-installing the dependency — no code to
 merge.
+
+#### Pin the version, and force the upgrade
+
+There is no registry release behind `github:` — npm resolves the ref once,
+writes the commit into `package-lock.json`, and reuses that commit forever.
+So pin the tag you want and treat it as the version:
+
+```json
+{ "dependencies": { "cantare": "github:fancysnake/cantare#v0.3.9" } }
+```
+
+Leave the ref off and you are not on the latest engine, you are on whatever
+`main` happened to be the day you first installed — on every machine, forever,
+because the lockfile carries the commit. Nothing warns you that a release came
+and went.
+
+To move to a new release, bump the tag and re-install:
+
+```sh
+npm install cantare@github:fancysnake/cantare#v0.4.0
+```
+
+Naming the spec is the reliable form. A bare `npm install` is happy with a
+lockfile entry that still satisfies `package.json`, so on an unpinned or
+branch-tracking ref (`#main`) it changes nothing at all — that case needs the
+explicit spec above, or `npm update cantare`, to re-resolve.
+
+Then commit the updated `package-lock.json`, or your host's `npm ci` will keep
+building the old engine. Released versions are the
+[tags](https://github.com/fancysnake/cantare/tags); what changed is in the
+[changelog](https://github.com/fancysnake/cantare/blob/main/CHANGELOG.md).
 
 `cantare.config.json` carries the brand and, optionally, a theme:
 
