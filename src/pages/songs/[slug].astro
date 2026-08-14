@@ -7,6 +7,7 @@ import { diagramDataForChords } from '../../lib/chord-data';
 import { chordDiagramSvg } from '../../lib/chord-diagram';
 import { chordKey } from '../../lib/chord-lookup';
 import { t } from '../../lib/i18n';
+import { url } from '../../lib/site';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -42,12 +43,12 @@ const initialDiagrams = chordNames.flatMap((name) => {
     <header data-pagefind-body>
       <h1 data-pagefind-meta="title">{title}</h1>
       <p class="song-meta">
-        <a href={`/artists/${slugify(artist)}/`} data-pagefind-filter="artist">{artist}</a>
+        <a href={url(`/artists/${slugify(artist)}/`)} data-pagefind-filter="artist">{artist}</a>
         {
           album && (
             <>
               {' '}
-              · <a href={`/albums/${slugify(album)}/`} data-pagefind-filter="album">
+              · <a href={url(`/albums/${slugify(album)}/`)} data-pagefind-filter="album">
                 {album}
               </a>
             </>
@@ -57,7 +58,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           language && (
             <>
               {' '}
-              · <a href={`/languages/${slugify(language)}/`} data-pagefind-filter="language">
+              · <a href={url(`/languages/${slugify(language)}/`)} data-pagefind-filter="language">
                 {language}
               </a>
             </>
@@ -67,7 +68,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
         {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
         {
           tags.map((tag) => (
-            <a class="tag" href={`/tags/${slugify(tag)}/`} data-pagefind-filter="tag">
+            <a class="tag" href={url(`/tags/${slugify(tag)}/`)} data-pagefind-filter="tag">
               #{tag}
             </a>
           ))

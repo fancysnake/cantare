@@ -1,6 +1,6 @@
 {
   "name": "Cantare",
-  "description": "Śpiewnik do wspólnego śpiewania.",
-  "url": "https://cantare.example.com",
-  "locale": "pl"
+  "description": "A songbook for singing together.",
+  "url": "https://cantare.fancysnake.dev",
+  "locale": "en"
 }

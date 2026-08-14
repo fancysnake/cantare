@@ -1,4 +1,7 @@
-# Deploying a cantare songbook
+---
+layout: default
+title: Deploying a cantare songbook
+---
 
 This covers deploying a **consumer** songbook (the package path) as a static
 site. The build emits a plain `dist/` directory of HTML/CSS/JS plus a Pagefind
@@ -9,7 +12,7 @@ search index — any static host works.
 A repo containing:
 
 - `package.json` with `cantare` as a dependency (see
-  [`examples/consumer/`](examples/consumer))
+  [`examples/consumer/`](https://github.com/fancysnake/cantare/tree/main/examples/consumer))
 - `cantare.config.json` — name, description, url, locale, optional theme
 - `songs/` — your `.cho` files
 

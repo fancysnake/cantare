@@ -84,14 +84,19 @@ function pagefindDevServer() {
   };
 }
 
+// Astro rewrites the *source* of a redirect with the base but not its target,
+// so the target is prefixed here.
+const base = `${(process.env.CANTARE_BASE ?? '').replace(/\/$/, '')}/`;
+
 export default defineConfig({
   site: config.url,
+  base,
   outDir: process.env.CANTARE_OUT_DIR ?? './dist',
   integrations: [pagefindDevServer(), pagefind()],
   vite: {
     plugins: [cantareConfigPlugin()],
   },
   redirects: {
-    '/search/': '/',
+    '/search/': base,
   },
 });

@@ -13,6 +13,13 @@ export interface SiteConfig {
 
 export const site: SiteConfig = config;
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/** Prefix an absolute in-site path with the configured base (`CANTARE_BASE`). */
+export function url(path: string): string {
+  return `${base}${path}`;
+}
+
 const PREFIX = '--color-';
 
 function declarations(vars: Record<string, string> | undefined): string {
