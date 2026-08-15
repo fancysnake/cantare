@@ -46,3 +46,11 @@ nav:
   - songs.md
   - deploy.md
   - architecture.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/fancysnake/cantare
+    - icon: fontawesome/solid/globe
+      link: https://fancysnake.dev
+      name: fancysnake.dev
