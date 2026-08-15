@@ -1,8 +1,6 @@
 [tools]
-aube = "1.38.0"
-node = "25.9.0"
-# Docs only. The site is MkDocs; the songbook engine stays Node-only.
-python = "3.14"
+aube = "1.40.0"
+node = "26.7.0"
 pipx = "1.15.0"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise.
