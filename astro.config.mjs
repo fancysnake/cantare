@@ -95,7 +95,7 @@ if (!/^\/([^/].*)?$/.test(rawBase)) {
 
 // Astro rewrites the *source* of a redirect with the base but not its target,
 // so the target is prefixed here.
-const base = `${rawBase.replace(/\/$/, '')}/`;
+const base = `${rawBase.replace(/\/+$/, '')}/`;
 
 export default defineConfig({
   site: config.url,

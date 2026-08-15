@@ -26,8 +26,8 @@ slug (`/songs/my-song/`).
 
 Notes:
 
-- `title` and `artist` are required in practice (they fall back to
-  "Untitled"/"Unknown"); `album`, `key`, `capo`, `copyright`, and `tags` are
+- `title` and `artist` are recommended; omitted, they fall back to
+  "Untitled"/"Unknown". `album`, `key`, `capo`, `copyright`, and `tags` are
   optional. A `{copyright: ...}` notice is displayed under the chord sheet.
 - Tags are comma-separated in a `{meta: tags ...}` directive.
 - Chord names use English notation (C D E F G A B).
