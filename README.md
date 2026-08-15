@@ -1,18 +1,26 @@
 # Cantare
 
+<!-- --8<-- [start:tagline] -->
+
 A static songbook for singing meetups: open the site, search for the song
 being sung (by title, lyrics, artist, album, or tag), and sing along.
 Lyrics-only by default; flip on chords to get transposition, autoscroll,
 and chord diagrams.
 
+<!-- --8<-- [end:tagline] -->
+
 - **Docs:** <https://cantare.fancysnake.dev>
 - **Demo:** <https://cantare.fancysnake.dev/demo/>
+
+<!-- --8<-- [start:built-with] -->
 
 Built with [Astro](https://astro.build) (static site generation),
 [ChordSheetJS](https://github.com/martijnversluis/ChordSheetJS) (ChordPro
 parsing and rendering), and [Pagefind](https://pagefind.app) (client-side
 search). Tooling: [mise](https://mise.jdx.dev) for tasks and tool versions,
 [aube](https://aube.jdx.dev) as the package manager.
+
+<!-- --8<-- [end:built-with] -->
 
 ## Quick start
 
@@ -38,7 +46,13 @@ the [docs](https://cantare.fancysnake.dev) (MkDocs sources in [`docs/`](docs);
 
 ## Licensing
 
-The code is released under the [MIT license](LICENSE). The example songs in
-`songs/` are public-domain works (see the `{copyright}` directive in each
-file) kept as fixtures; real song collections are expected to live outside
-this repository, and their rights remain with their respective owners.
+<!-- --8<-- [start:licensing] -->
+
+The code is released under the
+[MIT license](https://github.com/fancysnake/cantare/blob/main/LICENSE). The
+example songs in `songs/` are public-domain works (see the `{copyright}`
+directive in each file) kept as fixtures; real song collections are expected to
+live outside this repository, and their rights remain with their respective
+owners.
+
+<!-- --8<-- [end:licensing] -->

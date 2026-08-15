@@ -43,6 +43,6 @@ npm ci && npx cantare build ./songs
   the commit in the lockfile, so an unpinned dependency does not drift — it
   freezes, silently, at whatever `main` was on the day you installed.
 - To bump it, name the new spec explicitly
-  (`npm install cantare@github:fancysnake/cantare#v0.5.0`), commit the updated
+  (`npm install cantare@github:fancysnake/cantare#vX.Y.Z`), commit the updated
   lockfile, and redeploy — there is no code to merge. See
-  [Pin the version, and force the upgrade](index.md#pin-the-version-and-force-the-upgrade).
+  [Pin the version, and force the upgrade](getting-started.md#pin-the-version-and-force-the-upgrade).

@@ -30,7 +30,19 @@ markdown_extensions:
   - pymdownx.highlight: { anchor_linenums: true }
   - pymdownx.superfences
   - pymdownx.details
+  # Shared prose lives in README.md and is included from there, so the two
+  # cannot drift. base_path is the repo root, which is where mkdocs runs.
+  - pymdownx.snippets: { base_path: ['.'], check_paths: true }
+
+# --strict only fails on broken *pages* by default; anchors are how the
+# cross-references between these files actually break.
+validation:
+  anchors: warn
 
 nav:
   - index.md
+  - getting-started.md
+  - configuration.md
+  - songs.md
   - deploy.md
+  - architecture.md
