@@ -1,6 +1,6 @@
 [tools]
-aube = "1.38.0"
-node = "25.9.0"
+aube = "1.40.0"
+node = "26.7.0"
 
 [hooks]
 enter = "aube install"
