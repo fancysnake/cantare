@@ -10,6 +10,8 @@ theme:
   features:
     - content.code.copy
     - navigation.top
+  logo: assets/logo.png
+  favicon: assets/logo.png
   palette:
     - media: '(prefers-color-scheme: light)'
       scheme: default
