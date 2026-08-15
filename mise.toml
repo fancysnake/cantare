@@ -6,7 +6,7 @@ python = "3.14"
 pipx = "1.15.0"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise.
-"pipx:mkdocs-material" = { version = "latest", pipx_args = "--include-deps" }
+"pipx:mkdocs-material" = { version = "9.7.7", pipx_args = "--include-deps" }
 
 [hooks]
 enter = "aube install"
@@ -41,7 +41,7 @@ run = "mkdocs serve"
 
 [tasks."site:check"]
 description = "Build the docs, failing on a broken link"
-run = "mkdocs build --strict"
+run = "mkdocs build --strict --site-dir ${SITE_DIR:-site}"
 
 [tasks.sync]
 description = "Generate Astro types (astro sync)"
