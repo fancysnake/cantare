@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { locale } from '../lib/i18n';
-import { url } from '../lib/site';
+import { songHref } from '../lib/routes';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
@@ -16,7 +16,7 @@ const songs = [...Astro.props.songs].sort((a, b) =>
   {
     songs.map((song) => (
       <li>
-        <a href={url(`/songs/${song.id}/`)}>{song.data.title}</a>
+        <a href={songHref(song.id)}>{song.data.title}</a>
         <span class="song-meta"> — {song.data.artist}</span>
       </li>
     ))

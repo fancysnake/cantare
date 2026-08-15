@@ -17,7 +17,12 @@ export const site: SiteConfig = config;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-/** Prefix an absolute in-site path with the configured base (`CANTARE_BASE`). */
+/**
+ * Prefix an absolute in-site path with the configured base (`CANTARE_BASE`).
+ *
+ * For assets that have no route behind them (the Pagefind bundle). Internal
+ * links go through `routes.ts`, which is the only other caller.
+ */
 export function url(path: string): string {
   return `${base}${path}`;
 }

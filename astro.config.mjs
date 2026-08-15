@@ -84,9 +84,18 @@ function pagefindDevServer() {
   };
 }
 
+// A base without a leading slash makes every link document-relative, which
+// builds fine and produces a subtly broken site — so reject it here instead.
+const rawBase = process.env.CANTARE_BASE ?? '/';
+if (!/^\/([^/].*)?$/.test(rawBase)) {
+  throw new Error(
+    `CANTARE_BASE must be a site-absolute path starting with a single "/" (got ${JSON.stringify(rawBase)})`,
+  );
+}
+
 // Astro rewrites the *source* of a redirect with the base but not its target,
 // so the target is prefixed here.
-const base = `${(process.env.CANTARE_BASE ?? '').replace(/\/$/, '')}/`;
+const base = `${rawBase.replace(/\/$/, '')}/`;
 
 export default defineConfig({
   site: config.url,

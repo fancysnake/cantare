@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { slugify } from '../../lib/slug';
 import { locale, t } from '../../lib/i18n';
-import { url } from '../../lib/site';
+import { tagHref } from '../../lib/routes';
 
 const songs = await getCollection('songs');
 
@@ -24,9 +24,9 @@ const sorted = [...tags.entries()].sort((a, b) => a[1].name.localeCompare(b[1].n
   <h1>{t.tagsTitle}</h1>
   <ul class="song-list">
     {
-      sorted.map(([slug, { name, count }]) => (
+      sorted.map(([, { name, count }]) => (
         <li>
-          <a href={url(`/tags/${slug}/`)}>#{name}</a>
+          <a href={tagHref(name)}>#{name}</a>
           <span class="song-meta"> — {t.songCount(count)}</span>
         </li>
       ))
