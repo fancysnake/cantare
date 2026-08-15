@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { locale, t } from '../../lib/i18n';
+import { songHref } from '../../lib/routes';
 
 const songs = (await getCollection('songs')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title, locale),
@@ -25,7 +26,7 @@ for (const song of songs) {
         <ul class="song-list">
           {group.map((song) => (
             <li>
-              <a href={`/songs/${song.id}/`}>{song.data.title}</a>
+              <a href={songHref(song.id)}>{song.data.title}</a>
               <span class="song-meta"> — {song.data.artist}</span>
             </li>
           ))}

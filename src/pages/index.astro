@@ -3,14 +3,23 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import RandomButton from '../components/RandomButton.astro';
 import { t, locale } from '../lib/i18n';
+import { url } from '../lib/site';
+import { homeHref, songHref, songsHref } from '../lib/routes';
 
 const songs = await getCollection('songs');
-const songUrls = songs.map((song) => `/songs/${song.id}/`);
+const songUrls = songs.map((song) => songHref(song.id));
 ---
 
 <Base>
-  <link rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
-  <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
+  <link rel="stylesheet" href={url('/pagefind/pagefind-component-ui.css')} />
+  <script is:inline type="module" src={url('/pagefind/pagefind-component-ui.js')}></script>
+  {
+    /* Pagefind indexes paths relative to the build output, so under a base it
+      needs both told to it: where the bundle lives, and what to prefix results
+      with. Both are no-ops when the base is `/`. */
+  }
+  <pagefind-config instance="songs" bundle-path={url('/pagefind/')} base-url={homeHref()}
+  ></pagefind-config>
   {
     /* Pagefind ships only sparse translations for many locales, so override its
       UI strings from our own i18n table (keys are Pagefind's). The component
@@ -39,11 +48,11 @@ const songUrls = songs.map((song) => `/songs/${song.id}/`);
   </div>
   <pagefind-summary instance="songs" default-message={t.searchDefault}></pagefind-summary>
   <pagefind-results instance="songs"></pagefind-results>
-  <noscript>{t.searchNoscript} <a href="/songs/">{t.browseAllSongs}</a>.</noscript>
+  <noscript>{t.searchNoscript} <a href={songsHref()}>{t.browseAllSongs}</a>.</noscript>
 
   <p class="home-actions">
     <RandomButton urls={songUrls} />
-    <a href="/songs/">{t.navAllSongs}</a>
+    <a href={songsHref()}>{t.navAllSongs}</a>
   </p>
 </Base>
 

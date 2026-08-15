@@ -9,7 +9,7 @@ search index — any static host works.
 A repo containing:
 
 - `package.json` with `cantare` as a dependency (see
-  [`examples/consumer/`](examples/consumer))
+  [`examples/consumer/`](https://github.com/fancysnake/cantare/tree/main/examples/consumer))
 - `cantare.config.json` — name, description, url, locale, optional theme
 - `songs/` — your `.cho` files
 
@@ -39,5 +39,10 @@ npm ci && npx cantare build ./songs
   locally and commit the lockfile.
 - Installing `cantare` from git pulls the engine and its dependencies
   (Astro, ChordSheetJS, Pagefind, chord data); the build needs no extra setup.
-- To bump the engine, re-install (`npm install cantare@<ref>`), commit the
-  updated lockfile, and redeploy — there is no code to merge.
+- Pin the engine to a tag (`github:fancysnake/cantare#v0.4.0`). `npm ci` builds
+  the commit in the lockfile, so an unpinned dependency does not drift — it
+  freezes, silently, at whatever `main` was on the day you installed.
+- To bump it, name the new spec explicitly
+  (`npm install cantare@github:fancysnake/cantare#vX.Y.Z`), commit the updated
+  lockfile, and redeploy — there is no code to merge. See
+  [Pin the version, and force the upgrade](getting-started.md#pin-the-version-and-force-the-upgrade).

@@ -1,14 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import { t } from '../lib/i18n';
+import { homeHref, songsHref } from '../lib/routes';
 ---
 
 <Base title={t.notFoundTitle}>
   <h1>{t.notFoundHeading}</h1>
   <p>
     {t.notFoundBefore}
-    <a href="/">{t.notFoundSearch}</a>
+    <a href={homeHref()}>{t.notFoundSearch}</a>
     {t.notFoundOr}
-    <a href="/songs/">{t.notFoundBrowse}</a>.
+    <a href={songsHref()}>{t.notFoundBrowse}</a>.
   </p>
 </Base>

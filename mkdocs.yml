@@ -1,0 +1,56 @@
+site_name: Cantare
+site_url: https://cantare.fancysnake.dev
+site_description: A static songbook for singing meetups — search, chords, transposition.
+repo_url: https://github.com/fancysnake/cantare
+repo_name: fancysnake/cantare
+copyright: MIT
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.top
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      primary: yellow
+      accent: amber
+      toggle: { icon: material/weather-night, name: Switch to dark mode }
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      primary: yellow
+      accent: amber
+      toggle: { icon: material/weather-sunny, name: Switch to light mode }
+
+markdown_extensions:
+  - admonition
+  - toc: { permalink: true }
+  - pymdownx.highlight: { anchor_linenums: true }
+  - pymdownx.superfences
+  - pymdownx.details
+  # Shared prose lives in README.md and is included from there, so the two
+  # cannot drift. base_path is the repo root, which is where mkdocs runs.
+  - pymdownx.snippets: { base_path: ['.'], check_paths: true }
+
+# --strict only fails on broken *pages* by default; anchors are how the
+# cross-references between these files actually break.
+validation:
+  anchors: warn
+
+nav:
+  - index.md
+  - getting-started.md
+  - configuration.md
+  - songs.md
+  - deploy.md
+  - architecture.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/fancysnake/cantare
+    - icon: fontawesome/solid/globe
+      link: https://fancysnake.dev
+      name: fancysnake.dev

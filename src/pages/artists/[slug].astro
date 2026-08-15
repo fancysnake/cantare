@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import SongList from '../../components/SongList.astro';
 import RandomButton from '../../components/RandomButton.astro';
 import { slugify } from '../../lib/slug';
+import { songHref } from '../../lib/routes';
 import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
@@ -30,5 +31,5 @@ const { name, songs } = Astro.props;
 <Base title={name}>
   <h1 data-pagefind-body data-pagefind-meta={`title:${t.artistMeta}: ${name}`}>{name}</h1>
   <SongList songs={songs} />
-  <RandomButton urls={songs.map((song) => `/songs/${song.id}/`)} />
+  <RandomButton urls={songs.map((song) => songHref(song.id))} />
 </Base>

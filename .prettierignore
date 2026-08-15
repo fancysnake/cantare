@@ -1,4 +1,5 @@
 dist/
+site/
 .astro/
 aube-lock.yaml
 songs/
