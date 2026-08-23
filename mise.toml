@@ -56,3 +56,6 @@ run = [
     "aube update",
     "aube outdated"
 ]
+
+[tasks.lock]
+run = "aube install --lockfile-only --no-frozen-lockfile"
