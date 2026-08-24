@@ -1,5 +1,5 @@
 [tools]
-aube = "1.41.0"
+aube = "2.1.0"
 node = "26.7.0"
 pipx = "1.16.7"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
