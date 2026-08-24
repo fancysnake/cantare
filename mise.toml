@@ -52,7 +52,7 @@ _.path = ['{{config_root}}/node_modules/.bin']
 
 [tasks.update]
 run = [
-    "mise upgrade --bump",
+    "mise upgrade --bump --minimum-release-age=7d",
     "aube update",
     "aube outdated"
 ]
