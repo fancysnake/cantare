@@ -29,7 +29,9 @@ const { name, songs } = Astro.props;
 ---
 
 <Base title={name}>
-  <h1 data-pagefind-body data-pagefind-meta={`title:${t.artistMeta}: ${name}`}>{name}</h1>
+  <h1 data-pagefind-body data-pagefind-meta={`title:${t.artistMeta}: ${name}`}>
+    {name}
+  </h1>
   <SongList songs={songs} />
   <RandomButton urls={songs.map((song) => songHref(song.id))} />
 </Base>

@@ -13,12 +13,10 @@ const songs = [...Astro.props.songs].sort((a, b) =>
 ---
 
 <ul class="song-list">
-  {
-    songs.map((song) => (
-      <li>
-        <a href={songHref(song.id)}>{song.data.title}</a>
-        <span class="song-meta"> — {song.data.artist}</span>
-      </li>
-    ))
-  }
+  {songs.map((song) => (
+    <li>
+      <a href={songHref(song.id)}>{song.data.title}</a>
+      <span class="song-meta"> — {song.data.artist}</span>
+    </li>
+  ))}
 </ul>

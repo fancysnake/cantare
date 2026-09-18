@@ -13,18 +13,17 @@ const songUrls = songs.map((song) => songHref(song.id));
 <Base>
   <link rel="stylesheet" href={url('/pagefind/pagefind-component-ui.css')} />
   <script is:inline type="module" src={url('/pagefind/pagefind-component-ui.js')}></script>
-  {
-    /* Pagefind indexes paths relative to the build output, so under a base it
+  {/* Pagefind indexes paths relative to the build output, so under a base it
       needs both told to it: where the bundle lives, and what to prefix results
-      with. Both are no-ops when the base is `/`. */
-  }
-  <pagefind-config instance="songs" bundle-path={url('/pagefind/')} base-url={homeHref()}
+      with. Both are no-ops when the base is `/`. */}
+  <pagefind-config
+    instance="songs"
+    bundle-path={url('/pagefind/')}
+    base-url={homeHref()}
   ></pagefind-config>
-  {
-    /* Pagefind ships only sparse translations for many locales, so override its
+  {/* Pagefind ships only sparse translations for many locales, so override its
       UI strings from our own i18n table (keys are Pagefind's). The component
-      exposes the instance on the element once it has initialised. */
-  }
+      exposes the instance on the element once it has initialised. */}
   <script is:inline type="module" define:vars={{ searchUi: t.searchUi }}>
     await customElements.whenDefined('pagefind-input');
     const el = document.querySelector('pagefind-input[instance="songs"]');
@@ -33,22 +32,38 @@ const songUrls = songs.map((song) => songHref(song.id));
     }
     el?.instance?.setTranslations(searchUi);
   </script>
-
-  <pagefind-input instance="songs" lang={locale} placeholder={t.searchUi.placeholder}
+  <pagefind-input
+    instance="songs"
+    lang={locale}
+    placeholder={t.searchUi.placeholder}
   ></pagefind-input>
   <div class="search-filters">
-    <pagefind-filter-dropdown filter="artist" label={t.filterArtist} instance="songs"
+    <pagefind-filter-dropdown
+      filter="artist"
+      label={t.filterArtist}
+      instance="songs"
     ></pagefind-filter-dropdown>
-    <pagefind-filter-dropdown filter="album" label={t.filterAlbum} instance="songs"
+    <pagefind-filter-dropdown
+      filter="album"
+      label={t.filterAlbum}
+      instance="songs"
     ></pagefind-filter-dropdown>
-    <pagefind-filter-dropdown filter="tag" label={t.filterTag} instance="songs"
+    <pagefind-filter-dropdown
+      filter="tag"
+      label={t.filterTag}
+      instance="songs"
     ></pagefind-filter-dropdown>
-    <pagefind-filter-dropdown filter="language" label={t.filterLanguage} instance="songs"
+    <pagefind-filter-dropdown
+      filter="language"
+      label={t.filterLanguage}
+      instance="songs"
     ></pagefind-filter-dropdown>
   </div>
   <pagefind-summary instance="songs" default-message={t.searchDefault}></pagefind-summary>
   <pagefind-results instance="songs"></pagefind-results>
-  <noscript>{t.searchNoscript} <a href={songsHref()}>{t.browseAllSongs}</a>.</noscript>
+  <noscript>
+    {t.searchNoscript} <a href={songsHref()}>{t.browseAllSongs}</a>.
+  </noscript>
 
   <p class="home-actions">
     <RandomButton urls={songUrls} />
