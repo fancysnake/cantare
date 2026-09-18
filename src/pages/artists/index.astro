@@ -21,13 +21,11 @@ const sorted = [...artists.entries()].sort((a, b) => a[1].name.localeCompare(b[1
 <Base title={t.artistsTitle}>
   <h1>{t.artistsTitle}</h1>
   <ul class="song-list">
-    {
-      sorted.map(([, { name, count }]) => (
-        <li>
-          <a href={artistHref(name)}>{name}</a>
-          <span class="song-meta"> — {t.songCount(count)}</span>
-        </li>
-      ))
-    }
+    {sorted.map(([, { name, count }]) => (
+      <li>
+        <a href={artistHref(name)}>{name}</a>
+        <span class="song-meta"> — {t.songCount(count)}</span>
+      </li>
+    ))}
   </ul>
 </Base>

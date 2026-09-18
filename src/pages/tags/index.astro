@@ -23,13 +23,11 @@ const sorted = [...tags.entries()].sort((a, b) => a[1].name.localeCompare(b[1].n
 <Base title={t.tagsTitle}>
   <h1>{t.tagsTitle}</h1>
   <ul class="song-list">
-    {
-      sorted.map(([, { name, count }]) => (
-        <li>
-          <a href={tagHref(name)}>#{name}</a>
-          <span class="song-meta"> — {t.songCount(count)}</span>
-        </li>
-      ))
-    }
+    {sorted.map(([, { name, count }]) => (
+      <li>
+        <a href={tagHref(name)}>#{name}</a>
+        <span class="song-meta"> — {t.songCount(count)}</span>
+      </li>
+    ))}
   </ul>
 </Base>
