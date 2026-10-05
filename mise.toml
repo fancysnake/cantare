@@ -1,6 +1,6 @@
 [tools]
 aube = "2.2.14"
-node = "26.8.2"
+node = "26.10.0"
 pipx = "1.17.2"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise. uvx = false
