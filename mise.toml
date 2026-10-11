@@ -1,7 +1,7 @@
 [tools]
 aube = "2.2.14"
 node = "26.8.2"
-pipx = "1.17.2"
+pipx = "1.17.11"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise. uvx = false
 # because mise prefers uvx wherever `uv` is installed, and there
