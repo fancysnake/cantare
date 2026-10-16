@@ -7,21 +7,22 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-16
+
 ### Added
 
+- **`{meta: link https://…}` lists a song hosted elsewhere.** Song lists and the
+  random pick open the link in a new tab; its own page shows a button to it.
 - **`CANTARE_BASE` serves a songbook from a sub-path.** Every generated link,
-  asset and the Pagefind index are prefixed with it; unset, the base stays `/`
-  and builds are unchanged.
+  asset and the Pagefind index are prefixed with it; unset, the base stays `/`.
+  A value that is not a site-absolute path fails the build.
 - **Docs site**, built with MkDocs Material and published to GitHub Pages
   alongside a live demo of the repo's own songbook.
 
 ### Changed
 
-- **Internal links come from `src/lib/routes.ts`** instead of each template
-  composing a path. A link can no longer be written without its slug and base
-  prefix, which is what a sub-path build silently got wrong.
-- **A `CANTARE_BASE` that is not a site-absolute path fails the build.** It used
-  to be accepted and produce document-relative links on every page.
+- **The bundled fallback config is English**: a build without
+  `cantare.config.json` renders with `"locale": "en"` instead of `pl`.
 
 ## [0.4.0] - 2026-08-08
 
@@ -248,7 +249,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/fancysnake/cantare/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/fancysnake/cantare/compare/v0.3.7...v0.3.8
