@@ -15,7 +15,10 @@ mise run format    # Prettier write
 mise run check     # astro check (type-checks .astro templates)
 mise run site:serve # MkDocs docs at http://localhost:8000
 mise run site:check # mkdocs build --strict (fails on a broken link or anchor); SITE_DIR overrides the output dir
+mise run fullcheck # every gate below, in CI order
 ```
+
+`.vekna.toml` wires cabinet's PR rituals (`vekna cast refresh|review|labels`) to `fullcheck` as the gate; vekna + cabinet install via mise's pipx backend, pinned to Python 3.14 (excluded from `update`'s bump until vekna supports 3.15).
 
 No test suite. Quality gates: `mise run lint` + `mise run check` + a `CANTARE_BASE=/demo` build + `mise run site:check` (all four in `lint.yml`, on every PR). Husky + lint-staged run `eslint --fix` and Prettier on commit.
 
