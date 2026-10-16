@@ -1,27 +1,29 @@
 ---
 import { t } from '../lib/i18n';
+import type { SongLink } from '../lib/routes';
 
 interface Props {
-  urls: string[];
+  links: SongLink[];
   label?: string | undefined;
 }
 
-const { urls, label = t.randomSong } = Astro.props;
+const { links, label = t.randomSong } = Astro.props;
 ---
 
-<button class="btn random-pick" hidden data-urls={JSON.stringify(urls)}>
+<button class="btn random-pick" hidden data-links={JSON.stringify(links)}>
   🎲 {label}
 </button>
 
 <script>
+  import type { SongLink } from '../lib/routes';
+
   document.querySelectorAll<HTMLButtonElement>('button.random-pick').forEach((button) => {
     button.hidden = false;
     button.addEventListener('click', () => {
-      const urls: string[] = JSON.parse(button.dataset.urls ?? '[]');
-      const url = urls[Math.floor(Math.random() * urls.length)];
-      // Songs hosted elsewhere carry an absolute URL; open those beside the songbook.
-      if (url?.startsWith('http')) window.open(url, '_blank', 'noopener');
-      else if (url) window.location.href = url;
+      const links: SongLink[] = JSON.parse(button.dataset.links ?? '[]');
+      const link = links[Math.floor(Math.random() * links.length)];
+      if (link?.target) window.open(link.href, link.target, 'noopener');
+      else if (link) window.location.href = link.href;
     });
   });
 </script>
