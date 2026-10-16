@@ -22,7 +22,7 @@ mise run fullcheck # the gate: frozen install, sync, lint, check, song:check, bu
 
 No test suite. Quality gate: `mise run fullcheck`; `lint.yml` runs it on every PR, `.vekna.toml` uses it. Husky + lint-staged run `eslint --fix` and Prettier on commit.
 
-`.vekna.toml` wires cabinet's PR rituals (`vekna cast refresh|review|labels`); vekna + cabinet + their Python pin live in `mise.cabinet.toml`, loaded only with `MISE_ENV=cabinet` so CI skips them. Cabinet pushes over the `https-origin` remote with `gh` as credential helper, since a cast has no terminal for an ssh passphrase. One-time setup per clone: `git remote add https-origin https://github.com/fancysnake/cantare.git && gh auth setup-git`.
+`.vekna.toml` wires cabinet's PR rituals (`vekna cast refresh|review|labels`); vekna (with cabinet preinstalled) and its Python are pinned in `mise.toml`, so `mise install` provides them. Cabinet pushes over the `https-origin` remote with `gh` as credential helper, since a cast has no terminal for an ssh passphrase. One-time setup per clone: `git remote add https-origin https://github.com/fancysnake/cantare.git && gh auth setup-git`.
 
 The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency), pinned like every other tool. Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, ESLint, Prettier and tsconfig. Prose shared with the README (tagline, "Built with", licensing) is included from it via `pymdownx.snippets` — edit `README.md`, not the copy.
 
