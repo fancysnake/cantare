@@ -26,6 +26,8 @@ interface Strings {
   searchUi: Record<string, string>;
   browseAllSongs: string;
   randomSong: string;
+  openLink: string;
+  opensInNewTab: string;
   filterArtist: string;
   filterAlbum: string;
   filterTag: string;
@@ -103,6 +105,8 @@ const en: Strings = {
   },
   browseAllSongs: 'browse all songs',
   randomSong: 'Pick a random song',
+  openLink: 'Open the song',
+  opensInNewTab: 'opens in a new tab',
   filterArtist: 'Artist',
   filterAlbum: 'Album',
   filterTag: 'Tag',
@@ -182,6 +186,8 @@ const pl: Strings = {
   },
   browseAllSongs: 'przeglądać wszystkie piosenki',
   randomSong: 'Wylosuj piosenkę',
+  openLink: 'Otwórz piosenkę',
+  opensInNewTab: 'otwiera się w nowej karcie',
   filterArtist: 'Wykonawca',
   filterAlbum: 'Album',
   filterTag: 'Tag',

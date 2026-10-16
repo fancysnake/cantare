@@ -1,3 +1,4 @@
+import type { CollectionEntry } from 'astro:content';
 import { url } from './site';
 import { slugify } from './slug';
 
@@ -14,6 +15,14 @@ export const homeHref = (): string => url('/');
 
 export const songsHref = (): string => url('/songs/');
 export const songHref = (id: string): string => url(`/songs/${id}/`);
+
+export interface SongLink {
+  href: string;
+  target?: '_blank';
+}
+/** Where a song list points: a song with `{meta: link …}` opens that page in a new tab instead. */
+export const songLink = (song: CollectionEntry<'songs'>): SongLink =>
+  song.data.link ? { href: song.data.link, target: '_blank' } : { href: songHref(song.id) };
 
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);

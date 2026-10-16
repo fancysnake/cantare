@@ -30,6 +30,20 @@ Notes:
   "Untitled"/"Unknown". `album`, `key`, `capo`, `copyright`, and `tags` are
   optional. A `{copyright: ...}` notice is displayed under the chord sheet.
 - Tags are comma-separated in a `{meta: tags ...}` directive.
+- `{meta: link https://...}` makes the song open that page in a new tab
+  instead of its own sheet — a quick way to list a song hosted elsewhere (e.g. Ultimate Guitar)
+  without copying it. Only a title, artist and link are needed:
+
+  ```text
+  {title: Wonderwall}
+  {artist: Oasis}
+  {meta: link https://tabs.ultimate-guitar.com/tab/oasis/wonderwall-chords-27596}
+  ```
+
+  The song still shows up in lists, artist/tag pages, search and the random
+  pick. A search result leads to the song's own page, with a button to the
+  link.
+
 - Chord names use English notation (C D E F G A B).
 - `{chord_style: trailing}` suits songbooks converted from documents, where a
   line's chords are listed after the lyrics instead of anchored to a syllable:

@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ExternalCue from '../../components/ExternalCue.astro';
 import { parseSong, renderSong } from '../../lib/song';
 import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
 import { diagramDataForChords } from '../../lib/chord-data';
@@ -18,10 +19,12 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, language, key, capo, copyright, tags } = song.data;
+const { title, artist, album, language, key, capo, copyright, link, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 const trailingChords = parsed.metadata.get('chord_style') === 'trailing';
+// A link-only song has no sheet, so nothing for the sheet controls to act on.
+const hasBody = parsed.bodyLines.length > 0;
 
 const chordNames = [...new Set(parsed.getChords())];
 const diagramData = diagramDataForChords(chordNames);
@@ -73,7 +76,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
           ))
         }
       </p>
+      {link && <p data-pagefind-ignore><a class="btn" href={link} target="_blank">{t.openLink}<ExternalCue /></a></p>}
     </header>
+    {hasBody && (
     <div class="sheet-controls">
     <div class="transpose" role="group" aria-labelledby="transpose-label" hidden>
       <span id="transpose-label">{t.transposeLabel}</span>
@@ -96,6 +101,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
       ⛶
     </button>
     </div>
+    )}
   </div>
   {
     initialDiagrams.length > 0 && (
@@ -110,13 +116,17 @@ const initialDiagrams = chordNames.flatMap((name) => {
     )
   }
 
-  <div class="sheet-viewport">
-    <article
-      class:list={['chord-sheet', { 'trailing-chords': trailingChords }]}
-      set:html={sheetHtml}
-      data-pagefind-body
-    />
-  </div>
+  {
+    hasBody && (
+      <div class="sheet-viewport">
+        <article
+          class:list={['chord-sheet', { 'trailing-chords': trailingChords }]}
+          set:html={sheetHtml}
+          data-pagefind-body
+        />
+      </div>
+    )
+  }
   {copyright && <p class="song-meta copyright-notice">© {copyright}</p>}
 
   <script
