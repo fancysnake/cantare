@@ -15,23 +15,5 @@ jobs:
 
       - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
 
-      - name: Install dependencies
-        run: aube install
-
-      - name: Generate Astro types
-        run: mise run sync
-
-      - name: ESLint + Prettier check
-        run: mise run lint
-
-      - name: Type-check with astro check
-        run: mise run check
-
-      # The base-path build is what Pages publishes; nothing else exercises it.
-      - name: Build under a sub-path
-        run: mise run build
-        env:
-          CANTARE_BASE: /demo
-
-      - name: Build the docs
-        run: mise run site:check
+      - name: Gate
+        run: mise run fullcheck

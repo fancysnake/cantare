@@ -9,17 +9,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```sh
 mise run dev       # dev server at http://localhost:4321
 mise run build     # static build into dist/ + Pagefind search index
+mise run build:demo # the same under CANTARE_BASE=/demo, as Pages publishes it
 mise run preview   # serve the production build
 mise run lint      # ESLint (strict, type-checked) + Prettier check
 mise run format    # Prettier write
 mise run check     # astro check (type-checks .astro templates)
 mise run site:serve # MkDocs docs at http://localhost:8000
 mise run site:check # mkdocs build --strict (fails on a broken link or anchor); SITE_DIR overrides the output dir
+mise run song:check # asserts song.ts word-grouping rules, which read the formatter's own HTML back
+mise run fullcheck # the gate: frozen install, sync, lint, check, song:check, build:demo, site:check
 ```
 
-No test suite. Quality gates: `mise run lint` + `mise run check` + a `CANTARE_BASE=/demo` build + `mise run site:check` (all four in `lint.yml`, on every PR). Husky + lint-staged run `eslint --fix` and Prettier on commit.
+No test suite. Quality gate: `mise run fullcheck`; `lint.yml` runs it on every PR, `.vekna.toml` uses it. Husky + lint-staged run `eslint --fix` and Prettier on commit.
 
-`node src/lib/song.check.ts` asserts the word-grouping rules in `src/lib/song.ts`, which read the formatter's own HTML back and so are invisible to both gates. Run it when touching that path.
+`.vekna.toml` wires cabinet's PR rituals (`vekna cast refresh|review|labels`); vekna (with cabinet preinstalled) and its Python are pinned in `mise.toml`, so `mise install` provides them. Cabinet pushes over the `https-origin` remote with `gh` as credential helper, since a cast has no terminal for an ssh passphrase. One-time setup per clone: `git remote add https-origin https://github.com/fancysnake/cantare.git && gh auth setup-git`.
 
 The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency), pinned like every other tool. Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, ESLint, Prettier and tsconfig. Prose shared with the README (tagline, "Built with", licensing) is included from it via `pymdownx.snippets` — edit `README.md`, not the copy.
 

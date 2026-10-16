@@ -7,6 +7,8 @@ pipx = "1.17.2"
 # because mise prefers uvx wherever `uv` is installed, and there
 # --include-deps is neither accepted nor equivalent.
 "pipx:mkdocs-material" = { version = "9.7.7", uvx = false, pipx_args = "--include-deps" }
+python = "3.14"
+"pipx:vekna" = { version = "0.11.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@76d1805dab7edfc3e7077a0e1c29a05d406e7285" }
 
 [hooks]
 enter = "aube install"
@@ -17,6 +19,11 @@ run = "aube run dev"
 
 [tasks.build]
 description = "Build the static site"
+run = "aube run build"
+
+[tasks."build:demo"]
+description = "Build the static site under /demo, as Pages publishes it"
+env = { CANTARE_BASE = "/demo" }
 run = "aube run build"
 
 [tasks.preview]
@@ -35,6 +42,10 @@ run = "aube run format"
 description = "Type-check templates with astro check"
 run = "aube run check"
 
+[tasks."song:check"]
+description = "Assert the word-grouping rules in src/lib/song.ts"
+run = "node src/lib/song.check.ts"
+
 [tasks."site:serve"]
 description = "Serve the docs at http://localhost:8000"
 run = "mkdocs serve"
@@ -43,26 +54,28 @@ run = "mkdocs serve"
 description = "Build the docs, failing on a broken link"
 run = "mkdocs build --strict --site-dir ${SITE_DIR:-site}"
 
+[tasks.fullcheck]
+description = "The gate before a commit: deps, lint, types, song rules, sub-path build, docs"
+run = [
+    "aube install --frozen-lockfile",
+    { task = "sync" },
+    { task = "lint" },
+    { task = "check" },
+    { task = "song:check" },
+    { task = "build:demo" },
+    { task = "site:check" },
+]
+
 [tasks.sync]
 description = "Generate Astro types (astro sync)"
 run = "aube exec astro sync"
-
-[tasks.fullcheck]
-description = "Every gate lint.yml runs on a PR"
-run = [
-    "mise run sync",
-    "mise run lint",
-    "mise run check",
-    "CANTARE_BASE=/demo mise run build",
-    "mise run site:check",
-]
 
 [env]
 _.path = ['{{config_root}}/node_modules/.bin']
 
 [tasks.update]
 run = [
-    "mise upgrade --bump --minimum-release-age=7d",
+    "mise upgrade --bump --exclude python --minimum-release-age=7d",
     "aube update",
     "aube outdated"
 ]

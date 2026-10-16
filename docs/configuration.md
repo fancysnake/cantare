@@ -46,10 +46,4 @@ Unset, the base is `/`. The value must be a site-absolute path starting with a
 single `/`; anything else fails the build rather than producing a site whose
 links are quietly relative.
 
-!!! note
-
-    `CANTARE_BASE` is newer than the current release (`v0.4.0`). Until the next
-    tag it is available only when building from source — see the
-    [changelog](https://github.com/fancysnake/cantare/blob/main/CHANGELOG.md).
-
 See [Deploying a songbook](deploy.md) for hosting the built `dist/`.
