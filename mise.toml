@@ -70,16 +70,6 @@ run = [
 description = "Generate Astro types (astro sync)"
 run = "aube exec astro sync"
 
-[tasks.fullcheck]
-description = "Every gate lint.yml runs on a PR"
-run = [
-    "mise run sync",
-    "mise run lint",
-    "mise run check",
-    "CANTARE_BASE=/demo mise run build",
-    "mise run site:check",
-]
-
 [env]
 _.path = ['{{config_root}}/node_modules/.bin']
 
