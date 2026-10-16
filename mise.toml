@@ -2,10 +2,6 @@
 aube = "2.2.14"
 node = "26.8.2"
 pipx = "1.17.2"
-# vekna supports Python <= 3.14; tasks.update excludes python so --bump skips 3.15. Drop both once
-# vekna supports 3.15.
-python = "3.14"
-"pipx:vekna" = { version = "0.11.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v2.0.0" }
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise. uvx = false
 # because mise prefers uvx wherever `uv` is installed, and there
@@ -21,6 +17,11 @@ run = "aube run dev"
 
 [tasks.build]
 description = "Build the static site"
+run = "aube run build"
+
+[tasks."build:demo"]
+description = "Build the static site under /demo, as Pages publishes it"
+env = { CANTARE_BASE = "/demo" }
 run = "aube run build"
 
 [tasks.preview]
@@ -39,6 +40,10 @@ run = "aube run format"
 description = "Type-check templates with astro check"
 run = "aube run check"
 
+[tasks."song:check"]
+description = "Assert the word-grouping rules in src/lib/song.ts"
+run = "node src/lib/song.check.ts"
+
 [tasks."site:serve"]
 description = "Serve the docs at http://localhost:8000"
 run = "mkdocs serve"
@@ -48,12 +53,14 @@ description = "Build the docs, failing on a broken link"
 run = "mkdocs build --strict --site-dir ${SITE_DIR:-site}"
 
 [tasks.fullcheck]
-description = "The gate before a commit: lint, types, sub-path build, docs"
+description = "The gate before a commit: deps, lint, types, song rules, sub-path build, docs"
 run = [
+    "aube install --frozen-lockfile",
     { task = "sync" },
     { task = "lint" },
     { task = "check" },
-    "CANTARE_BASE=/demo aube run build",
+    { task = "song:check" },
+    { task = "build:demo" },
     { task = "site:check" },
 ]
 

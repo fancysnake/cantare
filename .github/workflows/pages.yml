@@ -29,9 +29,7 @@ jobs:
         run: mise run sync
 
       - name: Build the demo songbook
-        run: mise run build
-        env:
-          CANTARE_BASE: /demo
+        run: mise run build:demo
 
       - name: Build the docs
         run: mise run site:check

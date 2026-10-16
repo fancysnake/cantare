@@ -7,5 +7,5 @@ modules = ["cabinet.rituals.refresh", "cabinet.rituals.review", "cabinet.rituals
 remote = "https-origin"
 gate = "mise run fullcheck"
 
-[cabinet.agent]
-may_not_run = ["mise run fullcheck"]
+[cabinet.ci]
+gate_checks = ["lint"]
