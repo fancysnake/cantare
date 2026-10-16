@@ -34,5 +34,5 @@ const { name, songs } = Astro.props;
     {t.languagePrefix}: {name}
   </h1>
   <SongList songs={songs} />
-  <RandomButton urls={songs.map((song) => songHref(song.id))} />
+  <RandomButton urls={songs.map((song) => songHref(song))} />
 </Base>

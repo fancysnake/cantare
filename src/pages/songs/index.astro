@@ -26,7 +26,9 @@ for (const song of songs) {
         <ul class="song-list">
           {group.map((song) => (
             <li>
-              <a href={songHref(song.id)}>{song.data.title}</a>
+              <a href={songHref(song)} target={song.data.link ? '_blank' : undefined}>
+                {song.data.title}
+              </a>
               <span class="song-meta"> — {song.data.artist}</span>
             </li>
           ))}

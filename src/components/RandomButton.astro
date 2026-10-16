@@ -19,7 +19,9 @@ const { urls, label = t.randomSong } = Astro.props;
     button.addEventListener('click', () => {
       const urls: string[] = JSON.parse(button.dataset.urls ?? '[]');
       const url = urls[Math.floor(Math.random() * urls.length)];
-      if (url) window.location.href = url;
+      // Songs hosted elsewhere carry an absolute URL; open those beside the songbook.
+      if (url?.startsWith('http')) window.open(url, '_blank', 'noopener');
+      else if (url) window.location.href = url;
     });
   });
 </script>

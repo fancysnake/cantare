@@ -7,7 +7,7 @@ import { url } from '../lib/site';
 import { homeHref, songHref, songsHref } from '../lib/routes';
 
 const songs = await getCollection('songs');
-const songUrls = songs.map((song) => songHref(song.id));
+const songUrls = songs.map((song) => songHref(song));
 ---
 
 <Base>

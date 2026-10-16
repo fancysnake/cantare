@@ -13,7 +13,9 @@ import { slugify } from './slug';
 export const homeHref = (): string => url('/');
 
 export const songsHref = (): string => url('/songs/');
-export const songHref = (id: string): string => url(`/songs/${id}/`);
+/** A song with `{meta: link …}` lives elsewhere: its href is that external URL. */
+export const songHref = (song: { id: string; data: { link?: string | undefined } }): string =>
+  song.data.link ?? url(`/songs/${song.id}/`);
 
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);
