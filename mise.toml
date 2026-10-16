@@ -7,6 +7,8 @@ pipx = "1.17.2"
 # because mise prefers uvx wherever `uv` is installed, and there
 # --include-deps is neither accepted nor equivalent.
 "pipx:mkdocs-material" = { version = "9.7.7", uvx = false, pipx_args = "--include-deps" }
+python = "3.14"
+"pipx:vekna" = { version = "0.11.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@76d1805dab7edfc3e7077a0e1c29a05d406e7285" }
 
 [hooks]
 enter = "aube install"

@@ -1,7 +1,0 @@
-# Loaded only with MISE_ENV=cabinet: what `vekna cast` needs, kept out of CI.
-[tools]
-# vekna supports Python <= 3.14; tasks.update excludes python so --bump skips 3.15. Drop both once
-# vekna supports 3.15.
-python = "3.14"
-# cabinet v2.0.0
-"pipx:vekna" = { version = "0.11.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@76d1805dab7edfc3e7077a0e1c29a05d406e7285" }
