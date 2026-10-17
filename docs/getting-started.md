@@ -13,7 +13,7 @@ for a copy-paste starter.
   "private": true,
   "type": "module",
   "scripts": { "build": "cantare build ./songs" },
-  "dependencies": { "cantare": "github:fancysnake/cantare#v0.5.0" }
+  "dependencies": { "cantare": "github:fancysnake/cantare#v1.0.0" }
 }
 ```
 
@@ -44,7 +44,7 @@ writes the commit into `package-lock.json`, and reuses that commit forever.
 So pin the tag you want and treat it as the version:
 
 ```json
-{ "dependencies": { "cantare": "github:fancysnake/cantare#v0.5.0" } }
+{ "dependencies": { "cantare": "github:fancysnake/cantare#v1.0.0" } }
 ```
 
 Leave the ref off and you are not on the latest engine, you are on whatever
