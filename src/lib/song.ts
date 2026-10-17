@@ -17,6 +17,7 @@ export interface SongMeta {
   capo?: number | undefined;
   copyright?: string | undefined;
   link?: string | undefined;
+  url?: string | undefined;
   tags: string[];
 }
 
@@ -241,6 +242,7 @@ export function extractMeta(song: Song): SongMeta {
     capo: maybeNumber(single(meta.get('capo'))),
     copyright: single(meta.get('copyright')),
     link: single(meta.get('link')),
+    url: single(meta.get('url')),
     tags: tags
       ? tags
           .split(',')

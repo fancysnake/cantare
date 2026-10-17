@@ -19,7 +19,9 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, language, key, capo, copyright, link, tags } = song.data;
+const { title, artist, album, language, key, capo, copyright, link, url, tags } = song.data;
+// `link` redirects lists to it; `url` only adds the button on the song's own page.
+const externalHref = link ?? url;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 const trailingChords = parsed.metadata.get('chord_style') === 'trailing';
@@ -76,7 +78,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           ))
         }
       </p>
-      {link && <p data-pagefind-ignore><a class="btn" href={link} target="_blank">{t.openLink}<ExternalCue /></a></p>}
+      {externalHref && <p data-pagefind-ignore><a class="btn" href={externalHref} target="_blank">{t.openLink}<ExternalCue /></a></p>}
     </header>
     {hasBody && (
     <div class="sheet-controls">

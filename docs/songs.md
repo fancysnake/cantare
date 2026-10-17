@@ -44,6 +44,9 @@ Notes:
   pick. A search result leads to the song's own page, with a button to the
   link.
 
+- `{meta: url https://...}` adds that button to a song with its own sheet,
+  without redirecting lists away from it.
+
 - Chord names use English notation (C D E F G A B).
 - `{chord_style: trailing}` suits songbooks converted from documents, where a
   line's chords are listed after the lyrics instead of anchored to a syllable:
