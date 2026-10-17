@@ -42,7 +42,7 @@ const songs = defineCollection({
     capo: z.number().optional(),
     copyright: z.string().optional(),
     link: z.url({ protocol: /^https?$/ }).optional(),
-    url: z.url({ protocol: /^https?$/ }).optional(),
+    urls: z.array(z.url({ protocol: /^https?$/ })),
     tags: z.array(z.string()),
     source: z.string(),
   }),

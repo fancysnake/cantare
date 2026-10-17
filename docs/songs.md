@@ -44,8 +44,10 @@ Notes:
   pick. A search result leads to the song's own page, with a button to the
   link.
 
-- `{meta: url https://...}` adds that button to a song with its own sheet,
-  without redirecting lists away from it.
+- `{meta: urls https://... https://...}` adds a button per URL, labelled with
+  its host, to the song's own page without redirecting lists away from it.
+  Separate URLs with spaces or repeat the directive. Unlike `link`, it suits a
+  song with its own sheet, and the two can be combined.
 
 - Chord names use English notation (C D E F G A B).
 - `{chord_style: trailing}` suits songbooks converted from documents, where a
