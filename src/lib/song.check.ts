@@ -43,4 +43,26 @@ assert.deepEqual(urls, [
   { href: 'https://www.youtube.com/watch?v=b', label: 'youtube.com' },
 ]);
 
+// A bracketed trailing run stays one unit with its brackets, and the closing
+// bracket gets its own column instead of sitting under the last chord.
+const bracketed = '{chord_style: trailing}\nlyrics [C] ([Em] [G])';
+assert.deepEqual(words(bracketed), ['lyrics', '()']);
+assert.match(
+  renderSong(parseSong(bracketed)),
+  /<div class="chord">G<\/div><div class="lyrics"><\/div><\/div><div class="column"><div class="chord"><\/div><div class="lyrics">\)<\/div>/,
+);
+
+// Mid-line, the closing punctuation carries the space that ends its word, and
+// still gets its own column — the last of its `.word`, which global.css relies
+// on to pull it flush against the chord.
+const midLine = '{chord_style: trailing}\nlyrics [C] ([Em] [G]) [D], [A]';
+assert.deepEqual(words(midLine), ['lyrics', '()', ',', '']);
+assert.match(
+  renderSong(parseSong(midLine)),
+  /<div class="chord">G<\/div><div class="lyrics"><\/div><\/div><div class="column"><div class="chord"><\/div><div class="lyrics">\) <\/div><\/div><\/span>/,
+);
+
+// Inline songs keep an opening bracket followed by a space as a word of its own.
+assert.deepEqual(words('word ([C] la)'), ['word', '(', 'la)']);
+
 stdout.write('song.check: ok\n');

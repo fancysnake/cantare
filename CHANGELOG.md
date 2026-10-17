@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning].
   apart from `url`. A song still using `link` fails the build with a message
   naming the file.
 
+### Fixed
+
+- **Bracketed trailing chords stacked above their brackets.** Under
+  `{chord_style: trailing}`, `[C] ([Em] [G])` drew `Em G` above a gapped
+  `(  )`; it now reads `C (Em G)`.
+
 ## [0.5.0] - 2026-10-16
 
 ### Added
