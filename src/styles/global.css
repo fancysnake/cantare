@@ -359,6 +359,15 @@ h1 {
   margin-left: 1.5em;
 }
 
+/* A chord closed by punctuation (`[G])`, split off in song.ts) sits flush
+   against it, as the opening bracket does against its chord. Closing
+   punctuation ends its word; an opening bracket never does. */
+.chord-sheet.trailing-chords
+  .column:has(.lyrics:empty):has(+ .column:last-child .chord:empty)
+  .chord {
+  padding-right: 0;
+}
+
 /* Lyrics-only mode: the inter-word gap normally comes from chord padding, which
    vanishes when chords are hidden. Preserve the lyric's own trailing space so
    words stay separated (and mid-word splits like "e"+"xist" stay joined). */

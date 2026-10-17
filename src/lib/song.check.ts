@@ -32,4 +32,13 @@ assert.deepEqual(words('And [G]grace my fears re[D]lieved'), [
 // they must not be glued into a single unbreakable unit.
 assert.deepEqual(words("Don't [Am]worry,[C] be happy"), ["Don't", 'worry,', 'be', 'happy']);
 
+// A bracketed trailing run stays one unit with its brackets, and the closing
+// bracket gets its own column instead of sitting under the last chord.
+const bracketed = '{chord_style: trailing}\nlyrics [C] ([Em] [G])';
+assert.deepEqual(words(bracketed), ['lyrics', '()']);
+assert.match(
+  renderSong(parseSong(bracketed)),
+  /<div class="chord">G<\/div><div class="lyrics"><\/div><\/div><div class="column"><div class="chord"><\/div><div class="lyrics">\)<\/div>/,
+);
+
 stdout.write('song.check: ok\n');
