@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-17
+
+### Added
+
+- **`{meta: url https://…}` adds a source button to a song's own page**,
+  labelled with the text after the URL, else its host. Repeat it for more
+  buttons; lists keep pointing at the song's sheet.
+
+### Changed
+
+- **Breaking: `{meta: link …}` is renamed `{meta: redirect …}`.** A song still
+  using `link` fails the build with a message naming the file.
+
 ### Fixed
 
 - **Bracketed trailing chords stacked above their brackets.** Under
@@ -255,7 +268,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v0.5.0...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/fancysnake/cantare/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/fancysnake/cantare/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/fancysnake/cantare/compare/v0.3.8...v0.3.9

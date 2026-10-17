@@ -5,7 +5,7 @@
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
-import { parseSong, renderSong } from './song.ts';
+import { extractMeta, parseSong, renderSong } from './song.ts';
 
 /** The plain text of each `.word` span, chords stripped. */
 function words(source: string): string[] {
@@ -31,6 +31,17 @@ assert.deepEqual(words('And [G]grace my fears re[D]lieved'), [
 // A chord jammed against punctuation leaves the following words in one pair;
 // they must not be glued into a single unbreakable unit.
 assert.deepEqual(words("Don't [Am]worry,[C] be happy"), ["Don't", 'worry,', 'be', 'happy']);
+
+// Two urls on one host must not render two identically labelled buttons.
+const { urls } = extractMeta(
+  parseSong(
+    '{meta: url https://www.youtube.com/watch?v=a Live, 1994}\n{meta: url https://www.youtube.com/watch?v=b}',
+  ),
+);
+assert.deepEqual(urls, [
+  { href: 'https://www.youtube.com/watch?v=a', label: 'Live, 1994' },
+  { href: 'https://www.youtube.com/watch?v=b', label: 'youtube.com' },
+]);
 
 // A bracketed trailing run stays one unit with its brackets, and the closing
 // bracket gets its own column instead of sitting under the last chord.

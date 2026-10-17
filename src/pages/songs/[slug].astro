@@ -19,12 +19,13 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { title, artist, album, language, key, capo, copyright, link, tags } = song.data;
+const { title, artist, album, language, key, capo, copyright, redirect, urls, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
 const trailingChords = isTrailing(parsed);
-// A link-only song has no sheet, so nothing for the sheet controls to act on.
+// A redirect-only song has no sheet, so nothing for the sheet controls to act on.
 const hasBody = parsed.bodyLines.length > 0;
+const links = [...(redirect ? [{ href: redirect, label: t.openLink }] : []), ...urls];
 
 const chordNames = [...new Set(parsed.getChords())];
 const diagramData = diagramDataForChords(chordNames);
@@ -76,7 +77,13 @@ const initialDiagrams = chordNames.flatMap((name) => {
           ))
         }
       </p>
-      {link && <p data-pagefind-ignore><a class="btn" href={link} target="_blank">{t.openLink}<ExternalCue /></a></p>}
+      {
+        links.length > 0 && (
+          <p class="song-links" data-pagefind-ignore>
+            {links.map(({ href, label }) => <a class="btn" href={href} target="_blank">{label}<ExternalCue /></a>)}
+          </p>
+        )
+      }
     </header>
     {hasBody && (
     <div class="sheet-controls">

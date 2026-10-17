@@ -28,7 +28,14 @@ const songs = defineCollection({
         }
         seen.set(id, filePath);
         const source = await fs.readFile(filePath, 'utf-8');
-        const meta = extractMeta(parseSong(source));
+        const song = parseSong(source);
+        // chordsheetjs would drop the old directive silently, leaving a link-only song an empty sheet.
+        if (song.metadata.get('link') !== null) {
+          throw new Error(
+            `${path.relative(dir, filePath)}: {meta: link} was renamed to {meta: redirect}.`,
+          );
+        }
+        const meta = extractMeta(song);
         return { id, source, ...meta };
       }),
     );
@@ -41,7 +48,8 @@ const songs = defineCollection({
     key: z.string().optional(),
     capo: z.number().optional(),
     copyright: z.string().optional(),
-    link: z.url({ protocol: /^https?$/ }).optional(),
+    redirect: z.url({ protocol: /^https?$/ }).optional(),
+    urls: z.array(z.object({ href: z.url({ protocol: /^https?$/ }), label: z.string() })),
     tags: z.array(z.string()),
     source: z.string(),
   }),
