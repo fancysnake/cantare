@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- **`{meta: url https://…}` adds a source button to a song's own page**,
+  labelled with the URL's host. Repeat it for more buttons; lists keep
+  pointing at the song's sheet.
+
+### Changed
+
+- **Breaking: `{meta: link …}` is now `{meta: redirect …}`**, so it reads
+  apart from `url`. A song still using `link` fails the build with a message
+  naming the file.
+
 ## [0.5.0] - 2026-10-16
 
 ### Added

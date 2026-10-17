@@ -20,9 +20,9 @@ export interface SongLink {
   href: string;
   target?: '_blank';
 }
-/** Where a song list points: a song with `{meta: link …}` opens that page in a new tab instead. */
+/** Where a song list points: a song with `{meta: redirect …}` opens that page in a new tab instead. */
 export const songLink = (song: CollectionEntry<'songs'>): SongLink =>
-  song.data.link ? { href: song.data.link, target: '_blank' } : { href: songHref(song.id) };
+  song.data.redirect ? { href: song.data.redirect, target: '_blank' } : { href: songHref(song.id) };
 
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);

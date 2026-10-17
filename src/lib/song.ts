@@ -16,7 +16,7 @@ export interface SongMeta {
   key?: string | undefined;
   capo?: number | undefined;
   copyright?: string | undefined;
-  link?: string | undefined;
+  redirect?: string | undefined;
   urls: string[];
   tags: string[];
 }
@@ -241,9 +241,9 @@ export function extractMeta(song: Song): SongMeta {
     key: single(meta.get('key')),
     capo: maybeNumber(single(meta.get('capo'))),
     copyright: single(meta.get('copyright')),
-    link: single(meta.get('link')),
-    // Repeated directives arrive as an array; each may hold several space-separated URLs.
-    urls: [meta.get('urls') ?? []].flat().flatMap((value) => value.split(/\s+/).filter(Boolean)),
+    redirect: single(meta.get('redirect')),
+    // A repeated directive arrives as an array.
+    urls: [meta.get('url') ?? []].flat(),
     tags: tags
       ? tags
           .split(',')
