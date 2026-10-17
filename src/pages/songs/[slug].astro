@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ExternalCue from '../../components/ExternalCue.astro';
-import { parseSong, renderSong } from '../../lib/song';
+import { isTrailing, parseSong, renderSong } from '../../lib/song';
 import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
 import { diagramDataForChords } from '../../lib/chord-data';
 import { chordDiagramSvg } from '../../lib/chord-diagram';
@@ -22,7 +22,7 @@ const { song } = Astro.props;
 const { title, artist, album, language, key, capo, copyright, link, tags } = song.data;
 const parsed = parseSong(song.data.source);
 const sheetHtml = renderSong(parsed);
-const trailingChords = parsed.metadata.get('chord_style') === 'trailing';
+const trailingChords = isTrailing(parsed);
 // A link-only song has no sheet, so nothing for the sheet controls to act on.
 const hasBody = parsed.bodyLines.length > 0;
 

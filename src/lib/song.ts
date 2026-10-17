@@ -115,16 +115,7 @@ const TRAILING_FRAGMENT = /^(.*\s)(\S+)$/;
 // push a trailing chord run clear of the lyrics, would open to a full tab stop.
 const WHITESPACE_RUN = /\s+/g;
 
-// An opening bracket binds to what follows it (`([Em] [G])`), so it never takes
-// the whitespace that closes a word.
-const OPENING_BRACKET = /[([{]$/;
-
-// In a trailing chord run, punctuation after a chord (`[G])`) encloses the run
-// rather than anchoring the chord, so it gets a column of its own beside it.
-const PUNCTUATION = /^[^\p{L}\p{N}\s]+$/u;
-
 function splitWords(song: Song): Song {
-  const trailing = song.metadata.get('chord_style') === 'trailing';
   for (const line of song.lines) {
     const items: Line['items'] = [];
     for (const item of line.items) {
@@ -137,21 +128,13 @@ function splitWords(song: Song): Song {
       // and the formatter drops it from the head of a column — hand it back so
       // the boundary survives as trailing whitespace on the word it closes.
       const previous = items[items.length - 1];
-      if (
-        lyrics.startsWith(' ') &&
-        previous instanceof ChordLyricsPair &&
-        !OPENING_BRACKET.test(previous.lyrics ?? '')
-      ) {
+      if (lyrics.startsWith(' ') && previous instanceof ChordLyricsPair) {
         const before = previous.lyrics ?? '';
         if (!/\s$/.test(before)) previous.lyrics = `${before} `;
         lyrics = lyrics.slice(1);
       }
       const fragment = TRAILING_FRAGMENT.exec(lyrics);
-      const parts = fragment
-        ? [fragment[1] ?? '', fragment[2] ?? '']
-        : trailing && item.chords && PUNCTUATION.test(lyrics)
-          ? ['', lyrics]
-          : [lyrics];
+      const parts = fragment ? [fragment[1] ?? '', fragment[2] ?? ''] : [lyrics];
       parts.forEach((lyrics, index) => {
         if (index > 0) {
           items.push(new ChordLyricsPair('', lyrics));
@@ -167,8 +150,43 @@ function splitWords(song: Song): Song {
   return song;
 }
 
+export function isTrailing(song: Song): boolean {
+  return song.metadata.get('chord_style') === 'trailing';
+}
+
+const OPENING_BRACKET = /[([{]$/;
+const PUNCTUATION = /^[^\p{L}\p{N}\s]+$/u;
+
+// In a trailing chord run, brackets and punctuation enclose chords rather than
+// anchor them (`[C] ([Em] [G]), [D]`). An opening bracket binds to the chord
+// after it, so it sheds the space that would close its word; punctuation after
+// a chord moves to a column of its own beside it.
+function splitTrailingPunctuation(song: Song): Song {
+  if (!isTrailing(song)) return song;
+  for (const line of song.lines) {
+    const items: Line['items'] = [];
+    for (const item of line.items) {
+      const previous = items[items.length - 1];
+      items.push(item);
+      if (!(item instanceof ChordLyricsPair)) continue;
+      if (previous instanceof ChordLyricsPair && OPENING_BRACKET.test(previous.lyrics ?? '')) {
+        item.lyrics = (item.lyrics ?? '').trimStart();
+      }
+      const lyrics = item.lyrics ?? '';
+      if (item.chords && PUNCTUATION.test(lyrics.trimEnd())) {
+        item.lyrics = '';
+        items.push(new ChordLyricsPair('', lyrics));
+      }
+    }
+    line.items = items;
+  }
+  return song;
+}
+
 export function parseSong(source: string): Song {
-  return splitWords(expandChorusRecalls(new ChordProParser().parse(isolateGrids(source))));
+  return splitWords(
+    splitTrailingPunctuation(expandChorusRecalls(new ChordProParser().parse(isolateGrids(source)))),
+  );
 }
 
 // A mid-word chord (`e[A]xist`) still splits one word across columns, and each

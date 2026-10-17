@@ -41,4 +41,17 @@ assert.match(
   /<div class="chord">G<\/div><div class="lyrics"><\/div><\/div><div class="column"><div class="chord"><\/div><div class="lyrics">\)<\/div>/,
 );
 
+// Mid-line, the closing punctuation carries the space that ends its word, and
+// still gets its own column — the last of its `.word`, which global.css relies
+// on to pull it flush against the chord.
+const midLine = '{chord_style: trailing}\nlyrics [C] ([Em] [G]) [D], [A]';
+assert.deepEqual(words(midLine), ['lyrics', '()', ',', '']);
+assert.match(
+  renderSong(parseSong(midLine)),
+  /<div class="chord">G<\/div><div class="lyrics"><\/div><\/div><div class="column"><div class="chord"><\/div><div class="lyrics">\) <\/div><\/div><\/span>/,
+);
+
+// Inline songs keep an opening bracket followed by a space as a word of its own.
+assert.deepEqual(words('word ([C] la)'), ['word', '(', 'la)']);
+
 stdout.write('song.check: ok\n');
