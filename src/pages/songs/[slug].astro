@@ -25,6 +25,7 @@ const sheetHtml = renderSong(parsed);
 const trailingChords = parsed.metadata.get('chord_style') === 'trailing';
 // A redirect-only song has no sheet, so nothing for the sheet controls to act on.
 const hasBody = parsed.bodyLines.length > 0;
+const links = [...(redirect ? [{ href: redirect, label: t.openLink }] : []), ...urls];
 
 const chordNames = [...new Set(parsed.getChords())];
 const diagramData = diagramDataForChords(chordNames);
@@ -77,10 +78,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
         }
       </p>
       {
-        (redirect || urls.length > 0) && (
+        links.length > 0 && (
           <p class="song-links" data-pagefind-ignore>
-            {redirect && <a class="btn" href={redirect} target="_blank">{t.openLink}<ExternalCue /></a>}
-            {urls.map((href) => <a class="btn" href={href} target="_blank">{new URL(href).hostname}<ExternalCue /></a>)}
+            {links.map(({ href, label }) => <a class="btn" href={href} target="_blank">{label}<ExternalCue /></a>)}
           </p>
         )
       }

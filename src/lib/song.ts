@@ -8,6 +8,11 @@ import {
   type Song,
 } from 'chordsheetjs';
 
+export interface SongLink {
+  href: string;
+  label: string;
+}
+
 export interface SongMeta {
   title: string;
   artist: string;
@@ -17,7 +22,7 @@ export interface SongMeta {
   capo?: number | undefined;
   copyright?: string | undefined;
   redirect?: string | undefined;
-  urls: string[];
+  urls: SongLink[];
   tags: string[];
 }
 
@@ -243,7 +248,7 @@ export function extractMeta(song: Song): SongMeta {
     copyright: single(meta.get('copyright')),
     redirect: single(meta.get('redirect')),
     // A repeated directive arrives as an array.
-    urls: [meta.get('url') ?? []].flat(),
+    urls: [meta.get('url') ?? []].flat().map(songLink),
     tags: tags
       ? tags
           .split(',')
@@ -251,6 +256,13 @@ export function extractMeta(song: Song): SongMeta {
           .filter(Boolean)
       : [],
   };
+}
+
+/** `{meta: url https://… Optional label}`; without a label, the host names the button. */
+function songLink(value: string): SongLink {
+  const [href = '', ...words] = value.trim().split(/\s+/);
+  const label = words.join(' ') || (URL.parse(href)?.hostname.replace(/^www\./, '') ?? href);
+  return { href, label };
 }
 
 function maybeNumber(value: string | undefined): number | undefined {

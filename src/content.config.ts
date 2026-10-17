@@ -29,7 +29,7 @@ const songs = defineCollection({
         seen.set(id, filePath);
         const source = await fs.readFile(filePath, 'utf-8');
         const song = parseSong(source);
-        // Silently ignored, a link-only song would render as an empty sheet.
+        // chordsheetjs would drop the old directive silently, leaving a link-only song an empty sheet.
         if (song.metadata.get('link') !== null) {
           throw new Error(
             `${path.relative(dir, filePath)}: {meta: link} was renamed to {meta: redirect}.`,
@@ -49,7 +49,7 @@ const songs = defineCollection({
     capo: z.number().optional(),
     copyright: z.string().optional(),
     redirect: z.url({ protocol: /^https?$/ }).optional(),
-    urls: z.array(z.url({ protocol: /^https?$/ })),
+    urls: z.array(z.object({ href: z.url({ protocol: /^https?$/ }), label: z.string() })),
     tags: z.array(z.string()),
     source: z.string(),
   }),

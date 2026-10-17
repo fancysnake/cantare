@@ -44,10 +44,16 @@ Notes:
   pick. A search result leads to the song's own page, with a button to the
   redirect target.
 
-- `{meta: url https://...}` adds a button, labelled with the URL's host, to the
-  song's own page without redirecting lists away from it. Repeat the directive
-  for more buttons. Unlike `redirect`, it suits a song with its own sheet, and
-  the two can be combined.
+- `{meta: url https://...}` adds a button to the song's own page without
+  redirecting lists away from it. Repeat the directive for more buttons. Unlike
+  `redirect`, it suits a song with its own sheet, and the two can be combined.
+  Text after the URL labels the button; without it, the button reads the URL's
+  host minus `www.`, so label each one when two share a host:
+
+  ```text
+  {meta: url https://www.youtube.com/watch?v=abc Live, 1994}
+  {meta: url https://www.youtube.com/watch?v=def Acoustic}
+  ```
 
 - Chord names use English notation (C D E F G A B).
 - `{chord_style: trailing}` suits songbooks converted from documents, where a
