@@ -43,16 +43,16 @@
     }
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.5",
-    "eslint": "^10.13.0",
-    "eslint-plugin-astro": "^3.2.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.6.0",
-    "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^1.1.1",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2"
+    "@astrojs/check": "0.9.11",
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.6.5",
+    "eslint": "10.13.0",
+    "eslint-plugin-astro": "3.2.1",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.0"
   }
 }
