@@ -11,7 +11,7 @@ python = "3.14"
 "pipx:vekna" = { version = "0.13.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v3.0.0" }
 
 [hooks]
-enter = "aube install"
+enter = "aube install && aube exec astro sync"
 
 [tasks.dev]
 description = "Start the Astro dev server"
@@ -32,6 +32,7 @@ run = "aube run preview"
 
 [tasks.lint]
 description = "ESLint + Prettier check"
+depends = ["sync"]
 run = ["aube run lint", "aube run format:check"]
 
 [tasks.format]
@@ -58,7 +59,6 @@ run = "mkdocs build --strict --site-dir ${SITE_DIR:-site}"
 description = "The gate before a commit: deps, lint, types, song rules, sub-path build, docs"
 run = [
     "aube install --frozen-lockfile",
-    { task = "sync" },
     { task = "lint" },
     { task = "check" },
     { task = "song:check" },

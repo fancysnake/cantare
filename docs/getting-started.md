@@ -76,7 +76,7 @@ Clone the repo and work with the tooling directly. The repo's own
 so a fresh clone builds the demo site with no extra setup.
 
 ```sh
-mise install   # installs node + aube, then `aube install` runs on enter
+mise install   # installs node + aube; on enter, `aube install` + `astro sync`
 mise run dev   # dev server at http://localhost:4321
 ```
 
