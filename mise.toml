@@ -11,7 +11,7 @@ python = "3.14"
 "pipx:vekna" = { version = "0.13.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v3.0.0" }
 
 [hooks]
-enter = "aube install"
+enter = "aube install && aube exec astro sync"
 
 [tasks.dev]
 description = "Start the Astro dev server"
