@@ -1,13 +1,20 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import { t } from '../lib/i18n';
-import type { SongLink } from '../lib/routes';
+import { songLink } from '../lib/routes';
+import { songbooks } from '../lib/site';
+import { songbooksOf } from '../lib/songbook';
 
 interface Props {
-  links: SongLink[];
+  songs: CollectionEntry<'songs'>[];
   label?: string | undefined;
 }
 
-const { links, label = t.randomSong } = Astro.props;
+const { songs, label = t.randomSong } = Astro.props;
+const links = songs.map((song) => ({
+  ...songLink(song),
+  songbooks: songbooksOf(song.data, songbooks),
+}));
 ---
 
 <button class="btn random-pick" hidden data-links={JSON.stringify(links)}>
@@ -20,7 +27,9 @@ const { links, label = t.randomSong } = Astro.props;
   document.querySelectorAll<HTMLButtonElement>('button.random-pick').forEach((button) => {
     button.hidden = false;
     button.addEventListener('click', () => {
-      const links: SongLink[] = JSON.parse(button.dataset.links ?? '[]');
+      const all: (SongLink & { songbooks: string[] })[] = JSON.parse(button.dataset.links ?? '[]');
+      const active = document.documentElement.dataset.songbook;
+      const links = active ? all.filter((link) => link.songbooks.includes(active)) : all;
       const link = links[Math.floor(Math.random() * links.length)];
       if (link?.target) window.open(link.href, link.target, 'noopener');
       else if (link) window.location.href = link.href;

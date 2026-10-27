@@ -100,8 +100,13 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+#songbook-select,
 #chords-toggle {
   margin-left: auto;
+}
+
+#songbook-select + #chords-toggle {
+  margin-left: 0;
 }
 
 .site-footer {
@@ -186,6 +191,8 @@ h1 {
 }
 
 .song-list {
+  display: flex;
+  flex-direction: column;
   list-style: none;
   padding: 0;
 }

@@ -66,6 +66,10 @@ interface Strings {
   notFoundOr: string;
   notFoundBrowse: string;
   songCount: (n: number) => string;
+  songbookLabel: string;
+  songbookAll: string;
+  songbookOther: string;
+  outsideSongbook: string;
 }
 
 const en: Strings = {
@@ -145,6 +149,10 @@ const en: Strings = {
   notFoundOr: 'or',
   notFoundBrowse: 'browse all songs',
   songCount: (n) => (n === 1 ? '1 song' : `${n} songs`),
+  songbookLabel: 'Songbook',
+  songbookAll: 'All',
+  songbookOther: 'Other',
+  outsideSongbook: 'This song is not in the songbook you are browsing.',
 };
 
 const plPlural = new Intl.PluralRules('pl');
@@ -235,6 +243,10 @@ const pl: Strings = {
         return `${n} piosenek`;
     }
   },
+  songbookLabel: 'Śpiewnik',
+  songbookAll: 'Wszystkie',
+  songbookOther: 'Pozostałe',
+  outsideSongbook: 'Tej piosenki nie ma w wybranym śpiewniku.',
 };
 
 const STRINGS: Record<Locale, Strings> = { en, pl };
