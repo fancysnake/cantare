@@ -1,19 +1,12 @@
 ---
 import '../styles/global.css';
 import { getCollection } from 'astro:content';
-import { site, songbooks, themeCss } from '../lib/site';
-import { OTHER, songbookCss, songbooksOf } from '../lib/songbook';
+import { site, themeCss } from '../lib/site';
+import { songbookCss, songbookOptions as optionsOf } from '../lib/songbook';
 import { artistsHref, homeHref, languagesHref, songsHref, tagsHref } from '../lib/routes';
 import { locale, t } from '../lib/i18n';
 
-// "Other" is offered only when some song lands in it.
-const hasOther =
-  songbooks.length > 0 &&
-  (await getCollection('songs')).some((song) => songbooksOf(song.data, songbooks).includes(OTHER));
-const songbookOptions = [
-  ...songbooks.map(({ slug, name }) => ({ slug, name })),
-  ...(hasOther ? [{ slug: OTHER, name: t.songbookOther }] : []),
-];
+const songbookOptions = optionsOf(site.songbooks, await getCollection('songs'), t.songbookOther);
 const songbookSlugs = songbookOptions.map(({ slug }) => slug);
 const headStyles = [themeCss(), songbookCss(songbookSlugs)].filter(Boolean).join('\n');
 

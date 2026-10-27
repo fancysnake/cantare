@@ -1,8 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { t } from '../lib/i18n';
-import { songbooks } from '../lib/site';
-import { songbooksOf } from '../lib/songbook';
 
 interface Props {
   href: string;
@@ -12,29 +10,21 @@ interface Props {
 
 const { href, label, songs } = Astro.props;
 const counts: Record<string, number> = {};
-for (const slug of songs.flatMap((song) => songbooksOf(song.data, songbooks))) {
+for (const slug of songs.flatMap((song) => song.data.songbooks)) {
   counts[slug] = (counts[slug] ?? 0) + 1;
 }
 ---
 
 <li data-songbooks-dim={Object.keys(counts).join(' ') || undefined}>
   <a href={href}>{label}</a>
-  <span class="song-meta" data-counts={JSON.stringify({ '': songs.length, ...counts })}>
+  <span class="song-meta" data-songbooks-count="">
+    {' '}
     — {t.songCount(songs.length)}
   </span>
+  {Object.entries(counts).map(([slug, count]) => (
+    <span class="song-meta" data-songbooks-count={slug}>
+      {' '}
+      — {t.songCount(count)}
+    </span>
+  ))}
 </li>
-
-<script>
-  import { t } from '../lib/i18n';
-
-  // Counts follow the active songbook; the build renders the total, which is what "All" shows.
-  const recount = () => {
-    const active = document.documentElement.dataset.songbook ?? '';
-    document.querySelectorAll<HTMLElement>('[data-counts]').forEach((el) => {
-      const counts: Record<string, number> = JSON.parse(el.dataset.counts ?? '{}');
-      el.textContent = ` — ${t.songCount(counts[active] ?? 0)}`;
-    });
-  };
-  recount();
-  document.addEventListener('songbook:changed', recount);
-</script>

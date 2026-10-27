@@ -1,26 +1,43 @@
+import { z } from 'astro/zod';
 import { slugify } from './slug.ts';
 
-/** A songbook as written in the config: a song belongs if it matches any listed value. */
-export interface SongbookConfig {
-  name: string;
-  tags?: string[];
-  artists?: string[];
-  albums?: string[];
-  languages?: string[];
-}
-
 const KEYS = ['tags', 'artists', 'albums', 'languages'] as const;
-type Key = (typeof KEYS)[number];
-
-export interface Songbook {
-  slug: string;
-  name: string;
-  /** Slugified values per key, so matching ignores case and accents like the listing pages do. */
-  match: Record<Key, Set<string>>;
-}
 
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';
+
+const slugs = (values: string[] = []) => new Set(values.map(slugify));
+
+// An empty slug would match every song whose value also slugifies to nothing.
+const sluggable = z.string().refine((value) => slugify(value) !== '', 'has no letters or digits');
+const values = z.array(sluggable).optional();
+
+/** A songbook as written in the config: a song belongs if it matches any listed value. */
+const songbookSchema = z
+  .strictObject({
+    name: sluggable,
+    tags: values,
+    artists: values,
+    albums: values,
+    languages: values,
+  })
+  .refine((config) => KEYS.some((key) => config[key]?.length), {
+    error: `lists no ${KEYS.join(', ')}, so it would hold no songs`,
+  })
+  // Slugified values, so matching ignores case and accents like the listing pages do.
+  .transform(({ name, tags, artists, albums, languages }) => ({
+    slug: slugify(name),
+    name,
+    match: {
+      tags: slugs(tags),
+      artists: slugs(artists),
+      albums: slugs(albums),
+      languages: slugs(languages),
+    },
+  }));
+
+export type SongbookConfig = z.input<typeof songbookSchema>;
+export type Songbook = z.output<typeof songbookSchema>;
 
 /** The song metadata songbooks match on. */
 export interface SongbookFields {
@@ -31,54 +48,47 @@ export interface SongbookFields {
 }
 
 /** Validate the config's songbooks; a mistake fails the build rather than silently matching nothing. */
-export function parseSongbooks(configs: SongbookConfig[] | undefined): Songbook[] {
+export function parseSongbooks(config: unknown): Songbook[] {
+  const result = z.array(songbookSchema).optional().safeParse(config);
+  if (!result.success) {
+    throw new Error(`Invalid songbooks in the config:\n${z.prettifyError(result.error)}`);
+  }
   const seen = new Set([OTHER]);
-  return (configs ?? []).map((config) => {
-    const slug = slugify(config.name);
-    if (!slug) {
-      throw new Error(`Songbook name ${JSON.stringify(config.name)} has no letters or digits.`);
-    }
+  for (const { slug, name } of result.data ?? []) {
     if (seen.has(slug)) {
-      throw new Error(
-        `Songbook "${config.name}" clashes with another one (or the built-in "${OTHER}").`,
-      );
+      throw new Error(`Songbook "${name}" clashes with another one (or the built-in "${OTHER}").`);
     }
     seen.add(slug);
-    const unknown = Object.keys(config).filter(
-      (key) => key !== 'name' && !(KEYS as readonly string[]).includes(key),
-    );
-    if (unknown.length > 0) {
-      throw new Error(
-        `Songbook "${config.name}": unknown key ${unknown.join(', ')}; use ${KEYS.join(', ')}.`,
-      );
-    }
-    const match = Object.fromEntries(
-      KEYS.map((key) => [key, new Set((config[key] ?? []).map(slugify))]),
-    ) as Record<Key, Set<string>>;
-    if (KEYS.every((key) => match[key].size === 0)) {
-      throw new Error(
-        `Songbook "${config.name}" lists no ${KEYS.join(', ')}, so it would hold no songs.`,
-      );
-    }
-    return { slug, name: config.name, match };
-  });
+  }
+  return result.data ?? [];
 }
 
 /** Slugs of the songbooks a song belongs to: `other` when none picks it, nothing when none are defined. */
 export function songbooksOf(song: SongbookFields, songbooks: Songbook[]): string[] {
   if (songbooks.length === 0) return [];
-  const values: Record<Key, string[]> = {
+  const values = {
     tags: song.tags,
     artists: [song.artist],
     albums: song.album ? [song.album] : [],
     languages: song.language ? [song.language] : [],
   };
-  const slugs = songbooks
+  const matched = songbooks
     .filter(({ match }) =>
       KEYS.some((key) => values[key].some((value) => match[key].has(slugify(value)))),
     )
     .map(({ slug }) => slug);
-  return slugs.length > 0 ? slugs : [OTHER];
+  return matched.length > 0 ? matched : [OTHER];
+}
+
+/** The switcher's choices: the config's songbooks, then `otherName` when some song lands in Other. */
+export function songbookOptions(
+  config: unknown,
+  songs: { data: { songbooks: string[] } }[],
+  otherName: string,
+): { slug: string; name: string }[] {
+  const options = parseSongbooks(config).map(({ slug, name }) => ({ slug, name }));
+  const hasOther = songs.some((song) => song.data.songbooks.includes(OTHER));
+  return hasOther ? [...options, { slug: OTHER, name: otherName }] : options;
 }
 
 /**
@@ -86,8 +96,10 @@ export function songbooksOf(song: SongbookFields, songbooks: Songbook[]): string
  *
  * Membership is baked into attributes at build time, so this is the whole filter:
  * `data-songbooks` hides an element outside the songbook, `data-songbooks-dim`
- * greys it and moves it last, `data-songbooks-group` hides a group with nothing
- * left in it, and `data-songbooks-note` shows only outside the songbook.
+ * greys it, `data-songbooks-group` hides a group with nothing left in it,
+ * `data-songbooks-note` shows only outside the songbook, and of the
+ * `data-songbooks-count` spans only the active songbook's shows (the empty one
+ * is the total, shown when none is active).
  */
 export function songbookCss(slugs: string[]): string {
   if (slugs.length === 0) return '';
@@ -95,10 +107,15 @@ export function songbookCss(slugs: string[]): string {
     const active = `:root[data-songbook='${slug}']`;
     return [
       `${active} [data-songbooks]:not([data-songbooks~='${slug}']),`,
+      `${active} [data-songbooks-count=''],`,
       `${active} [data-songbooks-group]:not(:has([data-songbooks~='${slug}'])) { display: none; }`,
-      `${active} [data-songbooks-dim]:not([data-songbooks-dim~='${slug}']) { order: 1; opacity: 0.5; }`,
+      `${active} [data-songbooks-dim]:not([data-songbooks-dim~='${slug}']) { opacity: 0.5; }`,
       `${active} [data-songbooks-note]:not([data-songbooks-note~='${slug}']) { display: block; }`,
+      `${active} [data-songbooks-count='${slug}'] { display: inline; }`,
     ].join('\n');
   });
-  return ['[data-songbooks-note] { display: none; }', ...blocks].join('\n');
+  return [
+    "[data-songbooks-note], [data-songbooks-count]:not([data-songbooks-count='']) { display: none; }",
+    ...blocks,
+  ].join('\n');
 }

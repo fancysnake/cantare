@@ -1,9 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { t } from '../lib/i18n';
-import { songLink } from '../lib/routes';
-import { songbooks } from '../lib/site';
-import { songbooksOf } from '../lib/songbook';
+import { songLink, type RandomLink } from '../lib/routes';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
@@ -11,9 +9,9 @@ interface Props {
 }
 
 const { songs, label = t.randomSong } = Astro.props;
-const links = songs.map((song) => ({
+const links = songs.map((song): RandomLink => ({
   ...songLink(song),
-  songbooks: songbooksOf(song.data, songbooks),
+  songbooks: song.data.songbooks,
 }));
 ---
 
@@ -22,12 +20,12 @@ const links = songs.map((song) => ({
 </button>
 
 <script>
-  import type { SongLink } from '../lib/routes';
+  import type { RandomLink } from '../lib/routes';
 
   document.querySelectorAll<HTMLButtonElement>('button.random-pick').forEach((button) => {
     button.hidden = false;
     button.addEventListener('click', () => {
-      const all: (SongLink & { songbooks: string[] })[] = JSON.parse(button.dataset.links ?? '[]');
+      const all: RandomLink[] = JSON.parse(button.dataset.links ?? '[]');
       const active = document.documentElement.dataset.songbook;
       const links = active ? all.filter((link) => link.songbooks.includes(active)) : all;
       const link = links[Math.floor(Math.random() * links.length)];

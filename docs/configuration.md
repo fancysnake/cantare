@@ -52,13 +52,14 @@ belong to several songbooks. Songs no songbook picks go to a built-in
 
 With songbooks defined, the header shows a switcher. While a songbook is
 active, search, the song index and random picks show only its songs. On the
-artist, tag and language indexes, entries with no songs in it move to the
-bottom, greyed out. A song page opened from outside the songbook still opens
+artist, tag and language indexes, counts follow it and entries with no songs
+in it are greyed out. A song page opened from outside the songbook still opens
 and says so. The choice is the reader's own, remembered in their browser, so
 links stay the same for everyone.
 
-A songbook that lists nothing, uses an unknown key, or has the same name as
-another (or as "Other") fails the build.
+A songbook that lists nothing, uses an unknown key, has a name or value with no
+Latin letters or digits, or has the same name as another (or as "Other") fails
+the build.
 
 ## Hosting under a sub-path
 

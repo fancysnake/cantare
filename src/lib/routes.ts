@@ -24,6 +24,9 @@ export interface SongLink {
 export const songLink = (song: CollectionEntry<'songs'>): SongLink =>
   song.data.redirect ? { href: song.data.redirect, target: '_blank' } : { href: songHref(song.id) };
 
+/** A random-pick candidate: the song's link and the songbooks it may be picked in. */
+export type RandomLink = SongLink & { songbooks: string[] };
+
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);
 

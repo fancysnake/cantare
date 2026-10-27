@@ -92,21 +92,13 @@ h1 {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 1rem;
+  margin-right: auto;
 }
 
 .site-header .brand {
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.02em;
-}
-
-#songbook-select,
-#chords-toggle {
-  margin-left: auto;
-}
-
-#songbook-select + #chords-toggle {
-  margin-left: 0;
 }
 
 .site-footer {
@@ -126,6 +118,7 @@ h1 {
 
   .site-header nav {
     justify-content: center;
+    margin-right: 0;
   }
 
   .site-header a {
@@ -136,7 +129,6 @@ h1 {
   #chords-toggle,
   #theme-toggle {
     padding: 0.55rem 0.8rem;
-    margin-left: 0;
   }
 }
 
@@ -191,8 +183,6 @@ h1 {
 }
 
 .song-list {
-  display: flex;
-  flex-direction: column;
   list-style: none;
   padding: 0;
 }

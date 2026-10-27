@@ -5,7 +5,13 @@
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
-import { OTHER, parseSongbooks, songbooksOf, type SongbookFields } from './songbook.ts';
+import {
+  OTHER,
+  parseSongbooks,
+  songbookOptions,
+  songbooksOf,
+  type SongbookFields,
+} from './songbook.ts';
 
 const books = parseSongbooks([
   { name: 'Campfire', tags: ['folk', 'Shanty'] },
@@ -35,8 +41,19 @@ assert.deepEqual(songbooksOf(song({ tags: ['hymn'], language: 'PL' }), books), [
 assert.deepEqual(songbooksOf(song({ tags: ['test'] }), books), [OTHER]);
 assert.deepEqual(songbooksOf(song({ tags: ['folk'] }), []), []);
 
+// "Other" is offered only when some song lands in it.
+const config = [{ name: 'Campfire', tags: ['folk'] }];
+assert.deepEqual(songbookOptions(config, [{ data: { songbooks: ['campfire'] } }], 'Rest'), [
+  { slug: 'campfire', name: 'Campfire' },
+]);
+assert.deepEqual(songbookOptions(config, [{ data: { songbooks: [OTHER] } }], 'Rest'), [
+  { slug: 'campfire', name: 'Campfire' },
+  { slug: OTHER, name: 'Rest' },
+]);
+
 assert.deepEqual(parseSongbooks(undefined), []);
-assert.throws(() => parseSongbooks([{ name: 'Empty' }]), /holds no songs|no tags/);
+assert.throws(() => parseSongbooks([{ name: 'Empty' }]), /hold no songs/);
+assert.throws(() => parseSongbooks([{ name: 'Empty', tags: [] }]), /hold no songs/);
 assert.throws(() => parseSongbooks([{ name: 'Other', tags: ['x'] }]), /clashes/);
 assert.throws(
   () =>
@@ -46,10 +63,10 @@ assert.throws(
     ]),
   /clashes/,
 );
-assert.throws(
-  () => parseSongbooks([{ name: 'Typo', tags: ['x'], tag: ['y'] } as never]),
-  /unknown key tag/,
-);
+assert.throws(() => parseSongbooks([{ name: 'Typo', tags: ['x'], tag: ['y'] }]), /"tag"/);
+assert.throws(() => parseSongbooks({ name: 'Campfire', tags: ['x'] }), /expected array/);
 assert.throws(() => parseSongbooks([{ name: '!!', tags: ['x'] }]), /no letters or digits/);
+assert.throws(() => parseSongbooks([{ name: 'Blank', tags: [''] }]), /no letters or digits/);
+assert.throws(() => parseSongbooks([{ name: 'Kanji', artists: ['日本'] }]), /no letters or digits/);
 
 stdout.write('songbook checks passed\n');

@@ -1,14 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { songbooks } from '../lib/site';
-import { songbooksOf } from '../lib/songbook';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
 }
 
 // The search narrows to a songbook by this filter, so a page carries every songbook its songs are in.
-const slugs = new Set(Astro.props.songs.flatMap((song) => songbooksOf(song.data, songbooks)));
+const slugs = new Set(Astro.props.songs.flatMap((song) => song.data.songbooks));
 ---
 
 {[...slugs].map((slug) => (

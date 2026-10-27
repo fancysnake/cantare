@@ -2,8 +2,6 @@
 import type { CollectionEntry } from 'astro:content';
 import { locale } from '../lib/i18n';
 import { songLink } from '../lib/routes';
-import { songbooks } from '../lib/site';
-import { songbooksOf } from '../lib/songbook';
 import ExternalCue from './ExternalCue.astro';
 
 interface Props {
@@ -19,7 +17,7 @@ const songs = [...Astro.props.songs].sort((a, b) =>
   {songs.map((song) => {
     const link = songLink(song);
     return (
-      <li data-songbooks={songbooksOf(song.data, songbooks).join(' ') || undefined}>
+      <li data-songbooks={song.data.songbooks.join(' ') || undefined}>
         <a {...link}>
           {song.data.title}
           {link.target && <ExternalCue />}

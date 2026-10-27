@@ -9,8 +9,6 @@ import { diagramDataForChords } from '../../lib/chord-data';
 import { chordDiagramSvg } from '../../lib/chord-diagram';
 import { chordKey } from '../../lib/chord-lookup';
 import { t } from '../../lib/i18n';
-import { songbooks } from '../../lib/site';
-import { songbooksOf } from '../../lib/songbook';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -29,7 +27,6 @@ const trailingChords = isTrailing(parsed);
 // A redirect-only song has no sheet, so nothing for the sheet controls to act on.
 const hasBody = parsed.bodyLines.length > 0;
 const links = [...(redirect ? [{ href: redirect, label: t.openLink }] : []), ...urls];
-const songSongbooks = songbooksOf(song.data, songbooks);
 
 const chordNames = [...new Set(parsed.getChords())];
 const diagramData = diagramDataForChords(chordNames);
@@ -51,8 +48,12 @@ const initialDiagrams = chordNames.flatMap((name) => {
       <h1 data-pagefind-meta="title">{title}</h1>
       <SongbookFilters songs={[song]} />
       {
-        songSongbooks.length > 0 && (
-          <p class="song-meta" data-songbooks-note={songSongbooks.join(' ')} data-pagefind-ignore>
+        song.data.songbooks.length > 0 && (
+          <p
+            class="song-meta"
+            data-songbooks-note={song.data.songbooks.join(' ')}
+            data-pagefind-ignore
+          >
             {t.outsideSongbook}
           </p>
         )

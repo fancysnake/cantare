@@ -1,5 +1,5 @@
 import config from 'virtual:cantare-config';
-import { parseSongbooks, type SongbookConfig } from './songbook';
+import type { SongbookConfig } from './songbook';
 
 export interface SiteConfig {
   name: string;
@@ -17,8 +17,6 @@ export interface SiteConfig {
 }
 
 export const site: SiteConfig = config;
-
-export const songbooks = parseSongbooks(site.songbooks);
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
