@@ -13,9 +13,15 @@ const links = songs.map((song): RandomLink => ({
   ...songLink(song),
   songbooks: song.data.songbooks,
 }));
+const songbooks = [...new Set(songs.flatMap((song) => song.data.songbooks))].join(' ');
 ---
 
-<button class="btn random-pick" hidden data-links={JSON.stringify(links)}>
+<button
+  class="btn random-pick"
+  hidden
+  data-links={JSON.stringify(links)}
+  data-songbooks={songbooks || undefined}
+>
   🎲 {label}
 </button>
 
