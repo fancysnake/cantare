@@ -1,4 +1,5 @@
 import config from 'virtual:cantare-config';
+import type { SongbookConfig } from './songbook';
 
 export interface SiteConfig {
   name: string;
@@ -11,6 +12,8 @@ export interface SiteConfig {
   themeDark?: Record<string, string>;
   /** Footer line; omitted entirely when unset, linked when `href` is given. */
   footer?: { text: string; href?: string };
+  /** Named song selections the reader can switch between. */
+  songbooks?: SongbookConfig[];
 }
 
 export const site: SiteConfig = config;

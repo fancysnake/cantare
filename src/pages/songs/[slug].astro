@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ExternalCue from '../../components/ExternalCue.astro';
+import SongbookFilters from '../../components/SongbookFilters.astro';
 import { isTrailing, parseSong, renderSong } from '../../lib/song';
 import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
 import { diagramDataForChords } from '../../lib/chord-data';
@@ -45,6 +46,18 @@ const initialDiagrams = chordNames.flatMap((name) => {
   <div class="song-toolbar">
     <header data-pagefind-body>
       <h1 data-pagefind-meta="title">{title}</h1>
+      <SongbookFilters songs={[song]} />
+      {
+        song.data.songbooks.length > 0 && (
+          <p
+            class="song-meta"
+            data-songbooks-note={song.data.songbooks.join(' ')}
+            data-pagefind-ignore
+          >
+            {t.outsideSongbook}
+          </p>
+        )
+      }
       <p class="song-meta">
         <a href={artistHref(artist)} data-pagefind-filter="artist">{artist}</a>
         {

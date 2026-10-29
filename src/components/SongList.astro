@@ -17,7 +17,7 @@ const songs = [...Astro.props.songs].sort((a, b) =>
   {songs.map((song) => {
     const link = songLink(song);
     return (
-      <li>
+      <li data-songbooks={song.data.songbooks.join(' ') || undefined}>
         <a {...link}>
           {song.data.title}
           {link.target && <ExternalCue />}

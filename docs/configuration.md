@@ -1,6 +1,7 @@
 # Configuration
 
-`cantare.config.json` carries the brand and, optionally, a footer and a theme:
+`cantare.config.json` carries the brand and, optionally, a footer, a theme and
+songbooks:
 
 ```json
 {
@@ -31,6 +32,34 @@ The full set lives in
 [`src/styles/global.css`](https://github.com/fancysnake/cantare/blob/main/src/styles/global.css):
 
 `bg`, `surface`, `text`, `muted`, `border`, `border-strong`, `accent`, `chord`.
+
+## Songbooks
+
+`songbooks` splits one collection into named selections a reader can switch
+between, such as a choir set and campfire songs:
+
+```json
+"songbooks": [
+  { "name": "Choir", "tags": ["choir", "hymn"] },
+  { "name": "Campfire", "tags": ["folk"], "artists": ["Traditional"] }
+]
+```
+
+A song belongs to a songbook when any one of its tags, its artist, album or
+language appears in the lists; case and accents don't matter. A song can
+belong to several songbooks. Songs no songbook picks go to a built-in
+**Other**.
+
+With songbooks defined, the header shows a switcher. While a songbook is
+active, search, the song index and random picks show only its songs. On the
+artist, tag and language indexes, counts follow it and entries with no songs
+in it are greyed out. A song page opened from outside the songbook still opens
+and says so. The choice is the reader's own, remembered in their browser, so
+links stay the same for everyone.
+
+A songbook that lists nothing, uses an unknown key, has a name or value with no
+Latin letters or digits, or has the same name as another (or as "Other") fails
+the build.
 
 ## Hosting under a sub-path
 

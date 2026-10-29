@@ -4,10 +4,9 @@ import Base from '../layouts/Base.astro';
 import RandomButton from '../components/RandomButton.astro';
 import { t, locale } from '../lib/i18n';
 import { url } from '../lib/site';
-import { homeHref, songLink, songsHref } from '../lib/routes';
+import { homeHref, songsHref } from '../lib/routes';
 
 const songs = await getCollection('songs');
-const songLinks = songs.map(songLink);
 ---
 
 <Base>
@@ -31,6 +30,13 @@ const songLinks = songs.map(songLink);
       await new Promise((r) => requestAnimationFrame(r));
     }
     el?.instance?.setTranslations(searchUi);
+    // Results stay inside the active songbook; an empty list lifts the filter.
+    const applySongbook = () => {
+      const active = document.documentElement.dataset.songbook;
+      el?.instance?.triggerFilter('songbook', active ? [active] : []);
+    };
+    applySongbook();
+    document.addEventListener('songbook:changed', applySongbook);
   </script>
   <pagefind-input
     instance="songs"
@@ -66,7 +72,7 @@ const songLinks = songs.map(songLink);
   </noscript>
 
   <p class="home-actions">
-    <RandomButton links={songLinks} />
+    <RandomButton songs={songs} />
     <a href={songsHref()}>{t.navAllSongs}</a>
   </p>
 </Base>

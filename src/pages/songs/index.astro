@@ -21,7 +21,7 @@ for (const song of songs) {
   <h1>{t.allSongsTitle}</h1>
   {
     [...groups.entries()].map(([letter, group]) => (
-      <section>
+      <section data-songbooks-group>
         <h2>{letter}</h2>
         <SongList songs={group} />
       </section>

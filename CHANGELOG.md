@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- **Songbooks: named selections a reader switches between.** `songbooks` in
+  the config lists tags, artists, albums or languages per songbook; a song in
+  any of them belongs. While one is active, search, lists and random picks
+  show only its songs, and songs no songbook picks gather under "Other".
+
 ## [1.0.0] - 2026-10-17
 
 ### Added

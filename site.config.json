@@ -6,5 +6,9 @@
   "footer": {
     "text": "cantare · MIT License",
     "href": "https://github.com/fancysnake/cantare"
-  }
+  },
+  "songbooks": [
+    { "name": "Campfire", "tags": ["folk", "shanty", "ballad"] },
+    { "name": "Celebrations", "tags": ["hymn"], "artists": ["Robert Burns"] }
+  ]
 }

@@ -2,9 +2,12 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { site } from './lib/site';
 import { parseSong, extractMeta } from './lib/song';
+import { parseSongbooks, songbooksOf } from './lib/songbook';
 
 const SONGS_DIR = process.env.CANTARE_SONGS_DIR ?? 'songs';
+const songbooks = parseSongbooks(site.songbooks);
 
 const songs = defineCollection({
   loader: async () => {
@@ -36,7 +39,7 @@ const songs = defineCollection({
           );
         }
         const meta = extractMeta(song);
-        return { id, source, ...meta };
+        return { id, source, ...meta, songbooks: songbooksOf(meta, songbooks) };
       }),
     );
   },
@@ -51,6 +54,7 @@ const songs = defineCollection({
     redirect: z.url({ protocol: /^https?$/ }).optional(),
     urls: z.array(z.object({ href: z.url({ protocol: /^https?$/ }), label: z.string() })),
     tags: z.array(z.string()),
+    songbooks: z.array(z.string()),
     source: z.string(),
   }),
 });

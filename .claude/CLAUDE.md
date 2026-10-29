@@ -16,7 +16,7 @@ mise run format    # Prettier write
 mise run check     # astro check (type-checks .astro templates)
 mise run site:serve # MkDocs docs at http://localhost:8000
 mise run site:check # mkdocs build --strict (fails on a broken link or anchor); SITE_DIR overrides the output dir
-mise run song:check # asserts song.ts word-grouping rules, which read the formatter's own HTML back
+mise run song:check # asserts song.ts word-grouping rules (which read the formatter's own HTML back) and songbook matching
 mise run fullcheck # the gate: frozen install, sync, lint, check, song:check, build:demo, site:check
 ```
 
@@ -58,6 +58,7 @@ Static Astro songbook. Songs: ChordPro `.cho` files in `songs/`; filename = URL 
 - `src/pages/songs/[slug].astro`: embeds ChordPro source + diagram subset as inline JSON `<script>` blocks; client scripts do transposition (dispatches `song:rerendered`), autoscroll, diagram updates.
 - `src/lib/routes.ts`: **every internal link, as a finished href** (`songHref`, `artistHref`, …). Templates never write a path — a hand-written `href="/songs/…"` type-checks and lints, then breaks under a sub-path. `[slug].astro` pages own the slug in `getStaticPaths` via `src/lib/slug.ts`; `routes.ts` owns the link, and the two must agree.
 - Search: Pagefind via `astro-pagefind` — song pages mark `data-pagefind-body`/`data-pagefind-meta`/`data-pagefind-filter`; artist, album, tag double as facets.
+- Songbooks: `src/lib/songbook.ts` (pure, so `song:check` runs it under plain Node) validates config `songbooks` with zod; the content loader stores each song's membership as `song.data.songbooks`, which templates bake into `data-songbooks*` attributes; generated CSS keyed on `<html data-songbook>` (set from `localStorage` before first paint) does the hiding, so lists need no JS. Search narrows via a hidden `songbook` Pagefind filter; switching dispatches `songbook:changed`.
 
 ## Conventions
 

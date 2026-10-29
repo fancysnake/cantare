@@ -1,0 +1,14 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  songs: CollectionEntry<'songs'>[];
+}
+
+// The search narrows to a songbook by this filter, so a page carries every songbook its songs are in.
+const slugs = new Set(Astro.props.songs.flatMap((song) => song.data.songbooks));
+---
+
+{[...slugs].map((slug) => (
+  <span data-pagefind-filter={`songbook:${slug}`}></span>
+))}
