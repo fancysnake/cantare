@@ -1,28 +1,20 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ListingItem from '../../components/ListingItem.astro';
-import { slugify } from '../../lib/slug';
-import { locale, t } from '../../lib/i18n';
+import { groupBySlug } from '../../lib/facets';
+import { t } from '../../lib/i18n';
 import { artistHref } from '../../lib/routes';
 
 const songs = await getCollection('songs');
 
-const artists = new Map<string, { name: string; songs: CollectionEntry<'songs'>[] }>();
-for (const song of songs) {
-  const slug = slugify(song.data.artist);
-  const entry = artists.get(slug) ?? { name: song.data.artist, songs: [] };
-  entry.songs.push(song);
-  artists.set(slug, entry);
-}
-
-const sorted = [...artists.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name, locale));
+const artists = groupBySlug(songs, 'artists');
 ---
 
 <Base title={t.artistsTitle}>
   <h1>{t.artistsTitle}</h1>
   <ul class="song-list">
-    {sorted.map(([, { name, songs }]) => (
+    {artists.map(({ name, songs }) => (
       <ListingItem href={artistHref(name)} label={name} songs={songs} />
     ))}
   </ul>

@@ -3,6 +3,9 @@ import { slugify } from './slug.ts';
 
 const KEYS = ['tags', 'artists', 'albums', 'languages'] as const;
 
+/** A song field that songbooks match on and the listing pages group by. */
+export type FacetKey = (typeof KEYS)[number];
+
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';
 
@@ -47,6 +50,16 @@ export interface SongbookFields {
   tags: string[];
 }
 
+/** A song's values under each facet key, as lists so a missing album or language is just empty. */
+export function facetValues(song: SongbookFields): Record<FacetKey, string[]> {
+  return {
+    tags: song.tags,
+    artists: [song.artist],
+    albums: song.album ? [song.album] : [],
+    languages: song.language ? [song.language] : [],
+  };
+}
+
 /** Validate the config's songbooks; a mistake fails the build rather than silently matching nothing. */
 export function parseSongbooks(config: unknown): Songbook[] {
   const result = z.array(songbookSchema).optional().safeParse(config);
@@ -66,12 +79,7 @@ export function parseSongbooks(config: unknown): Songbook[] {
 /** Slugs of the songbooks a song belongs to: `other` when none picks it, nothing when none are defined. */
 export function songbooksOf(song: SongbookFields, songbooks: Songbook[]): string[] {
   if (songbooks.length === 0) return [];
-  const values = {
-    tags: song.tags,
-    artists: [song.artist],
-    albums: song.album ? [song.album] : [],
-    languages: song.language ? [song.language] : [],
-  };
+  const values = facetValues(song);
   const matched = songbooks
     .filter(({ match }) =>
       KEYS.some((key) => values[key].some((value) => match[key].has(slugify(value)))),

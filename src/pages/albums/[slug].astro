@@ -1,30 +1,18 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SongList from '../../components/SongList.astro';
 import RandomButton from '../../components/RandomButton.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
-import { slugify } from '../../lib/slug';
+import { groupBySlug, type Facet } from '../../lib/facets';
 import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  const byAlbum = new Map<string, { name: string; songs: CollectionEntry<'songs'>[] }>();
-  for (const song of songs) {
-    const name = song.data.album;
-    if (!name) continue;
-    const slug = slugify(name);
-    const entry = byAlbum.get(slug) ?? { name, songs: [] };
-    entry.songs.push(song);
-    byAlbum.set(slug, entry);
-  }
-  return [...byAlbum.entries()].map(([slug, props]) => ({ params: { slug }, props }));
+  return groupBySlug(songs, 'albums').map((props) => ({ params: { slug: props.slug }, props }));
 }
 
-interface Props {
-  name: string;
-  songs: CollectionEntry<'songs'>[];
-}
+type Props = Facet;
 
 const { name, songs } = Astro.props;
 ---

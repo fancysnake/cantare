@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
 import {
   OTHER,
+  facetValues,
   parseSongbooks,
   songbookOptions,
   songbooksOf,
@@ -23,6 +24,14 @@ const song = (fields: Partial<SongbookFields>): SongbookFields => ({
   artist: 'Traditional',
   tags: [],
   ...fields,
+});
+
+// A missing album or language is no value, so it groups and matches nothing.
+assert.deepEqual(facetValues(song({ tags: ['folk'], language: 'en' })), {
+  tags: ['folk'],
+  artists: ['Traditional'],
+  albums: [],
+  languages: ['en'],
 });
 
 // Any listed value under any key picks the song.
