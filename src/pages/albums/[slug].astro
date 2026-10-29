@@ -9,8 +9,7 @@ import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  const byAlbum = groupBySlug(songs, (song) => (song.data.album ? [song.data.album] : []));
-  return [...byAlbum.entries()].map(([slug, props]) => ({ params: { slug }, props }));
+  return groupBySlug(songs, 'albums').map((props) => ({ params: { slug: props.slug }, props }));
 }
 
 type Props = Facet;

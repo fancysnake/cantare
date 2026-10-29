@@ -3,20 +3,18 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ListingItem from '../../components/ListingItem.astro';
 import { groupBySlug } from '../../lib/facets';
-import { locale, t } from '../../lib/i18n';
+import { t } from '../../lib/i18n';
 import { artistHref } from '../../lib/routes';
 
 const songs = await getCollection('songs');
 
-const artists = groupBySlug(songs, (song) => [song.data.artist]);
-
-const sorted = [...artists.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name, locale));
+const artists = groupBySlug(songs, 'artists');
 ---
 
 <Base title={t.artistsTitle}>
   <h1>{t.artistsTitle}</h1>
   <ul class="song-list">
-    {sorted.map(([, { name, songs }]) => (
+    {artists.map(({ name, songs }) => (
       <ListingItem href={artistHref(name)} label={name} songs={songs} />
     ))}
   </ul>
