@@ -4,19 +4,12 @@ import Base from '../../layouts/Base.astro';
 import SongList from '../../components/SongList.astro';
 import RandomButton from '../../components/RandomButton.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
-import { slugify } from '../../lib/slug';
+import { groupBySlug } from '../../lib/facets';
 import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  const byArtist = new Map<string, { name: string; songs: CollectionEntry<'songs'>[] }>();
-  for (const song of songs) {
-    const name = song.data.artist;
-    const slug = slugify(name);
-    const entry = byArtist.get(slug) ?? { name, songs: [] };
-    entry.songs.push(song);
-    byArtist.set(slug, entry);
-  }
+  const byArtist = groupBySlug(songs, (song) => [song.data.artist]);
   return [...byArtist.entries()].map(([slug, props]) => ({ params: { slug }, props }));
 }
 

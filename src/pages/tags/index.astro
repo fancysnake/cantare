@@ -1,22 +1,14 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ListingItem from '../../components/ListingItem.astro';
-import { slugify } from '../../lib/slug';
+import { groupBySlug } from '../../lib/facets';
 import { locale, t } from '../../lib/i18n';
 import { tagHref } from '../../lib/routes';
 
 const songs = await getCollection('songs');
 
-const tags = new Map<string, { name: string; songs: CollectionEntry<'songs'>[] }>();
-for (const song of songs) {
-  for (const tag of song.data.tags) {
-    const slug = slugify(tag);
-    const entry = tags.get(slug) ?? { name: tag, songs: [] };
-    entry.songs.push(song);
-    tags.set(slug, entry);
-  }
-}
+const tags = groupBySlug(songs, (song) => song.data.tags);
 
 const sorted = [...tags.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name, locale));
 ---
