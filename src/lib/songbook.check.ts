@@ -64,6 +64,7 @@ assert.deepEqual(parseSongbooks(undefined), []);
 assert.throws(() => parseSongbooks([{ name: 'Empty' }]), /hold no songs/);
 assert.throws(() => parseSongbooks([{ name: 'Empty', tags: [] }]), /hold no songs/);
 assert.throws(() => parseSongbooks([{ name: 'Other', tags: ['x'] }]), /clashes/);
+assert.throws(() => parseSongbooks([{ name: 'Songs', tags: ['x'] }]), /clashes/);
 assert.throws(
   () =>
     parseSongbooks([

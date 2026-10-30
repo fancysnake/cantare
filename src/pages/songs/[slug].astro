@@ -42,6 +42,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   description={`${title} — ${artist}`}
   fullWidth
   pageClass="song-page"
+  song={{ id: song.id, songbooks: song.data.songbooks }}
 >
   <div class="song-toolbar">
     <header data-pagefind-body>

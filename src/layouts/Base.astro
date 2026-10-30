@@ -15,6 +15,8 @@ interface Props {
   description?: string | undefined;
   fullWidth?: boolean | undefined;
   pageClass?: string | undefined;
+  /** The song this page shows, so the share link can open it inside the active songbook. */
+  song?: { id: string; songbooks: string[] } | undefined;
 }
 
 const {
@@ -22,6 +24,7 @@ const {
   description = `${site.name} — ${site.description}`,
   fullWidth,
   pageClass,
+  song,
 } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : site.name;
 ---
@@ -78,6 +81,17 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
           ))}
         </select>
       )}
+      {songbookOptions.length > 0 && (
+        <button
+          id="share-link"
+          class="btn"
+          data-song={song?.id}
+          data-song-songbooks={song?.songbooks.join(' ')}
+          hidden
+        >
+          🔗 {t.shareLink}
+        </button>
+      )}
       <button id="chords-toggle" class="btn" hidden>
         🎸
       </button>
@@ -95,6 +109,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
     )}
     <script>
       import { t } from '../lib/i18n';
+      import { songbookHref } from '../lib/routes';
 
       const toggle = document.getElementById('theme-toggle');
       if (toggle) {
@@ -176,6 +191,36 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
           document.dispatchEvent(new CustomEvent('songbook:changed'));
         });
         songbookSelect.hidden = false;
+      }
+
+      const shareButton = document.getElementById('share-link');
+      if (shareButton) {
+        const label = shareButton.textContent;
+        // A song outside the active songbook has no link inside it, so it falls back to the songbook's home.
+        const shareUrl = () => {
+          const songbook = document.documentElement.dataset.songbook;
+          if (!songbook) return location.href;
+          const { song, songSongbooks = '' } = shareButton.dataset;
+          const inSongbook = song && songSongbooks.split(' ').includes(songbook);
+          return new URL(songbookHref(songbook, inSongbook ? song : undefined), location.href).href;
+        };
+
+        shareButton.addEventListener('click', () => {
+          const link = shareUrl();
+          if ('share' in navigator && matchMedia('(pointer: coarse)').matches) {
+            // Dismissing the share sheet rejects too; there is nothing to do then.
+            navigator.share({ url: link }).catch(() => undefined);
+            return;
+          }
+          navigator.clipboard.writeText(link).then(
+            () => {
+              shareButton.textContent = `✓ ${t.shareCopied}`;
+              setTimeout(() => (shareButton.textContent = label), 2000);
+            },
+            () => prompt(t.shareLink, link),
+          );
+        });
+        shareButton.hidden = false;
       }
     </script>
   </body>

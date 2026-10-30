@@ -70,6 +70,8 @@ interface Strings {
   songbookAll: string;
   songbookOther: string;
   outsideSongbook: string;
+  shareLink: string;
+  shareCopied: string;
 }
 
 const en: Strings = {
@@ -153,6 +155,8 @@ const en: Strings = {
   songbookAll: 'All',
   songbookOther: 'Other',
   outsideSongbook: 'This song is not in the songbook you are browsing.',
+  shareLink: 'Share link',
+  shareCopied: 'Link copied',
 };
 
 const plPlural = new Intl.PluralRules('pl');
@@ -247,6 +251,8 @@ const pl: Strings = {
   songbookAll: 'Wszystkie',
   songbookOther: 'Pozostałe',
   outsideSongbook: 'Tej piosenki nie ma w wybranym śpiewniku.',
+  shareLink: 'Udostępnij link',
+  shareCopied: 'Skopiowano link',
 };
 
 const STRINGS: Record<Locale, Strings> = { en, pl };

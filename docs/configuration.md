@@ -54,12 +54,19 @@ With songbooks defined, the header shows a switcher. While a songbook is
 active, search, the song index and random picks show only its songs. On the
 artist, tag and language indexes, counts follow it and entries with no songs
 in it are greyed out. A song page opened from outside the songbook still opens
-and says so. The choice is the reader's own, remembered in their browser, so
-links stay the same for everyone.
+and says so. The choice is the reader's own, remembered in their browser.
+
+To share a songbook, link to its name: `/campfire/` opens the site with
+Campfire active, and `/campfire/<song>/` opens one of its songs with Campfire
+active. Both then land on the usual page, so the address bar shows the plain
+link. `/other/` works too when some songs land in Other. The header's
+**Share link** button copies such a link for the active songbook (on phones it
+opens the share sheet); with none active it copies the page's own link.
 
 A songbook that lists nothing, uses an unknown key, has a name or value with no
-Latin letters or digits, or has the same name as another (or as "Other") fails
-the build.
+Latin letters or digits, or has the same name as another, as "Other", or as a
+site section (songs, artists, albums, tags, languages, pagefind) fails the
+build.
 
 ## Hosting under a sub-path
 
