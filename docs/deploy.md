@@ -39,7 +39,7 @@ npm ci && npx cantare build ./songs
   locally and commit the lockfile.
 - Installing `cantare` from git pulls the engine and its dependencies
   (Astro, ChordSheetJS, Pagefind, chord data); the build needs no extra setup.
-- Pin the engine to a tag (`github:fancysnake/cantare#v1.0.0`). `npm ci` builds
+- Pin the engine to a tag (`github:fancysnake/cantare#v1.1.0`). `npm ci` builds
   the commit in the lockfile, so an unpinned dependency does not drift — it
   freezes, silently, at whatever `main` was on the day you installed.
 - To bump it, name the new spec explicitly

@@ -9,6 +9,6 @@
     "preview": "cantare preview"
   },
   "dependencies": {
-    "cantare": "github:fancysnake/cantare#v1.0.0"
+    "cantare": "github:fancysnake/cantare#v1.1.0"
   }
 }

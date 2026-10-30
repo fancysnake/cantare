@@ -23,7 +23,7 @@ There are two ways to run a songbook on cantare, from the same repo:
 ## Where to go next
 
 - [Getting started](getting-started.md) — install, build, pin the engine
-- [Configuration](configuration.md) — branding, footer, theming, sub-paths
+- [Configuration](configuration.md) — branding, footer, theming, songbooks, sub-paths
 - [Adding songs](songs.md) — the ChordPro subset cantare reads
 - [Deploying a songbook](deploy.md) — hosting the built `dist/`
 - [How it works](architecture.md) — the shape of the codebase
