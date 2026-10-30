@@ -27,10 +27,6 @@ export const songLink = (song: CollectionEntry<'songs'>): SongLink =>
 /** A random-pick candidate: the song's link and the songbooks it may be picked in. */
 export type RandomLink = SongLink & { songbooks: string[] };
 
-/** A shareable link that activates a songbook, then opens its home or one of its songs. */
-export const songbookHref = (songbook: string, songId?: string): string =>
-  url(songId ? `/${songbook}/${songId}/` : `/${songbook}/`);
-
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);
 

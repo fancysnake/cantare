@@ -9,9 +9,6 @@ export type FacetKey = (typeof KEYS)[number];
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';
 
-// Songbooks get top-level URLs, so a slug can't be a site section's.
-const TAKEN = [OTHER, 'songs', 'artists', 'albums', 'tags', 'languages', 'pagefind'];
-
 const slugs = (values: string[] = []) => new Set(values.map(slugify));
 
 // An empty slug would match every song whose value also slugifies to nothing.
@@ -69,12 +66,10 @@ export function parseSongbooks(config: unknown): Songbook[] {
   if (!result.success) {
     throw new Error(`Invalid songbooks in the config:\n${z.prettifyError(result.error)}`);
   }
-  const seen = new Set(TAKEN);
+  const seen = new Set([OTHER]);
   for (const { slug, name } of result.data ?? []) {
     if (seen.has(slug)) {
-      throw new Error(
-        `Songbook "${name}" clashes with another one or a built-in name: ${TAKEN.join(', ')}.`,
-      );
+      throw new Error(`Songbook "${name}" clashes with another one (or the built-in "${OTHER}").`);
     }
     seen.add(slug);
   }
