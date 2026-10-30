@@ -13,8 +13,9 @@ and this project adheres to [Semantic Versioning].
   the config lists tags, artists, albums or languages per songbook; a song in
   any of them belongs. While one is active, search, lists and random picks
   show only its songs, and songs no songbook picks gather under "Other".
-- **Shareable songbook links.** `?songbook=<name>` on any page's link opens
-  it with that songbook active. The header's **Share link** button copies the
+- **Shareable songbook links.** `?songbook=<slug>` on any page's link opens
+  it with that songbook active; the slug is the name lowercased, with accents
+  dropped and other characters turned into `-`. The header's **Share link** button copies the
   current page's link with the active songbook added.
 
 ## [1.0.0] - 2026-10-17
