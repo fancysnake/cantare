@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { getCollection } from 'astro:content';
 import { site, themeCss } from '../lib/site';
 import { songbookCss, songbookOptions as optionsOf } from '../lib/songbook';
+import ShareButton from '../components/ShareButton.astro';
 import { artistsHref, homeHref, languagesHref, songsHref, tagsHref } from '../lib/routes';
 import { locale, t } from '../lib/i18n';
 
@@ -51,6 +52,16 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       }
     </script>
     {songbookSlugs.length > 0 && <script is:inline define:vars={{ songbookSlugs }}>
+      // A shared link's `?songbook=` becomes the reader's choice; the address bar keeps the plain link.
+      const url = new URL(location.href);
+      const sharedSongbook = url.searchParams.get('songbook');
+      if (sharedSongbook !== null) {
+        if (songbookSlugs.includes(sharedSongbook)) {
+          localStorage.setItem('songbook', sharedSongbook);
+        }
+        url.searchParams.delete('songbook');
+        history.replaceState(history.state, '', url);
+      }
       // A songbook since removed from the config falls back to all songs.
       const storedSongbook = localStorage.getItem('songbook');
       if (songbookSlugs.includes(storedSongbook)) {
@@ -78,6 +89,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
           ))}
         </select>
       )}
+      {songbookOptions.length > 0 && <ShareButton />}
       <button id="chords-toggle" class="btn" hidden>
         🎸
       </button>

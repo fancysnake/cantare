@@ -54,8 +54,16 @@ With songbooks defined, the header shows a switcher. While a songbook is
 active, search, the song index and random picks show only its songs. On the
 artist, tag and language indexes, counts follow it and entries with no songs
 in it are greyed out. A song page opened from outside the songbook still opens
-and says so. The choice is the reader's own, remembered in their browser, so
-links stay the same for everyone.
+and says so. The choice is the reader's own, remembered in their browser.
+
+To share a songbook, add `?songbook=` with its slug to any page's link. The
+slug is the name lowercased, with accents dropped and every run of other
+characters turned into `-`: "Campfire" becomes `campfire`, "Śpiewnik Chóru"
+becomes `spiewnik-choru`. `/artists/?songbook=campfire` opens the artist index
+with Campfire active. The page then drops the parameter, so the address bar
+shows the plain link. `?songbook=other` works too when some songs land in
+Other; an unknown slug, or the name as written, is ignored. While a songbook is active, the header's **Share link** button copies
+the current page's link with that songbook added.
 
 A songbook that lists nothing, uses an unknown key, has a name or value with no
 Latin letters or digits, or has the same name as another (or as "Other") fails

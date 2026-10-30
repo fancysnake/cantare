@@ -7,12 +7,18 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-30
+
 ### Added
 
-- **Songbooks: named selections a reader switches between.** `songbooks` in
-  the config lists tags, artists, albums or languages per songbook; a song in
-  any of them belongs. While one is active, search, lists and random picks
-  show only its songs, and songs no songbook picks gather under "Other".
+- **`songbooks` in the config defines named selections a reader switches
+  between.** Each lists tags, artists, albums or languages; while one is
+  active, search, lists and random picks show only its songs, and songs no
+  songbook picks gather under "Other".
+- **`?songbook=<slug>` on any page's link opens it with that songbook
+  active.** The slug is the name lowercased, accents dropped, other characters
+  turned into `-`; the header's **Share link** button copies the current page's
+  link with the active songbook.
 
 ## [1.0.0] - 2026-10-17
 
@@ -275,7 +281,8 @@ toggle away.
 
 <!-- Versions -->
 
-[unreleased]: https://github.com/fancysnake/cantare/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/fancysnake/cantare/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/fancysnake/cantare/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/fancysnake/cantare/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/fancysnake/cantare/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/fancysnake/cantare/compare/v0.3.9...v0.4.0
