@@ -8,7 +8,7 @@ pipx = "1.17.14"
 # --include-deps is neither accepted nor equivalent.
 "pipx:mkdocs-material" = { version = "9.7.7", uvx = false, pipx_args = "--include-deps" }
 python = "3.14"
-"pipx:vekna" = { version = "0.13.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v3.0.0" }
+"pipx:vekna" = { version = "0.14.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v3.0.0" }
 
 [hooks]
 enter = "aube install && aube exec astro sync"
