@@ -16,7 +16,7 @@ mise run format    # Prettier write
 mise run check     # astro check (type-checks .astro templates)
 mise run site:serve # MkDocs docs at http://localhost:8000
 mise run site:check # mkdocs build --strict (fails on a broken link or anchor); SITE_DIR overrides the output dir
-mise run song:check # asserts song.ts word-grouping rules (which read the formatter's own HTML back) and songbook matching
+mise run song:check # asserts song.ts word-grouping rules (which read the formatter's own HTML back), songbook matching and the GLIMPSE layer lint rules
 mise run fullcheck # the gate: frozen install, sync, lint, check, song:check, build:demo, site:check
 ```
 
