@@ -1,72 +1,90 @@
 // @ts-check
+import { builtinModules } from 'node:module';
 import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import astro from 'eslint-plugin-astro';
+import { createNodeResolver, importX } from 'eslint-plugin-import-x';
 
 // GLIMPSE layers (https://glimpse.fancysnake.dev/). A layer is declared by
 // path; the flat modules in src/lib/ belong to none until they move into one.
 
-const EDGES = {
-  regex: 'astro\\.config',
-  message: 'Nothing imports edges.',
-};
-const FRAMEWORK = {
-  regex: '^(astro:|virtual:|node:|astro(/(?!zod$)|$))',
-  message:
-    'pacts, specs and mills run without the framework and Node; astro/zod is the one exemption.',
-};
-const GATES_REACH = {
-  regex: '(^|/)lib/(mills|links|specs)(\\.ts)?(/|$)',
-  message: 'Gates import pacts as their only layer.',
-};
+/** @type {Record<string, string[]>} each layer and the layers it may import besides itself */
+const LAYERS = { pacts: [], specs: [], mills: ['pacts', 'specs'], links: ['pacts'] };
+/** Layers that run without the framework and Node. */
+const PURE = ['pacts', 'specs', 'mills'];
+const GATES = ['src/pages', 'src/layouts', 'src/components', 'bin'];
 
 /**
- * Bans every import that climbs out of a layer folder, except into `allowed`.
- * shortcut: `../` between a layer's own subfolders is banned too, switch to a
- * resolver-based rule when a layer needs it.
- * @param {string} message
- * @param {...string} allowed regex source, matched right after the last `../`
+ * A layer is one module or a folder of them; both shapes, relative to src/.
+ * @param {string} name
  */
-const climbsOut = (message, ...allowed) => ({
-  regex: `^(\\.\\./)+(?!${['\\.\\./', ...allowed].join('|')})`,
-  message,
-});
-const PACTS = 'pacts(/|$)';
-const SPECS = 'specs(\\.ts)?$';
+const shapes = (name) => [`lib/${name}.ts`, `lib/${name}`];
+/** @param {string[]} paths */
+const inSrc = (paths) => paths.map((path) => `src/${path}`);
+
+// `\x2F` stands for `/`, which an esquery regex cannot contain.
+const BUILTINS = builtinModules.filter((name) => !/[:/]/.test(name)).join('|');
+const FRAMEWORK = `^(astro:|virtual:|node:|@astrojs\\x2F|astro-|astro(\\x2F(?!zod$)|$)|(${BUILTINS})(\\x2F|$))`;
+const FRAMEWORK_MESSAGE =
+  'pacts, specs and mills run without the framework and Node; astro/zod is the one exemption.';
 
 /**
- * @param {string[]} files
- * @param {...{ regex: string, message: string }} patterns
- * @returns {import('eslint').Linter.Config}
+ * @param {string} root the directory the layer paths are relative to
+ * @returns {import('eslint').Linter.Config[]}
  */
-const layer = (files, ...patterns) => ({
-  files,
-  // Checks sit next to the code they assert and may import across layers.
-  ignores: ['**/*.check.ts'],
-  rules: {
-    'no-restricted-imports': ['error', { patterns: [EDGES, ...patterns] }],
+export const layers = (root) => [
+  {
+    // Checks sit next to the code they assert and may import across layers.
+    ignores: ['**/*.check.ts'],
+    plugins: { 'import-x': importX },
+    settings: {
+      'import-x/resolver-next': [createNodeResolver({ extensions: ['.ts', '.js', '.mjs'] })],
+    },
+    rules: {
+      'import-x/no-restricted-paths': [
+        'error',
+        {
+          basePath: root,
+          zones: [
+            ...Object.entries(LAYERS).map(([name, allowed]) => ({
+              target: inSrc(shapes(name)),
+              from: 'src',
+              except: [name, ...allowed].flatMap(shapes),
+              message: allowed.length
+                ? `${name} imports ${allowed.join(' and ')} only.`
+                : `${name} imports no other project code.`,
+            })),
+            {
+              target: GATES,
+              from: inSrc(['mills', 'links', 'specs', 'inits'].flatMap(shapes)),
+              message: 'Gates import pacts as their only layer.',
+            },
+            {
+              target: 'astro.config.mjs',
+              from: ['src', 'bin'],
+              message: 'edges imports no project code.',
+            },
+            { target: '.', from: 'astro.config.mjs', message: 'Nothing imports edges.' },
+          ],
+        },
+      ],
+    },
   },
-});
-
-const layers = [
-  layer(['src/lib/pacts/**'], FRAMEWORK, climbsOut('pacts imports no other project code.')),
-  layer(['src/lib/specs.ts'], FRAMEWORK, {
-    regex: '^\\.\\.?/',
-    message: 'specs imports no project code.',
-  }),
-  layer(
-    ['src/lib/mills/**'],
-    FRAMEWORK,
-    climbsOut('mills import pacts and specs only.', PACTS, SPECS),
-  ),
-  layer(['src/lib/links/**'], climbsOut('links import pacts only.', PACTS)),
-  layer(['src/pages/**', 'src/layouts/**', 'src/components/**', 'bin/**'], GATES_REACH),
-  layer(['src/lib/inits.ts']),
-  layer(['astro.config.mjs'], {
-    regex: '^\\.\\.?/',
-    message: 'edges imports no project code.',
-  }),
+  {
+    files: PURE.flatMap((name) => [`src/lib/${name}.ts`, `src/lib/${name}/**`]),
+    ignores: ['**/*.check.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { patterns: [{ regex: FRAMEWORK, message: FRAMEWORK_MESSAGE }] },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        { selector: `ImportExpression[source.value=/${FRAMEWORK}/]`, message: FRAMEWORK_MESSAGE },
+      ],
+    },
+  },
 ];
 
 export default defineConfig(
@@ -102,5 +120,5 @@ export default defineConfig(
     files: ['**/*.astro', '**/*.astro/*.ts', '**/*.astro/*.js'],
     extends: [tseslint.configs.disableTypeChecked],
   },
-  ...layers,
+  layers(import.meta.dirname),
 );
