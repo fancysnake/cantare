@@ -19,6 +19,7 @@ const MODULES = [
     `src/lib/${name}/b.ts`,
   ]),
   'src/lib/flat.ts',
+  'bin/cantare.js',
   'astro.config.mjs',
 ];
 
@@ -28,6 +29,7 @@ const CASES: [string, string, boolean][] = [
   ['src/lib/pacts/a.ts', "import 'astro/zod';", false],
   ['src/lib/pacts/a.ts', "import '../specs';", true],
   ['src/lib/pacts/a.ts', "import '../flat';", true],
+  ['src/lib/pacts/a.ts', "import '../../../bin/cantare.js';", true],
   ['src/lib/pacts/a.ts', "import 'node:fs';", true],
   ['src/lib/pacts/a.ts', "import 'fs/promises';", true],
   ['src/lib/pacts/a.ts', "import 'astro';", true],
@@ -48,6 +50,8 @@ const CASES: [string, string, boolean][] = [
   ['src/lib/mills/a.ts', "import '../links';", true],
   ['src/lib/mills/a.ts', "import './../flat';", true],
   ['src/lib/mills/a.ts', "await import('../links/a');", true],
+  ['src/lib/mills/a.ts', "import '../links/a.js';", true],
+  ['src/lib/mills/a.ts', "import '../pacts/a.js';", false],
   ['src/lib/mills/a.ts', "await import('astro:content');", true],
   ['src/lib/mills.ts', "import './specs';", false],
   ['src/lib/mills.ts', "import './inits';", true],

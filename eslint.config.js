@@ -39,7 +39,12 @@ export const layers = (root) => [
     ignores: ['**/*.check.ts'],
     plugins: { 'import-x': importX },
     settings: {
-      'import-x/resolver-next': [createNodeResolver({ extensions: ['.ts', '.js', '.mjs'] })],
+      'import-x/resolver-next': [
+        createNodeResolver({
+          extensions: ['.ts', '.js', '.mjs'],
+          extensionAlias: { '.js': ['.ts', '.js'] },
+        }),
+      ],
     },
     rules: {
       'import-x/no-restricted-paths': [
@@ -49,7 +54,7 @@ export const layers = (root) => [
           zones: [
             ...Object.entries(LAYERS).map(([name, allowed]) => ({
               target: inSrc(shapes(name)),
-              from: 'src',
+              from: ['src', 'bin'],
               except: [name, ...allowed].flatMap(shapes),
               message: allowed.length
                 ? `${name} imports ${allowed.join(' and ')} only.`
