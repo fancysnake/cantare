@@ -1,54 +1,30 @@
 import { z } from 'astro/zod';
-import { slugify } from './slug.ts';
-
-const KEYS = ['tags', 'artists', 'albums', 'languages'] as const;
-
-/** A song field that songbooks match on and the listing pages group by. */
-export type FacetKey = (typeof KEYS)[number];
+import { slugify } from './pacts/slug.ts';
+import {
+  FACET_KEYS,
+  songbookSchema,
+  type FacetKey,
+  type SongbookFields,
+} from './pacts/songbook.ts';
 
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';
 
 const slugs = (values: string[] = []) => new Set(values.map(slugify));
 
-// An empty slug would match every song whose value also slugifies to nothing.
-const sluggable = z.string().refine((value) => slugify(value) !== '', 'has no letters or digits');
-const values = z.array(sluggable).optional();
+// Slugified values, so matching ignores case and accents like the listing pages do.
+const songbookMatcher = songbookSchema.transform(({ name, tags, artists, albums, languages }) => ({
+  slug: slugify(name),
+  name,
+  match: {
+    tags: slugs(tags),
+    artists: slugs(artists),
+    albums: slugs(albums),
+    languages: slugs(languages),
+  },
+}));
 
-/** A songbook as written in the config: a song belongs if it matches any listed value. */
-const songbookSchema = z
-  .strictObject({
-    name: sluggable,
-    tags: values,
-    artists: values,
-    albums: values,
-    languages: values,
-  })
-  .refine((config) => KEYS.some((key) => config[key]?.length), {
-    error: `lists no ${KEYS.join(', ')}, so it would hold no songs`,
-  })
-  // Slugified values, so matching ignores case and accents like the listing pages do.
-  .transform(({ name, tags, artists, albums, languages }) => ({
-    slug: slugify(name),
-    name,
-    match: {
-      tags: slugs(tags),
-      artists: slugs(artists),
-      albums: slugs(albums),
-      languages: slugs(languages),
-    },
-  }));
-
-export type SongbookConfig = z.input<typeof songbookSchema>;
-export type Songbook = z.output<typeof songbookSchema>;
-
-/** The song metadata songbooks match on. */
-export interface SongbookFields {
-  artist: string;
-  album?: string | undefined;
-  language?: string | undefined;
-  tags: string[];
-}
+type Songbook = z.output<typeof songbookMatcher>;
 
 /** A song's values under each facet key, as lists so a missing album or language is just empty. */
 export function facetValues(song: SongbookFields): Record<FacetKey, string[]> {
@@ -62,7 +38,7 @@ export function facetValues(song: SongbookFields): Record<FacetKey, string[]> {
 
 /** Validate the config's songbooks; a mistake fails the build rather than silently matching nothing. */
 export function parseSongbooks(config: unknown): Songbook[] {
-  const result = z.array(songbookSchema).optional().safeParse(config);
+  const result = z.array(songbookMatcher).optional().safeParse(config);
   if (!result.success) {
     throw new Error(`Invalid songbooks in the config:\n${z.prettifyError(result.error)}`);
   }
@@ -82,7 +58,7 @@ export function songbooksOf(song: SongbookFields, songbooks: Songbook[]): string
   const values = facetValues(song);
   const matched = songbooks
     .filter(({ match }) =>
-      KEYS.some((key) => values[key].some((value) => match[key].has(slugify(value)))),
+      FACET_KEYS.some((key) => values[key].some((value) => match[key].has(slugify(value)))),
     )
     .map(({ slug }) => slug);
   return matched.length > 0 ? matched : [OTHER];

@@ -458,7 +458,8 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
   <script>
     import { chordDiagramSvg } from '../../lib/chord-diagram';
-    import { chordKey, type DiagramData } from '../../lib/chord-lookup';
+    import { chordKey } from '../../lib/chord-lookup';
+    import type { DiagramData } from '../../lib/pacts/chord';
 
     const dataEl = document.getElementById('chord-data');
     const sheetEl = document.querySelector<HTMLElement>('.chord-sheet');

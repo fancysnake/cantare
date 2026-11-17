@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { t } from '../lib/i18n';
-import { songLink, type RandomLink } from '../lib/routes';
+import type { RandomLink } from '../lib/pacts/song';
+import { songLink } from '../lib/routes';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
@@ -26,7 +27,7 @@ const songbooks = [...new Set(songs.flatMap((song) => song.data.songbooks))].joi
 </button>
 
 <script>
-  import type { RandomLink } from '../lib/routes';
+  import type { RandomLink } from '../lib/pacts/song';
 
   document.querySelectorAll<HTMLButtonElement>('button.random-pick').forEach((button) => {
     button.hidden = false;

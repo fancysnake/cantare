@@ -3,7 +3,7 @@
  * frets/fingers are low-E → high-E; -1 = muted, 0 = open.
  * Uses currentColor throughout so it follows light/dark themes.
  */
-import type { ChordPosition } from './chord-lookup';
+import type { ChordPosition } from './pacts/chord';
 import { t } from './i18n';
 
 const STRINGS = 6;
