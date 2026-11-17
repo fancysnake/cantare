@@ -1,6 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
+import { slugify } from './pacts/slug';
+import type { SongLink } from './pacts/song';
 import { url } from './site';
-import { slugify } from './slug';
 
 /**
  * Every internal link in the site, as a finished href.
@@ -16,16 +17,9 @@ export const homeHref = (): string => url('/');
 export const songsHref = (): string => url('/songs/');
 export const songHref = (id: string): string => url(`/songs/${id}/`);
 
-export interface SongLink {
-  href: string;
-  target?: '_blank';
-}
 /** Where a song list points: a song with `{meta: redirect …}` opens that page in a new tab instead. */
 export const songLink = (song: CollectionEntry<'songs'>): SongLink =>
   song.data.redirect ? { href: song.data.redirect, target: '_blank' } : { href: songHref(song.id) };
-
-/** A random-pick candidate: the song's link and the songbooks it may be picked in. */
-export type RandomLink = SongLink & { songbooks: string[] };
 
 export const artistsHref = (): string => url('/artists/');
 export const artistHref = (name: string): string => url(`/artists/${slugify(name)}/`);

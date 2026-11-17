@@ -2,6 +2,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { songMetaSchema } from './lib/pacts/song';
 import { site } from './lib/site';
 import { parseSong, extractMeta } from './lib/song';
 import { parseSongbooks, songbooksOf } from './lib/songbook';
@@ -43,17 +44,7 @@ const songs = defineCollection({
       }),
     );
   },
-  schema: z.object({
-    title: z.string(),
-    artist: z.string(),
-    album: z.string().optional(),
-    language: z.string().optional(),
-    key: z.string().optional(),
-    capo: z.number().optional(),
-    copyright: z.string().optional(),
-    redirect: z.url({ protocol: /^https?$/ }).optional(),
-    urls: z.array(z.object({ href: z.url({ protocol: /^https?$/ }), label: z.string() })),
-    tags: z.array(z.string()),
+  schema: songMetaSchema.extend({
     songbooks: z.array(z.string()),
     source: z.string(),
   }),

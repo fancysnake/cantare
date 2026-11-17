@@ -7,24 +7,7 @@ import {
   type Line,
   type Song,
 } from 'chordsheetjs';
-
-export interface SongLink {
-  href: string;
-  label: string;
-}
-
-export interface SongMeta {
-  title: string;
-  artist: string;
-  album?: string | undefined;
-  language?: string | undefined;
-  key?: string | undefined;
-  capo?: number | undefined;
-  copyright?: string | undefined;
-  redirect?: string | undefined;
-  urls: SongLink[];
-  tags: string[];
-}
+import type { RenderedSheet, SongMeta, SongUrl } from './pacts/song.ts';
 
 const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
 const GRID_CLOSE = /^\s*\{\s*(?:end_of_grid|eog)\b/i;
@@ -251,11 +234,6 @@ export function renderSong(song: Song): string {
   return grouped;
 }
 
-export interface RenderedSheet {
-  html: string;
-  key?: string | undefined;
-}
-
 export function renderTransposed(source: string, semitones: number): RenderedSheet {
   let song = parseSong(source);
   if (semitones !== 0) {
@@ -283,7 +261,7 @@ export function extractMeta(song: Song): SongMeta {
     copyright: single(meta.get('copyright')),
     redirect: single(meta.get('redirect')),
     // A repeated directive arrives as an array.
-    urls: [meta.get('url') ?? []].flat().map(songLink),
+    urls: [meta.get('url') ?? []].flat().map(songUrl),
     tags: tags
       ? tags
           .split(',')
@@ -294,7 +272,7 @@ export function extractMeta(song: Song): SongMeta {
 }
 
 /** `{meta: url https://… Optional label}`; without a label, the host names the button. */
-function songLink(value: string): SongLink {
+function songUrl(value: string): SongUrl {
   const [href = '', ...words] = value.trim().split(/\s+/);
   const label = words.join(' ') || (URL.parse(href)?.hostname.replace(/^www\./, '') ?? href);
   return { href, label };

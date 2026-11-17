@@ -1,6 +1,6 @@
 /**
- * Self-check for the GLIMPSE layer rules in eslint.config.js. No layer exists
- * in src/lib yet, so `mise run lint` passes whatever the rules say. This lints
+ * Self-check for the GLIMPSE layer rules in eslint.config.js. Most layers hold
+ * no code yet, so `mise run lint` passes whatever their rules say. This lints
  * import lines inside a throwaway tree that has every layer in both shapes.
  * Run it with `node layers.check.ts`.
  */

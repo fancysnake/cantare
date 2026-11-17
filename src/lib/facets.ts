@@ -1,7 +1,8 @@
 import type { CollectionEntry } from 'astro:content';
 import { locale } from './i18n';
-import { slugify } from './slug';
-import { facetValues, type FacetKey } from './songbook';
+import { slugify } from './pacts/slug';
+import type { FacetKey } from './pacts/songbook';
+import { facetValues } from './songbook';
 
 type Song = CollectionEntry<'songs'>;
 
