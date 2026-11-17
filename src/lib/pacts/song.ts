@@ -29,8 +29,3 @@ export interface SongLink {
 
 /** A random-pick candidate: the song's link and the songbooks it may be picked in. */
 export type RandomLink = SongLink & { songbooks: string[] };
-
-export interface RenderedSheet {
-  html: string;
-  key?: string | undefined;
-}
