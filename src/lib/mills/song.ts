@@ -7,7 +7,7 @@ import {
   type Line,
   type Song,
 } from 'chordsheetjs';
-import type { SongMeta, SongUrl } from './pacts/song.ts';
+import type { SongMeta, SongUrl } from '../pacts/song.ts';
 
 const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
 const GRID_CLOSE = /^\s*\{\s*(?:end_of_grid|eog)\b/i;

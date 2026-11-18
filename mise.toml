@@ -44,8 +44,8 @@ description = "Type-check templates with astro check"
 run = "aube run check"
 
 [tasks."song:check"]
-description = "Assert the word-grouping rules in src/lib/song.ts, songbook matching and the lint layer rules"
-run = ["node src/lib/song.check.ts", "node src/lib/songbook.check.ts", "node layers.check.ts"]
+description = "Assert the word-grouping rules in src/lib/mills/song.ts, songbook matching and the lint layer rules"
+run = ["node src/lib/mills/song.check.ts", "node src/lib/mills/songbook.check.ts", "node layers.check.ts"]
 
 [tasks."site:serve"]
 description = "Serve the docs at http://localhost:8000"

@@ -1,11 +1,11 @@
 import { z } from 'astro/zod';
-import { slugify } from './pacts/slug.ts';
+import { slugify } from '../pacts/slug.ts';
 import {
   FACET_KEYS,
   songbookSchema,
   type FacetKey,
   type SongbookFields,
-} from './pacts/songbook.ts';
+} from '../pacts/songbook.ts';
 
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';

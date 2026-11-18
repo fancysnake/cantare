@@ -61,9 +61,11 @@ export const layers = (root) => [
                 : `${name} imports no other project code.`,
             })),
             {
+              // Exemption: gates import mills. No inits layer exists yet, so
+              // gates compose mills directly.
               target: GATES,
-              from: inSrc(['mills', 'links', 'specs', 'inits'].flatMap(shapes)),
-              message: 'Gates import pacts as their only layer.',
+              from: inSrc(['links', 'specs', 'inits'].flatMap(shapes)),
+              message: 'Gates import pacts and mills only.',
             },
             {
               target: 'astro.config.mjs',

@@ -5,7 +5,7 @@
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
-import type { SongbookFields } from './pacts/songbook.ts';
+import type { SongbookFields } from '../pacts/songbook.ts';
 import { OTHER, facetValues, parseSongbooks, songbookOptions, songbooksOf } from './songbook.ts';
 
 const books = parseSongbooks([
