@@ -4,8 +4,8 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { songMetaSchema } from './lib/pacts/song';
 import { site } from './lib/site';
-import { parseSong, extractMeta } from './lib/song';
-import { parseSongbooks, songbooksOf } from './lib/songbook';
+import { parseSong, extractMeta } from './lib/mills/song';
+import { parseSongbooks, songbooksOf } from './lib/mills/songbook';
 
 const SONGS_DIR = process.env.CANTARE_SONGS_DIR ?? 'songs';
 const songbooks = parseSongbooks(site.songbooks);

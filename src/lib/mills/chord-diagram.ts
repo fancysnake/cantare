@@ -3,8 +3,7 @@
  * frets/fingers are low-E → high-E; -1 = muted, 0 = open.
  * Uses currentColor throughout so it follows light/dark themes.
  */
-import type { ChordPosition } from './pacts/chord';
-import { t } from './i18n';
+import type { ChordPosition } from '../pacts/chord';
 
 const STRINGS = 6;
 const FRETS = 4;
@@ -19,7 +18,8 @@ function escapeXml(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-export function chordDiagramSvg(name: string, position: ChordPosition): string {
+/** `label` is the accessible description that follows the chord name. */
+export function chordDiagramSvg(name: string, position: ChordPosition, label: string): string {
   const { frets, fingers, baseFret, barres } = position;
   const parts: string[] = [];
 
@@ -87,5 +87,5 @@ export function chordDiagramSvg(name: string, position: ChordPosition): string {
     }
   });
 
-  return `<svg viewBox="0 0 ${RIGHT + 16} ${BOTTOM + 8}" role="img" aria-label="${escapeXml(name)} — ${t.chordDiagram}" xmlns="http://www.w3.org/2000/svg">${parts.join('')}</svg>`;
+  return `<svg viewBox="0 0 ${RIGHT + 16} ${BOTTOM + 8}" role="img" aria-label="${escapeXml(name)} — ${escapeXml(label)}" xmlns="http://www.w3.org/2000/svg">${parts.join('')}</svg>`;
 }

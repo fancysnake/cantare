@@ -61,9 +61,11 @@ export const layers = (root) => [
                 : `${name} imports no other project code.`,
             })),
             {
+              // Exemption: gates import mills. The song page re-renders in the
+              // browser, where no composition step can hand it a mill.
               target: GATES,
-              from: inSrc(['mills', 'links', 'specs', 'inits'].flatMap(shapes)),
-              message: 'Gates import pacts as their only layer.',
+              from: inSrc(['links', 'specs', 'inits'].flatMap(shapes)),
+              message: 'Gates import pacts and mills only.',
             },
             {
               target: 'astro.config.mjs',

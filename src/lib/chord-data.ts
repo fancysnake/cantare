@@ -5,7 +5,7 @@
  * keeps client-side transposition lookups offline.
  */
 import guitar from '@tombatossals/chords-db/lib/guitar.json';
-import { parseChordName, normalizeSuffix } from './chord-lookup';
+import { parseChordName, normalizeSuffix } from './mills/chord-lookup';
 import type { DiagramData } from './pacts/chord';
 
 const KEY_TO_CHORDS_MAP: Record<string, string> = {

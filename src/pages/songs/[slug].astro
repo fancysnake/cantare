@@ -3,11 +3,11 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ExternalCue from '../../components/ExternalCue.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
-import { isTrailing, parseSong, renderSong } from '../../lib/song';
+import { isTrailing, parseSong, renderSong } from '../../lib/mills/song';
 import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
 import { diagramDataForChords } from '../../lib/chord-data';
-import { chordDiagramSvg } from '../../lib/chord-diagram';
-import { chordKey } from '../../lib/chord-lookup';
+import { chordDiagramSvg } from '../../lib/mills/chord-diagram';
+import { chordKey } from '../../lib/mills/chord-lookup';
 import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
@@ -33,7 +33,7 @@ const diagramData = diagramDataForChords(chordNames);
 const initialDiagrams = chordNames.flatMap((name) => {
   const dataKey = chordKey(name);
   const position = dataKey ? diagramData[dataKey] : undefined;
-  return position ? [chordDiagramSvg(name, position)] : [];
+  return position ? [chordDiagramSvg(name, position, t.chordDiagram)] : [];
 });
 ---
 
@@ -163,7 +163,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   />
 
   <script>
-    import { renderTransposed } from '../../lib/song';
+    import { renderTransposed } from '../../lib/mills/song';
 
     const sheet = document.querySelector<HTMLElement>('.chord-sheet');
     const sourceEl = document.getElementById('song-source');
@@ -457,8 +457,9 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
-    import { chordDiagramSvg } from '../../lib/chord-diagram';
-    import { chordKey } from '../../lib/chord-lookup';
+    import { chordDiagramSvg } from '../../lib/mills/chord-diagram';
+    import { chordKey } from '../../lib/mills/chord-lookup';
+    import { t } from '../../lib/i18n';
     import type { DiagramData } from '../../lib/pacts/chord';
 
     const dataEl = document.getElementById('chord-data');
@@ -470,7 +471,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
       const svgFor = (name: string): string | null => {
         const dataKey = chordKey(name);
         const position = dataKey ? data[dataKey] : undefined;
-        return position ? chordDiagramSvg(name, position) : null;
+        return position ? chordDiagramSvg(name, position, t.chordDiagram) : null;
       };
 
       const grid = document.getElementById('chord-grid');
