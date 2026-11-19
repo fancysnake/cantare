@@ -7,8 +7,7 @@ export interface ChordPosition {
 
 export type DiagramData = Record<string, ChordPosition>;
 
-/** The part of a `@tombatossals/chords-db` instrument file that diagrams read. */
-export interface ChordsDb {
-  keys: string[];
-  chords: Record<string, { suffix: string; positions: ChordPosition[] }[]>;
+/** Key into DiagramData: a chord root and a normalized suffix, e.g. "F#|m7". */
+export function diagramKey(root: string, suffix: string): string {
+  return `${root}|${suffix}`;
 }
