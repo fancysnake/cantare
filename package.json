@@ -31,10 +31,10 @@
   "license": "MIT",
   "dependencies": {
     "@tombatossals/chords-db": "^0.5.1",
-    "astro": "^7.4.1",
+    "astro": "^7.4.11",
     "astro-pagefind": "^2.0.1",
     "chordsheetjs": "^16.2.2",
-    "pagefind": "^1.5.2"
+    "pagefind": "^1.6.0"
   },
   "aube": {
     "allowBuilds": {
@@ -43,17 +43,17 @@
     }
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.11",
+    "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.5",
-    "eslint": "^10.13.0",
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
     "eslint-plugin-astro": "^3.2.1",
     "eslint-plugin-import-x": "^4.18.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
-    "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^1.1.1",
+    "prettier": "^3.10.0",
+    "prettier-plugin-astro": "^1.1.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.0"
+    "typescript-eslint": "^8.72.2"
   }
 }

@@ -2,6 +2,30 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:best-practices", ":preserveSemverRanges"],
   "minimumReleaseAge": "7 days",
-  "prCreation": "not-pending",
-  "internalChecksFilter": "strict"
+  "internalChecksFilter": "strict",
+  "packageRules": [
+    {
+      "description": "npm bumps change package.json only and fail the frozen-lockfile install; mise run update handles them",
+      "matchManagers": ["npm"],
+      "enabled": false
+    },
+    {
+      "description": "Python stays out, as in mise run update",
+      "matchManagers": ["mise"],
+      "matchDepNames": ["python"],
+      "enabled": false
+    },
+    {
+      "description": "One PR for all small updates",
+      "groupName": "non-major dependencies",
+      "groupSlug": "non-major",
+      "matchUpdateTypes": ["minor", "patch", "digest"]
+    },
+    {
+      "description": "A 0.x minor can break, so it gets its own PR",
+      "matchCurrentVersion": "/^0\\./",
+      "matchUpdateTypes": ["minor"],
+      "groupName": null
+    }
+  ]
 }

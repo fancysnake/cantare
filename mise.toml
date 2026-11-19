@@ -1,14 +1,15 @@
 [tools]
-aube = "2.7.0"
-node = "26.11.1"
-pipx = "1.17.14"
+# workflow: mise installs aube only if its release was built by one of these
+# workflows. Keep it; update the names if aube renames its release workflow.
+aube = { version = "2.10.0", workflow = ["release-plz.yml@refs/heads/main", "release.yml@refs/heads/main"] }
+node = "26.13.1"
+pipx = "1.18.16"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
 # mkdocs-material itself, and pipx will not expose it otherwise. uvx = false
 # because mise prefers uvx wherever `uv` is installed, and there
 # --include-deps is neither accepted nor equivalent.
-"pipx:mkdocs-material" = { version = "9.7.7", uvx = false, pipx_args = "--include-deps" }
+"pipx:mkdocs-material" = { version = "9.8.1", uvx = false, pipx_args = "--include-deps" }
 python = "3.14"
-"pipx:vekna" = { version = "0.13.0", pipx_args = "--preinstall git+https://github.com/fancysnake/cabinet.git@v3.0.0" }
 
 [hooks]
 enter = "aube install && aube exec astro sync"
