@@ -1,7 +1,6 @@
-import config from 'virtual:cantare-config';
-import type { SiteConfig } from './pacts/site';
+import { site } from './links/config/virtual';
 
-export const site: SiteConfig = config;
+export { site };
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
