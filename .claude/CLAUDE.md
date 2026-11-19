@@ -26,7 +26,7 @@ No test suite. Quality gate: `mise run fullcheck`; `lint.yml` runs it on every P
 
 The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency), pinned like every other tool. Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, ESLint, Prettier and tsconfig. Prose shared with the README (tagline, "Built with", licensing) is included from it via `pymdownx.snippets` — edit `README.md`, not the copy.
 
-`.github/workflows/pages.yml` publishes to GitHub Pages on push to main: docs at `cantare.fancysnake.dev` (`mise run site:check` with `SITE_DIR=_site`), the repo's own songbook built with `CANTARE_BASE=/demo` and moved to `_site/demo`. `docs/CNAME` holds the custom domain. Actions are pinned to commit SHAs; Dependabot bumps them.
+`.github/workflows/pages.yml` publishes to GitHub Pages on push to main: docs at `cantare.fancysnake.dev` (`mise run site:check` with `SITE_DIR=_site`), the repo's own songbook built with `CANTARE_BASE=/demo` and moved to `_site/demo`. `docs/CNAME` holds the custom domain. Actions are pinned to commit SHAs; Renovate bumps them.
 
 Dev server serves Pagefind index from **last build** — run `mise run build` after adding songs to make them searchable in dev.
 
