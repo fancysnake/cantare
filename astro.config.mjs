@@ -1,6 +1,6 @@
+// @ts-check
 import pagefind from 'astro-pagefind';
 import { defineConfig } from 'astro/config';
-// @ts-check
 import { createReadStream, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 

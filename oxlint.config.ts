@@ -61,9 +61,10 @@ const EDGES: Pattern = {
   regex: '(^|/)astro\\.config(\\.mjs)?$',
   message: 'Nothing imports edges.',
 };
-// A `./` before a `../` would slip past the groups below.
+// A `./` before a `../`, or a `../` right after a folder name, would slip past
+// the groups below.
 const DETOUR: Pattern = {
-  regex: '^\\./\\.{1,2}/|/\\./',
+  regex: '^\\./\\.{1,2}/|/\\./|[^./]/\\.\\./',
   message: 'Write a relative import as its shortest path.',
 };
 
@@ -227,6 +228,8 @@ export default defineConfig({
     'import/no-unassigned-import': 'off',
     // The waits in the client scripts are sequential by intent.
     'no-await-in-loop': 'off',
+    // The song loader spreads once per song at build time.
+    'oxc/no-map-spread': 'off',
     // JSON.parse returns `any`, and the two places that read JSON assert its shape.
     'typescript/no-unsafe-type-assertion': 'off',
     // Numbers stringify deterministically; the SVG renderer interpolates

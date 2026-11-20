@@ -23,5 +23,5 @@ export const loadSongs = async (): Promise<({ id: string } & z.infer<typeof song
   (await readSongFiles(SONGS_DIR)).map((file) => {
     const { id, source } = file;
     const meta = songMeta(file);
-    return Object.assign({ id, source }, meta, { songbooks: songbooksOf(meta, songbooks) });
+    return { id, source, ...meta, songbooks: songbooksOf(meta, songbooks) };
   });

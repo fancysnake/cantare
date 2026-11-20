@@ -1,7 +1,7 @@
 /**
  * Self-check for the GLIMPSE layer rules in oxlint.config.ts. A layer that
- * holds no code passes `mise run lint` whatever its rule says. This lints
- * import lines inside a throwaway tree that has every layer in both shapes.
+ * holds no code passes `mise run lint` whatever its rule says. This writes
+ * each case's import line into a throwaway tree and lints the tree once.
  * Run it with `node layers.check.ts`.
  */
 import assert from 'node:assert/strict';
@@ -14,19 +14,6 @@ import { stdout } from 'node:process';
 import { layers } from './oxlint.config.ts';
 
 const OXLINT = join(import.meta.dirname, 'node_modules/.bin/oxlint');
-
-const MODULES = [
-  ...['pacts', 'specs', 'mills', 'links', 'inits'].flatMap((name) => [
-    `src/lib/${name}.ts`,
-    `src/lib/${name}/a.ts`,
-    `src/lib/${name}/b.ts`,
-  ]),
-  'src/lib/links/sub/a.ts',
-  'src/lib/links/sub/deep/a.ts',
-  'src/lib/flat.ts',
-  'bin/cantare.js',
-  'astro.config.mjs',
-];
 
 /** [importing file, import line, banned] */
 const CASES: [string, string, boolean][] = [
@@ -62,6 +49,9 @@ const CASES: [string, string, boolean][] = [
   ['src/lib/links/sub/a.ts', "import '../../flat';", true],
   ['src/lib/links/sub/a.ts', "import '.././../flat';", true],
   ['src/lib/links/sub/a.ts', "import '../../../pages/p';", true],
+  ['src/lib/links/sub/a.ts', "import '../config/../../mills/a';", true],
+  ['src/lib/links/sub/a.ts', "import '../x/../../flat';", true],
+  ['src/lib/mills/a.ts', "import './x/../../links/a';", true],
   ['src/lib/links/sub/deep/a.ts', "import '../../../pacts/a';", true],
   ['src/lib/links/sub/deep/a.ts', "import './b';", false],
   ['src/lib/flat.ts', "import './links/a';", false],
@@ -123,34 +113,39 @@ const CASES: [string, string, boolean][] = [
   ['astro.config.mjs', "import './src/lib/flat';", true],
 ];
 
+// Case n of a file sits on line n + 1 of it.
+const byFile = Map.groupBy(CASES, ([file]) => file);
+
 const root = mkdtempSync(join(tmpdir(), 'layers-'));
 try {
-  const write = (file: string, code: string) => {
+  for (const [file, cases] of byFile) {
     mkdirSync(dirname(join(root, file)), { recursive: true });
-    writeFileSync(join(root, file), code);
-  };
-  for (const module of MODULES) write(module, '');
+    writeFileSync(join(root, file), cases.map(([, code]) => `${code}\n`).join(''));
+  }
   writeFileSync(join(root, '.oxlintrc.json'), JSON.stringify(layers));
-  for (const [file, code, banned] of CASES) {
-    write(file, code);
-    const { stdout: report } = spawnSync(OXLINT, ['--format', 'json', file], {
-      cwd: root,
-      encoding: 'utf8',
-    });
-    write(file, '');
-    // A parse error or a bad config is not JSON, or reports under another
-    // rule; either would pass as a ban.
-    const { diagnostics } = JSON.parse(report) as { diagnostics: { code: string }[] };
-    assert.deepEqual(
-      diagnostics.filter((d) => d.code !== 'eslint(no-restricted-imports)'),
-      [],
-      `${file}: ${code}`,
-    );
-    assert.equal(
-      diagnostics.length > 0,
-      banned,
-      `${file}: ${code} should be ${banned ? 'banned' : 'allowed'}`,
-    );
+  const { stdout: report } = spawnSync(OXLINT, ['--format', 'json', '.'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 2 ** 26,
+  });
+  const { diagnostics } = JSON.parse(report) as {
+    diagnostics: { code: string; filename: string; labels: { span: { line: number } }[] }[];
+  };
+  // A parse error or a bad config reports under another rule; either would
+  // pass as a ban.
+  assert.deepEqual(
+    diagnostics.filter((d) => d.code !== 'eslint(no-restricted-imports)'),
+    [],
+  );
+  const flagged = new Set(diagnostics.map((d) => `${d.filename}:${d.labels[0]?.span.line}`));
+  for (const [file, cases] of byFile) {
+    for (const [index, [, code, banned]] of cases.entries()) {
+      assert.equal(
+        flagged.has(`${file}:${index + 1}`),
+        banned,
+        `${file}: ${code} should be ${banned ? 'banned' : 'allowed'}`,
+      );
+    }
   }
 } finally {
   rmSync(root, { recursive: true, force: true });
