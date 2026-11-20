@@ -1,7 +1,7 @@
-import { diagramKey } from '../pacts/chord';
+import { diagramKey, type ChordRoot } from '../pacts/chord';
 
-/* chords-db uses these twelve key spellings */
-const ENHARMONIC: Record<string, string> = {
+/* The other spelling of each root that has no ChordRoot of its own. */
+const ENHARMONIC: Record<string, ChordRoot> = {
   Db: 'C#',
   'D#': 'Eb',
   Gb: 'F#',

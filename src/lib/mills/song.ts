@@ -7,7 +7,7 @@ import {
   type Line,
   type Song,
 } from 'chordsheetjs';
-import type { SongMeta, SongUrl } from '../pacts/song.ts';
+import type { SongFile, SongMeta, SongUrl } from '../pacts/song.ts';
 
 const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
 const GRID_CLOSE = /^\s*\{\s*(?:end_of_grid|eog)\b/i;
@@ -250,6 +250,16 @@ export function renderTransposed(source: string, semitones: number): RenderedShe
 function single(value: string | string[] | null | undefined): string | undefined {
   if (Array.isArray(value)) return value[0];
   return value ?? undefined;
+}
+
+/** The metadata of a song file; throws, naming the file, on a directive that no longer exists. */
+export function songMeta({ path, source }: SongFile): SongMeta {
+  const song = parseSong(source);
+  // chordsheetjs would drop the old directive silently, leaving a link-only song an empty sheet.
+  if (song.metadata.get('link') !== null) {
+    throw new Error(`${path}: {meta: link} was renamed to {meta: redirect}.`);
+  }
+  return extractMeta(song);
 }
 
 export function extractMeta(song: Song): SongMeta {

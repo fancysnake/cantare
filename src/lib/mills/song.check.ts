@@ -5,7 +5,7 @@
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
-import { extractMeta, parseSong, renderSong } from './song.ts';
+import { extractMeta, parseSong, renderSong, songMeta } from './song.ts';
 
 /** The plain text of each `.word` span, chords stripped. */
 function words(source: string): string[] {
@@ -64,5 +64,12 @@ assert.match(
 
 // Inline songs keep an opening bracket followed by a space as a word of its own.
 assert.deepEqual(words('word ([C] la)'), ['word', '(', 'la)']);
+
+// The renamed `link` directive fails the build, naming the file.
+assert.throws(
+  () => songMeta({ id: 'x', path: 'a/x.cho', source: '{meta: link https://example.com}' }),
+  /a\/x\.cho: \{meta: link\} was renamed to \{meta: redirect\}/,
+);
+assert.equal(songMeta({ id: 'x', path: 'x.cho', source: '{title: X}' }).title, 'X');
 
 stdout.write('song.check: ok\n');
