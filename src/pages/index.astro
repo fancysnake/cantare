@@ -26,11 +26,10 @@ const songs = await getCollection('songs');
       exposes the instance on the element once it has initialised. */}
   <script is:inline type="module" define:vars={{ searchUi: t.searchUi }}>
     await customElements.whenDefined('pagefind-input');
-    const find = () => document.querySelector('pagefind-input[instance="songs"]');
-    let el = find();
-    for (let i = 0; i < 60 && !el?.instance; i += 1) {
+    const el = document.querySelector('pagefind-input[instance="songs"]');
+    for (let i = 0; i < 60; i += 1) {
+      if (el?.instance) break;
       await new Promise((r) => requestAnimationFrame(r));
-      el = find();
     }
     el?.instance?.setTranslations(searchUi);
     // Results stay inside the active songbook; an empty list lifts the filter.

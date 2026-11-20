@@ -179,6 +179,8 @@ export default defineConfig({
     'import/no-unassigned-import': 'off',
     // The waits in the client scripts are sequential by intent.
     'no-await-in-loop': 'off',
+    // The song loader spreads once per song at build time.
+    'oxc/no-map-spread': 'off',
     // JSON.parse returns `any`, and the two places that read JSON assert its shape.
     'typescript/no-unsafe-type-assertion': 'off',
     // Numbers stringify deterministically; the SVG renderer interpolates

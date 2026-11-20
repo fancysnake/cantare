@@ -15,7 +15,7 @@ const songs = defineCollection({
     (await readSongFiles(SONGS_DIR)).map((file) => {
       const { id, source } = file;
       const meta = songMeta(file);
-      return Object.assign({ id, source }, meta, { songbooks: songbooksOf(meta, songbooks) });
+      return { id, source, ...meta, songbooks: songbooksOf(meta, songbooks) };
     }),
   schema: songMetaSchema.extend({
     songbooks: z.array(z.string()),
