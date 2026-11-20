@@ -85,8 +85,8 @@ mise run dev   # dev server at http://localhost:4321
 | `mise run dev`        | Dev server with hot reload                          |
 | `mise run build`      | Static production build into `dist/` + search index |
 | `mise run preview`    | Serve the production build locally                  |
-| `mise run lint`       | ESLint (strict, type-checked) + Prettier check      |
-| `mise run format`     | Format the codebase with Prettier                   |
+| `mise run lint`       | oxlint (strict, type-aware) + oxfmt check           |
+| `mise run format`     | Format the codebase with oxfmt                      |
 | `mise run check`      | `astro check` type-checks the templates             |
 | `mise run site:serve` | These docs at http://localhost:8000                 |
 | `mise run site:check` | Build the docs, failing on a broken link            |

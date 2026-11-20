@@ -1,5 +1,6 @@
-import { slugify } from '../pacts/slug';
 import type { FacetKey, SongbookFields } from '../pacts/songbook';
+
+import { slugify } from '../pacts/slug';
 import { facetValues } from './songbook';
 
 export interface Facet<Song> {
@@ -23,5 +24,5 @@ export function groupBySlug<Song extends { data: SongbookFields }>(
       groups.set(slug, group);
     }
   }
-  return [...groups.values()].sort((a, b) => a.name.localeCompare(b.name, locale));
+  return [...groups.values()].toSorted((a, b) => a.name.localeCompare(b.name, locale));
 }

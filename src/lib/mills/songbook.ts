@@ -1,4 +1,5 @@
 import { z } from 'astro/zod';
+
 import { slugify } from '../pacts/slug.ts';
 import {
   FACET_KEYS,
@@ -10,17 +11,17 @@ import {
 /** The built-in songbook holding every song no defined songbook picks. */
 export const OTHER = 'other';
 
-const slugs = (values: string[] = []) => new Set(values.map(slugify));
+const slugSet = (values: string[] = []) => new Set(values.map(slugify));
 
 // Slugified values, so matching ignores case and accents like the listing pages do.
 const songbookMatcher = songbookSchema.transform(({ name, tags, artists, albums, languages }) => ({
   slug: slugify(name),
   name,
   match: {
-    tags: slugs(tags),
-    artists: slugs(artists),
-    albums: slugs(albums),
-    languages: slugs(languages),
+    tags: slugSet(tags),
+    artists: slugSet(artists),
+    albums: slugSet(albums),
+    languages: slugSet(languages),
   },
 }));
 

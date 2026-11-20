@@ -11,8 +11,8 @@ mise run dev       # dev server at http://localhost:4321
 mise run build     # static build into dist/ + Pagefind search index
 mise run build:demo # the same under CANTARE_BASE=/demo, as Pages publishes it
 mise run preview   # serve the production build
-mise run lint      # ESLint (strict, type-checked) + Prettier check
-mise run format    # Prettier write
+mise run lint      # oxlint (strict, type-aware) + oxfmt check
+mise run format    # oxfmt write
 mise run check     # astro check (type-checks .astro templates)
 mise run site:serve # MkDocs docs at http://localhost:8000
 mise run site:check # mkdocs build --strict (fails on a broken link or anchor); SITE_DIR overrides the output dir
@@ -20,11 +20,11 @@ mise run song:check # asserts mills/song.ts word-grouping rules (which read the 
 mise run fullcheck # the gate: frozen install, sync, lint, check, song:check, build:demo, site:check
 ```
 
-No test suite. Quality gate: `mise run fullcheck`; `lint.yml` runs it on every PR, `.vekna.toml` uses it. Husky + lint-staged run `eslint --fix` and Prettier on commit.
+No test suite. Quality gate: `mise run fullcheck`; `lint.yml` runs it on every PR, `.vekna.toml` uses it. Husky + lint-staged run `oxlint --fix` and oxfmt on commit. `oxlint.config.ts` holds the lint rules; oxlint reads an import as text, and its regex engine skips a lookahead pattern without an error, so `layers.check.ts` is what proves a layer rule bans anything.
 
 `.vekna.toml` wires cabinet's PR rituals (`vekna cast refresh|review|labels`); vekna (with cabinet preinstalled) and its Python are pinned in `mise.toml`, so `mise install` provides them. Cabinet pushes over the `https-origin` remote with `gh` as credential helper, since a cast has no terminal for an ssh passphrase. One-time setup per clone: `git remote add https-origin https://github.com/fancysnake/cantare.git && gh auth setup-git`.
 
-The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency), pinned like every other tool. Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, ESLint, Prettier and tsconfig. Prose shared with the README (tagline, "Built with", licensing) is included from it via `pymdownx.snippets` — edit `README.md`, not the copy.
+The docs are the only Python in the repo: MkDocs Material via mise's pipx backend (`--include-deps`, since the `mkdocs` binary belongs to a dependency), pinned like every other tool. Content is `docs/*.md` + `mkdocs.yml`; output `site/` is ignored by git, oxlint, oxfmt and tsconfig. Prose shared with the README (tagline, "Built with", licensing) is included from it via `pymdownx.snippets` — edit `README.md`, not the copy.
 
 `.github/workflows/pages.yml` publishes to GitHub Pages on push to main: docs at `cantare.fancysnake.dev` (`mise run site:check` with `SITE_DIR=_site`), the repo's own songbook built with `CANTARE_BASE=/demo` and moved to `_site/demo`. `docs/CNAME` holds the custom domain. Actions are pinned to commit SHAs; Renovate bumps them.
 

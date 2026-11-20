@@ -1,7 +1,10 @@
 [tools]
 # workflow: mise installs aube only if its release was built by one of these
 # workflows. Keep it; update the names if aube renames its release workflow.
-aube = { version = "2.10.0", workflow = ["release-plz.yml@refs/heads/main", "release.yml@refs/heads/main"] }
+aube = { version = "2.10.0", workflow = [
+  "release-plz.yml@refs/heads/main",
+  "release.yml@refs/heads/main",
+] }
 node = "26.13.1"
 pipx = "1.18.16"
 # --include-deps: the `mkdocs` binary belongs to a dependency, not to
@@ -32,12 +35,12 @@ description = "Preview the built site"
 run = "aube run preview"
 
 [tasks.lint]
-description = "ESLint + Prettier check"
+description = "oxlint + oxfmt check"
 depends = ["sync"]
 run = ["aube run lint", "aube run format:check"]
 
 [tasks.format]
-description = "Format with Prettier"
+description = "Format with oxfmt"
 run = "aube run format"
 
 [tasks.check]
@@ -46,7 +49,11 @@ run = "aube run check"
 
 [tasks."song:check"]
 description = "Assert the word-grouping rules in src/lib/mills/song.ts, songbook matching and the lint layer rules"
-run = ["node src/lib/mills/song.check.ts", "node src/lib/mills/songbook.check.ts", "node layers.check.ts"]
+run = [
+  "node src/lib/mills/song.check.ts",
+  "node src/lib/mills/songbook.check.ts",
+  "node layers.check.ts",
+]
 
 [tasks."site:serve"]
 description = "Serve the docs at http://localhost:8000"
@@ -59,12 +66,12 @@ run = "mkdocs build --strict --site-dir ${SITE_DIR:-site}"
 [tasks.fullcheck]
 description = "The gate before a commit: deps, lint, types, song rules, sub-path build, docs"
 run = [
-    "aube install --frozen-lockfile",
-    { task = "lint" },
-    { task = "check" },
-    { task = "song:check" },
-    { task = "build:demo" },
-    { task = "site:check" },
+  "aube install --frozen-lockfile",
+  { task = "lint" },
+  { task = "check" },
+  { task = "song:check" },
+  { task = "build:demo" },
+  { task = "site:check" },
 ]
 
 [tasks.sync]
@@ -76,9 +83,9 @@ _.path = ['{{config_root}}/node_modules/.bin']
 
 [tasks.update]
 run = [
-    "mise upgrade --bump --exclude python --minimum-release-age=7d",
-    "aube update",
-    "aube outdated"
+  "mise upgrade --bump --exclude python --minimum-release-age=7d",
+  "aube update",
+  "aube outdated",
 ]
 
 [tasks.lock]

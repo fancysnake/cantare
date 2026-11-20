@@ -7,6 +7,7 @@ import {
   type Line,
   type Song,
 } from 'chordsheetjs';
+
 import type { SongFile, SongMeta, SongUrl } from '../pacts/song.ts';
 
 const GRID_OPEN = /^\s*\{\s*(?:start_of_grid|sog)\b/i;
@@ -70,8 +71,7 @@ function expandChorusRecalls(song: Song): Song {
     if (line.items.some((item) => item instanceof Tag && item.name === CHORUS)) {
       const label = recallLabel(line);
       const target =
-        (label && [...blocks].reverse().find((b) => b.label === label)) ??
-        blocks[blocks.length - 1];
+        (label && blocks.findLast((b) => b.label === label)) ?? blocks[blocks.length - 1];
       if (target) {
         line.type = CHORUS;
         for (const source of target.lines) {
@@ -124,13 +124,13 @@ function splitWords(song: Song): Song {
       }
       const fragment = TRAILING_FRAGMENT.exec(lyrics);
       const parts = fragment ? [fragment[1] ?? '', fragment[2] ?? ''] : [lyrics];
-      parts.forEach((lyrics, index) => {
+      parts.forEach((part, index) => {
         if (index > 0) {
-          items.push(new ChordLyricsPair('', lyrics));
+          items.push(new ChordLyricsPair('', part));
           return;
         }
         const head = item.clone();
-        head.lyrics = lyrics;
+        head.lyrics = part;
         items.push(head);
       });
     }

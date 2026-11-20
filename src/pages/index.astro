@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
-import Base from '../layouts/Base.astro';
+
 import RandomButton from '../components/RandomButton.astro';
+import Base from '../layouts/Base.astro';
 import { t, locale } from '../lib/i18n';
-import { url } from '../lib/site';
 import { homeHref, songsHref } from '../lib/routes';
+import { url } from '../lib/site';
 
 const songs = await getCollection('songs');
 ---
@@ -26,7 +27,8 @@ const songs = await getCollection('songs');
   <script is:inline type="module" define:vars={{ searchUi: t.searchUi }}>
     await customElements.whenDefined('pagefind-input');
     const el = document.querySelector('pagefind-input[instance="songs"]');
-    for (let i = 0; i < 60 && !el?.instance; i += 1) {
+    for (let i = 0; i < 60; i += 1) {
+      if (el?.instance) break;
       await new Promise((r) => requestAnimationFrame(r));
     }
     el?.instance?.setTranslations(searchUi);

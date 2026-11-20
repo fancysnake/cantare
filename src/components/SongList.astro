@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+
 import { locale } from '../lib/i18n';
 import { songLink } from '../lib/routes';
 import ExternalCue from './ExternalCue.astro';
@@ -8,7 +9,7 @@ interface Props {
   songs: CollectionEntry<'songs'>[];
 }
 
-const songs = [...Astro.props.songs].sort((a, b) =>
+const songs = Astro.props.songs.toSorted((a, b) =>
   a.data.title.localeCompare(b.data.title, locale),
 );
 ---
