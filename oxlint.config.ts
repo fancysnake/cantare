@@ -36,9 +36,10 @@ const EDGES: Pattern = {
   regex: '(^|/)astro\\.config(\\.mjs)?$',
   message: 'Nothing imports edges.',
 };
-// A `./` before a `../` would slip past the groups below.
+// A `./` before a `../`, or a `../` right after a folder name, would slip past
+// the groups below.
 const DETOUR: Pattern = {
-  regex: '^\\./\\.{1,2}/|/\\./',
+  regex: '^\\./\\.{1,2}/|/\\./|[^./]/\\.\\./',
   message: 'Write a relative import as its shortest path.',
 };
 
