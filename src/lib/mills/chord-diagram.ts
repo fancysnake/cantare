@@ -4,6 +4,7 @@
  * Uses currentColor throughout so it follows light/dark themes.
  */
 import type { ChordPosition, DiagramData } from '../pacts/chord';
+
 import { chordKey } from './chord-lookup';
 
 const STRINGS = 6;

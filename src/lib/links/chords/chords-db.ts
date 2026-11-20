@@ -3,6 +3,7 @@
  * pages embed the small subset this link returns.
  */
 import guitar from '@tombatossals/chords-db/lib/guitar.json';
+
 import {
   CHORD_ROOTS,
   diagramKey,

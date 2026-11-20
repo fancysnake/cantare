@@ -1,9 +1,9 @@
 {
   "name": "cantare",
   "version": "1.1.0",
-  "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
-  "type": "module",
   "private": true,
+  "description": "A static songbook built with Astro, Pagefind and ChordSheetJS",
+  "license": "MIT",
   "bin": {
     "cantare": "./bin/cantare.js"
   },
@@ -14,21 +14,17 @@
     "site.config.json",
     "tsconfig.json"
   ],
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "prepare": "husky || true"
   },
-  "lint-staged": {
-    "*.{js,mjs,ts,astro}": "eslint --fix",
-    "*": "prettier --write --ignore-unknown"
-  },
-  "license": "MIT",
   "dependencies": {
     "@tombatossals/chords-db": "^0.5.1",
     "astro": "^7.4.11",
@@ -36,24 +32,25 @@
     "chordsheetjs": "^16.2.2",
     "pagefind": "^1.6.0"
   },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/compiler-rs": "^0.5.3",
+    "@types/node": "^26.6.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
+    "oxlint-tsgolint": "^7.0.2007",
+    "typescript": "^6.0.3"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,astro}": "oxlint --fix",
+    "*": "oxfmt --no-error-on-unmatched-pattern"
+  },
   "aube": {
     "allowBuilds": {
       "esbuild": true,
       "sharp": true
     }
-  },
-  "devDependencies": {
-    "@astrojs/check": "^0.9.12",
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.6",
-    "eslint": "^10.14.0",
-    "eslint-plugin-astro": "^3.2.1",
-    "eslint-plugin-import-x": "^4.18.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.6.0",
-    "prettier": "^3.10.0",
-    "prettier-plugin-astro": "^1.1.2",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.2"
   }
 }

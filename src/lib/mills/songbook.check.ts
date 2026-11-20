@@ -1,11 +1,13 @@
 /**
  * Self-check for songbook membership and config validation. Matching decides
- * what a reader sees in every list, and neither `astro check` nor ESLint can
+ * what a reader sees in every list, and neither `astro check` nor oxlint can
  * see a wrong rule. Run it with `node src/lib/songbook.check.ts`.
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
+
 import type { SongbookFields } from '../pacts/songbook.ts';
+
 import { OTHER, facetValues, parseSongbooks, songbookOptions, songbooksOf } from './songbook.ts';
 
 const books = parseSongbooks([

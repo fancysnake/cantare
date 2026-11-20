@@ -1,10 +1,11 @@
 /**
  * Self-check for word grouping — the one part of song.ts that reads its own
- * renderer's HTML back, so neither `astro check` nor ESLint can see a wrong
+ * renderer's HTML back, so neither `astro check` nor oxlint can see a wrong
  * boundary rule. Run it with `node src/lib/song.check.ts`.
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
+
 import { extractMeta, parseSong, renderSong, songMeta } from './song.ts';
 
 /** The plain text of each `.word` span, chords stripped. */

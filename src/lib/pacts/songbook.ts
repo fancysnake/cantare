@@ -1,6 +1,8 @@
 import { z } from 'astro/zod';
-import { slugify } from './slug.ts';
+
 import type { SongMeta } from './song.ts';
+
+import { slugify } from './slug.ts';
 
 export const FACET_KEYS = ['tags', 'artists', 'albums', 'languages'] as const;
 

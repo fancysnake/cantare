@@ -200,15 +200,15 @@ const initialDiagrams = chordNames.flatMap((name) => {
     const toggle = autoscroll?.querySelector<HTMLButtonElement>('.scroll-toggle');
     const scrollState = autoscroll?.querySelector<HTMLOutputElement>('.scroll-state');
 
+    const atBottom = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
+
     if (autoscroll && toggle && scrollState) {
       const SPEEDS = [10, 20, 30, 45, 60, 85, 120, 160]; // px per second
       let level = 2;
       let playing = false;
       let last = 0;
       let carry = 0;
-
-      const atBottom = () =>
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
 
       const stop = () => {
         playing = false;
@@ -463,6 +463,11 @@ const initialDiagrams = chordNames.flatMap((name) => {
     const dataEl = document.getElementById('chord-data');
     const sheetEl = document.querySelector<HTMLElement>('.chord-sheet');
 
+    const chordTarget = (event: Event): HTMLElement | null =>
+      event.target instanceof Element
+        ? event.target.closest<HTMLElement>('.chord-sheet .chord')
+        : null;
+
     if (dataEl && sheetEl) {
       const data: DiagramData = JSON.parse(dataEl.textContent ?? '{}');
 
@@ -495,11 +500,6 @@ const initialDiagrams = chordNames.flatMap((name) => {
 
       let shownFor: HTMLElement | null = null;
       let hoverTimer = 0;
-
-      const chordTarget = (event: Event): HTMLElement | null =>
-        event.target instanceof Element
-          ? event.target.closest<HTMLElement>('.chord-sheet .chord')
-          : null;
 
       const show = (chordEl: HTMLElement, svg: string) => {
         popover.innerHTML = svg;

@@ -1,6 +1,8 @@
 import type { CollectionEntry } from 'astro:content';
-import { slugify } from './pacts/slug';
+
 import type { SongLink } from './pacts/song';
+
+import { slugify } from './pacts/slug';
 import { url } from './site';
 
 /**
