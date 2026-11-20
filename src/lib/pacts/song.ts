@@ -18,6 +18,15 @@ export const songMetaSchema = z.object({
 
 export type SongMeta = z.infer<typeof songMetaSchema>;
 
+/** A ChordPro file as read from the songs directory. */
+export interface SongFile {
+  /** The filename without its extension; the song's URL slug. */
+  id: string;
+  /** Relative to the songs directory. */
+  path: string;
+  source: string;
+}
+
 /** A source link on a song's own page. */
 export type SongUrl = SongMeta['urls'][number];
 

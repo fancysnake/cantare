@@ -5,9 +5,9 @@ import ExternalCue from '../../components/ExternalCue.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
 import { isTrailing, parseSong, renderSong } from '../../lib/mills/song';
 import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
-import { chordsDb } from '../../lib/chord-data';
+import { fingeringsForSuffixes } from '../../lib/chord-data';
 import { chordDiagramFor } from '../../lib/mills/chord-diagram';
-import { diagramDataForChords } from '../../lib/mills/chord-lookup';
+import { diagramSuffixes } from '../../lib/mills/chord-lookup';
 import { t } from '../../lib/i18n';
 
 export async function getStaticPaths() {
@@ -29,7 +29,7 @@ const hasBody = parsed.bodyLines.length > 0;
 const links = [...(redirect ? [{ href: redirect, label: t.openLink }] : []), ...urls];
 
 const chordNames = [...new Set(parsed.getChords())];
-const diagramData = diagramDataForChords(chordNames, chordsDb);
+const diagramData = fingeringsForSuffixes(diagramSuffixes(chordNames));
 const initialDiagrams = chordNames.flatMap((name) => {
   const svg = chordDiagramFor(name, diagramData, t.chordDiagram);
   return svg ? [svg] : [];
