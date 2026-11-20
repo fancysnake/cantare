@@ -1,13 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
-
 import RandomButton from '../components/RandomButton.astro';
 import Base from '../layouts/Base.astro';
-import { t, locale } from '../lib/i18n';
-import { homeHref, songsHref } from '../lib/routes';
-import { url } from '../lib/site';
+import { homeHref, songs as allSongs, songsHref, url } from '../lib/inits/pages';
+import { locale, t } from '../lib/inits/site';
 
-const songs = await getCollection('songs');
+const songs = await allSongs();
 ---
 
 <Base>

@@ -1,13 +1,7 @@
-import type { FacetKey, SongbookFields } from '../pacts/songbook';
+import type { Facet, FacetKey, SongbookFields } from '../pacts/songbook';
 
 import { slugify } from '../pacts/slug';
 import { facetValues } from './songbook';
-
-export interface Facet<Song> {
-  slug: string;
-  name: string;
-  songs: Song[];
-}
 
 /** Groups songs by the slug of each value under `key`, sorted by name in `locale`; first spelling seen names the group. */
 export function groupBySlug<Song extends { data: SongbookFields }>(

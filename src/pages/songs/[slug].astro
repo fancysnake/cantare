@@ -1,17 +1,21 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ExternalCue from '../../components/ExternalCue.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
-import { isTrailing, parseSong, renderSong } from '../../lib/mills/song';
-import { albumHref, artistHref, languageHref, tagHref } from '../../lib/routes';
-import { fingeringsForSuffixes } from '../../lib/chord-data';
-import { chordDiagramFor } from '../../lib/mills/chord-diagram';
-import { diagramSuffixes } from '../../lib/mills/chord-lookup';
-import { t } from '../../lib/i18n';
+import {
+  albumHref,
+  artistHref,
+  diagramData as diagramDataFor,
+  languageHref,
+  songs as allSongs,
+  tagHref,
+} from '../../lib/inits/pages';
+import { chordDiagram, isTrailing, parseSong, renderSong } from '../../lib/inits/sheet';
+import { t } from '../../lib/inits/site';
 
 export async function getStaticPaths() {
-  const songs = await getCollection('songs');
+  const songs = await allSongs();
   return songs.map((song) => ({ params: { slug: song.id }, props: { song } }));
 }
 
@@ -29,9 +33,9 @@ const hasBody = parsed.bodyLines.length > 0;
 const links = [...(redirect ? [{ href: redirect, label: t.openLink }] : []), ...urls];
 
 const chordNames = [...new Set(parsed.getChords())];
-const diagramData = fingeringsForSuffixes(diagramSuffixes(chordNames));
+const diagramData = diagramDataFor(chordNames);
 const initialDiagrams = chordNames.flatMap((name) => {
-  const svg = chordDiagramFor(name, diagramData, t.chordDiagram);
+  const svg = chordDiagram(name, diagramData);
   return svg ? [svg] : [];
 });
 ---
@@ -162,7 +166,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   />
 
   <script>
-    import { renderTransposed } from '../../lib/mills/song';
+    import { renderTransposed } from '../../lib/inits/sheet';
 
     const sheet = document.querySelector<HTMLElement>('.chord-sheet');
     const sourceEl = document.getElementById('song-source');
@@ -194,7 +198,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
-    import { t } from '../../lib/i18n';
+    import { t } from '../../lib/inits/site';
 
     const autoscroll = document.querySelector<HTMLElement>('.autoscroll');
     const toggle = autoscroll?.querySelector<HTMLButtonElement>('.scroll-toggle');
@@ -269,7 +273,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
-    import { t } from '../../lib/i18n';
+    import { t } from '../../lib/inits/site';
 
     const focusToggle = document.getElementById('focus-toggle');
     if (focusToggle) {
@@ -306,7 +310,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
-    import { t } from '../../lib/i18n';
+    import { t } from '../../lib/inits/site';
 
     const modeToggle = document.getElementById('sheet-mode-toggle');
     const viewport = document.querySelector<HTMLElement>('.sheet-viewport');
@@ -456,8 +460,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
   </script>
 
   <script>
-    import { chordDiagramFor } from '../../lib/mills/chord-diagram';
-    import { t } from '../../lib/i18n';
+    import { chordDiagram } from '../../lib/inits/sheet';
     import type { DiagramData } from '../../lib/pacts/chord';
 
     const dataEl = document.getElementById('chord-data');
@@ -471,7 +474,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
     if (dataEl && sheetEl) {
       const data: DiagramData = JSON.parse(dataEl.textContent ?? '{}');
 
-      const svgFor = (name: string): string | null => chordDiagramFor(name, data, t.chordDiagram);
+      const svgFor = (name: string): string | null => chordDiagram(name, data);
 
       const grid = document.getElementById('chord-grid');
       const refreshGrid = () => {

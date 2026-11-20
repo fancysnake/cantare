@@ -4,7 +4,8 @@ import { builtinModules } from 'node:module';
 import { defineConfig } from 'oxlint';
 
 // GLIMPSE layers (https://glimpse.fancysnake.dev/). A layer is declared by
-// path; the flat modules in src/lib/ belong to none until they move into one.
+// path: pacts, specs, mills, links and inits under src/lib/, gates where the
+// framework puts them.
 // oxlint sees an import as text, not as a resolved path, so a rule bans the
 // `../` steps that leave the layer and re-allows the layers it may import.
 // Its regex engine has no lookahead and skips such a pattern without an error.
@@ -15,11 +16,26 @@ const LAYERS: Record<string, string[]> = {
   specs: [],
   mills: ['pacts', 'specs'],
   links: ['pacts'],
+  inits: ['pacts', 'specs', 'mills', 'links'],
 };
 /** Layers that run without the framework and Node. */
 const PURE = new Set(['pacts', 'specs', 'mills']);
-const GATES = ['src/pages/**', 'src/layouts/**', 'src/components/**', 'bin/**'];
+/** Each folder of gates, with the path from a file in it to src/lib/. */
+const GATES: [files: string, up: string][] = [
+  ['src/content.config.ts', './lib/'],
+  ['src/pages/*', '../lib/'],
+  ['src/pages/*/*', '../../lib/'],
+  ['src/layouts/*', '../lib/'],
+  ['src/components/*', '../lib/'],
+  ['bin/*', '../src/lib/'],
+];
+const GATES_MESSAGE = 'Gates import pacts and inits only.';
 
+interface Path {
+  name: string;
+  importNames: string[];
+  message: string;
+}
 type Pattern = { message: string } & ({ regex: string } | { group: string[] });
 
 const BUILTINS = builtinModules.filter((name) => !/[:/]/.test(name)).join('|');
@@ -42,9 +58,11 @@ const DETOUR: Pattern = {
   message: 'Write a relative import as its shortest path.',
 };
 
-const restrict = (files: string[], patterns: Pattern[]): OxlintOverride => ({
+const restrict = (files: string[], patterns: Pattern[], paths: Path[] = []): OxlintOverride => ({
   files,
-  rules: { 'no-restricted-imports': ['error', { patterns: [...patterns, DETOUR, EDGES] }] },
+  rules: {
+    'no-restricted-imports': ['error', { paths, patterns: [...patterns, DETOUR, EDGES] }],
+  },
 });
 
 /**
@@ -147,14 +165,28 @@ export const layers: { rules: DummyRuleMap; overrides: OxlintOverride[] } = {
   rules: { 'no-restricted-imports': ['error', { patterns: [EDGES] }] },
   overrides: [
     ...layerOverrides,
-    // Exemption: gates import mills. No inits layer exists yet, so gates
-    // compose mills directly.
-    restrict(GATES, [
-      {
-        regex: '^\\.{1,2}/(.*/)?lib/(links|specs|inits)(\\.[jt]s)?(/|$)',
-        message: 'Gates import pacts and mills only.',
-      },
-    ]),
+    // Exemption: gates import inits. A static build has no seam that hands
+    // `getStaticPaths` or a browser script its services, so they import them.
+    ...GATES.map(([files, up]) =>
+      restrict(
+        [files],
+        [
+          leaving(['pacts', 'inits'], up, GATES_MESSAGE),
+          // Whatever the depth of the importing file.
+          {
+            regex: '^\\.{1,2}/(.*/)?lib/(mills|links|specs)(\\.[jt]s)?(/|$)',
+            message: GATES_MESSAGE,
+          },
+        ],
+        [
+          {
+            name: 'astro:content',
+            importNames: ['getCollection', 'getEntry', 'getEntries'],
+            message: 'Gates read songs through inits, not from the content collection.',
+          },
+        ],
+      ),
+    ),
     restrict(
       ['astro.config.mjs'],
       [{ regex: '^\\.{1,2}/(.*/)?(src|bin)(/|$)', message: 'edges imports no project code.' }],

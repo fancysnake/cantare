@@ -1,16 +1,21 @@
 ---
 import '../styles/global.css';
-import { getCollection } from 'astro:content';
-
 import ShareButton from '../components/ShareButton.astro';
-import { locale, t } from '../lib/i18n';
-import { songbookCss, songbookOptions as optionsOf } from '../lib/mills/songbook';
-import { artistsHref, homeHref, languagesHref, songsHref, tagsHref } from '../lib/routes';
-import { site, themeCss } from '../lib/site';
+import {
+  artistsHref,
+  homeHref,
+  languagesHref,
+  songbookCss,
+  songbookOptions as optionsOf,
+  songsHref,
+  tagsHref,
+  themeCss,
+} from '../lib/inits/pages';
+import { locale, site, t } from '../lib/inits/site';
 
-const songbookOptions = optionsOf(site.songbooks, await getCollection('songs'), t.songbookOther);
+const songbookOptions = await optionsOf();
 const songbookSlugs = songbookOptions.map(({ slug }) => slug);
-const headStyles = [themeCss(), songbookCss(songbookSlugs)].filter(Boolean).join('\n');
+const headStyles = [themeCss, songbookCss(songbookSlugs)].filter(Boolean).join('\n');
 
 interface Props {
   title?: string | undefined;
@@ -107,7 +112,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       </footer>
     )}
     <script>
-      import { t } from '../lib/i18n';
+      import { t } from '../lib/inits/site';
 
       const toggle = document.getElementById('theme-toggle');
       if (toggle) {

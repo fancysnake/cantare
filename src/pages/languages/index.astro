@@ -1,15 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
-
 import ListingItem from '../../components/ListingItem.astro';
 import Base from '../../layouts/Base.astro';
-import { locale, t } from '../../lib/i18n';
-import { groupBySlug } from '../../lib/mills/facets';
-import { languageHref } from '../../lib/routes';
+import { languageHref, facets } from '../../lib/inits/pages';
+import { t } from '../../lib/inits/site';
 
-const songs = await getCollection('songs');
-
-const languages = groupBySlug(songs, 'languages', locale);
+const languages = await facets('languages');
 ---
 
 <Base title={t.languagesTitle}>

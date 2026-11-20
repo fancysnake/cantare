@@ -1,5 +1,3 @@
-import { site } from './site';
-
 export type Locale = 'en' | 'pl';
 
 interface Strings {
@@ -261,6 +259,8 @@ function isLocale(value: string): value is Locale {
   return value in STRINGS;
 }
 
-export const locale: Locale = isLocale(site.locale) ? site.locale : 'en';
-
-export const t: Strings = STRINGS[locale];
+/** The UI strings for the site locale; a locale with no table gets English. */
+export function strings(siteLocale: string): { locale: Locale; t: Strings } {
+  const locale = isLocale(siteLocale) ? siteLocale : 'en';
+  return { locale, t: STRINGS[locale] };
+}
