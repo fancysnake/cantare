@@ -1,4 +1,4 @@
-import type { SongLink } from '../pacts/song';
+import type { SongLink, SongMeta } from '../pacts/song';
 
 import { slugify } from '../pacts/slug';
 
@@ -11,7 +11,7 @@ import { slugify } from '../pacts/slug';
  * templates never build a path: `[slug].astro` pages own the slug via
  * `getStaticPaths`, and these helpers own the link.
  */
-export function routes(base: string) {
+export function routesFor(base: string) {
   const prefix = base.replace(/\/$/, '');
   /** For assets that have no route behind them (the Pagefind bundle). */
   const url = (path: string): string => `${prefix}${path}`;
@@ -22,7 +22,7 @@ export function routes(base: string) {
     songsHref: (): string => url('/songs/'),
     songHref,
     /** Where a song list points: a song with `{meta: redirect …}` opens that page in a new tab instead. */
-    songLink: (song: { id: string; data: { redirect?: string | undefined } }): SongLink =>
+    songLink: (song: { id: string; data: Pick<SongMeta, 'redirect'> }): SongLink =>
       song.data.redirect
         ? { href: song.data.redirect, target: '_blank' }
         : { href: songHref(song.id) },

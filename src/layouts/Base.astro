@@ -1,21 +1,12 @@
 ---
 import '../styles/global.css';
 import ShareButton from '../components/ShareButton.astro';
-import {
-  artistsHref,
-  homeHref,
-  languagesHref,
-  songbookCss,
-  songbookOptions as optionsOf,
-  songsHref,
-  tagsHref,
-  themeCss,
-} from '../lib/inits/pages';
+import { headCss, loadSongbookOptions, routes } from '../lib/inits/pages';
 import { locale, site, t } from '../lib/inits/site';
 
-const songbookOptions = await optionsOf();
+const songbookOptions = await loadSongbookOptions();
 const songbookSlugs = songbookOptions.map(({ slug }) => slug);
-const headStyles = [themeCss, songbookCss(songbookSlugs)].filter(Boolean).join('\n');
+const headStyles = await headCss();
 
 interface Props {
   title?: string | undefined;
@@ -78,14 +69,14 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
   </head>
   <body class:list={[pageClass]}>
     <header class="site-header">
-      <a href={homeHref()} class="brand">
+      <a href={routes.homeHref()} class="brand">
         {site.name}
       </a>
       <nav aria-label={t.navLabel}>
-        <a href={songsHref()}>{t.navAllSongs}</a>
-        <a href={artistsHref()}>{t.navArtists}</a>
-        <a href={tagsHref()}>{t.navTags}</a>
-        <a href={languagesHref()}>{t.navLanguages}</a>
+        <a href={routes.songsHref()}>{t.navAllSongs}</a>
+        <a href={routes.artistsHref()}>{t.navArtists}</a>
+        <a href={routes.tagsHref()}>{t.navTags}</a>
+        <a href={routes.languagesHref()}>{t.navLanguages}</a>
       </nav>
       {songbookOptions.length > 0 && (
         <select id="songbook-select" class="btn" aria-label={t.songbookLabel} hidden>

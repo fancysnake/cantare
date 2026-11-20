@@ -29,7 +29,16 @@ const GATES: [files: string, up: string][] = [
   ['src/components/*', '../lib/'],
   ['bin/*', '../src/lib/'],
 ];
+/** Every gate folder, for the depth guard. */
+const GATE_ROOTS = ['src/pages/**', 'src/layouts/**', 'src/components/**', 'bin/**'];
 const GATES_MESSAGE = 'Gates import pacts and inits only.';
+const GATE_PATHS: Path[] = [
+  {
+    name: 'astro:content',
+    importNames: ['getCollection', 'getEntry', 'getEntries'],
+    message: 'Gates read songs through inits, not from the content collection.',
+  },
+];
 
 interface Path {
   name: string;
@@ -165,6 +174,19 @@ export const layers: { rules: DummyRuleMap; overrides: OxlintOverride[] } = {
   rules: { 'no-restricted-imports': ['error', { patterns: [EDGES] }] },
   overrides: [
     ...layerOverrides,
+    // A gate nested deeper than GATES covers may import nothing upward.
+    ...GATE_ROOTS.map((files) =>
+      restrict(
+        [files],
+        [
+          {
+            group: ['../**'],
+            message: 'Gates are checked two folders deep; nest no deeper, or extend GATES.',
+          },
+        ],
+        GATE_PATHS,
+      ),
+    ),
     // Exemption: gates import inits. A static build has no seam that hands
     // `getStaticPaths` or a browser script its services, so they import them.
     ...GATES.map(([files, up]) =>
@@ -172,19 +194,14 @@ export const layers: { rules: DummyRuleMap; overrides: OxlintOverride[] } = {
         [files],
         [
           leaving(['pacts', 'inits'], up, GATES_MESSAGE),
-          // Whatever the depth of the importing file.
+          // The groups see only paths under `up`; this also catches a path that
+          // reaches src/lib/ from elsewhere, such as `../../src/lib/mills/a`.
           {
             regex: '^\\.{1,2}/(.*/)?lib/(mills|links|specs)(\\.[jt]s)?(/|$)',
             message: GATES_MESSAGE,
           },
         ],
-        [
-          {
-            name: 'astro:content',
-            importNames: ['getCollection', 'getEntry', 'getEntries'],
-            message: 'Gates read songs through inits, not from the content collection.',
-          },
-        ],
+        GATE_PATHS,
       ),
     ),
     restrict(

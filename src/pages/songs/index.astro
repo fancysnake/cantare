@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import SongList from '../../components/SongList.astro';
-import { songs as allSongs } from '../../lib/inits/pages';
+import { allSongs } from '../../lib/inits/pages';
 import { locale, t } from '../../lib/inits/site';
 
 const songs = (await allSongs()).toSorted((a, b) =>

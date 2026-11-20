@@ -3,14 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ExternalCue from '../../components/ExternalCue.astro';
 import SongbookFilters from '../../components/SongbookFilters.astro';
-import {
-  albumHref,
-  artistHref,
-  diagramData as diagramDataFor,
-  languageHref,
-  songs as allSongs,
-  tagHref,
-} from '../../lib/inits/pages';
+import { allSongs, diagramDataFor, routes } from '../../lib/inits/pages';
 import { chordDiagram, isTrailing, parseSong, renderSong } from '../../lib/inits/sheet';
 import { t } from '../../lib/inits/site';
 
@@ -62,12 +55,12 @@ const initialDiagrams = chordNames.flatMap((name) => {
         )
       }
       <p class="song-meta">
-        <a href={artistHref(artist)} data-pagefind-filter="artist">{artist}</a>
+        <a href={routes.artistHref(artist)} data-pagefind-filter="artist">{artist}</a>
         {
           album && (
             <>
               {' '}
-              · <a href={albumHref(album)} data-pagefind-filter="album">
+              · <a href={routes.albumHref(album)} data-pagefind-filter="album">
                 {album}
               </a>
             </>
@@ -77,7 +70,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
           language && (
             <>
               {' '}
-              · <a href={languageHref(language)} data-pagefind-filter="language">
+              · <a href={routes.languageHref(language)} data-pagefind-filter="language">
                 {language}
               </a>
             </>
@@ -87,7 +80,7 @@ const initialDiagrams = chordNames.flatMap((name) => {
         {capo !== undefined && <span class="key-info"> · {t.capoLabel}: {capo}</span>}
         {
           tags.map((tag) => (
-            <a class="tag" href={tagHref(tag)} data-pagefind-filter="tag">
+            <a class="tag" href={routes.tagHref(tag)} data-pagefind-filter="tag">
               #{tag}
             </a>
           ))

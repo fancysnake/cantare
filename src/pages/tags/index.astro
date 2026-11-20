@@ -1,7 +1,7 @@
 ---
 import ListingItem from '../../components/ListingItem.astro';
 import Base from '../../layouts/Base.astro';
-import { tagHref, facets } from '../../lib/inits/pages';
+import { facets, routes } from '../../lib/inits/pages';
 import { t } from '../../lib/inits/site';
 
 const tags = await facets('tags');
@@ -11,7 +11,7 @@ const tags = await facets('tags');
   <h1>{t.tagsTitle}</h1>
   <ul class="song-list">
     {tags.map(({ name, songs }) => (
-      <ListingItem href={tagHref(name)} label={`#${name}`} songs={songs} />
+      <ListingItem href={routes.tagHref(name)} label={`#${name}`} songs={songs} />
     ))}
   </ul>
 </Base>

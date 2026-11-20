@@ -1,7 +1,7 @@
 ---
 import ListingItem from '../../components/ListingItem.astro';
 import Base from '../../layouts/Base.astro';
-import { languageHref, facets } from '../../lib/inits/pages';
+import { facets, routes } from '../../lib/inits/pages';
 import { t } from '../../lib/inits/site';
 
 const languages = await facets('languages');
@@ -11,7 +11,7 @@ const languages = await facets('languages');
   <h1>{t.languagesTitle}</h1>
   <ul class="song-list">
     {languages.map(({ name, songs }) => (
-      <ListingItem href={languageHref(name)} label={name} songs={songs} />
+      <ListingItem href={routes.languageHref(name)} label={name} songs={songs} />
     ))}
   </ul>
 </Base>
