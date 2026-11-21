@@ -3,8 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 
 import type { RandomLink } from '../lib/pacts/song';
 
-import { t } from '../lib/i18n';
-import { songLink } from '../lib/routes';
+import { routes } from '../lib/inits/pages';
+import { t } from '../lib/inits/site';
 
 interface Props {
   songs: CollectionEntry<'songs'>[];
@@ -13,7 +13,7 @@ interface Props {
 
 const { songs, label = t.randomSong } = Astro.props;
 const links = songs.map((song): RandomLink => ({
-  ...songLink(song),
+  ...routes.songLink(song),
   songbooks: song.data.songbooks,
 }));
 const songbooks = [...new Set(songs.flatMap((song) => song.data.songbooks))].join(' ');

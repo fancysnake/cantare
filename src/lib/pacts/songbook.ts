@@ -28,5 +28,12 @@ export const songbookSchema = z
 
 export type SongbookConfig = z.input<typeof songbookSchema>;
 
+/** The songs that share one value of a facet key; each gets a listing page. */
+export interface Facet<Song> {
+  slug: string;
+  name: string;
+  songs: Song[];
+}
+
 /** The song metadata songbooks match on. */
 export type SongbookFields = Pick<SongMeta, 'artist' | 'album' | 'language' | 'tags'>;

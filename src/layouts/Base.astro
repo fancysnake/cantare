@@ -1,16 +1,12 @@
 ---
 import '../styles/global.css';
-import { getCollection } from 'astro:content';
-
 import ShareButton from '../components/ShareButton.astro';
-import { locale, t } from '../lib/i18n';
-import { songbookCss, songbookOptions as optionsOf } from '../lib/mills/songbook';
-import { artistsHref, homeHref, languagesHref, songsHref, tagsHref } from '../lib/routes';
-import { site, themeCss } from '../lib/site';
+import { headCss, loadSongbookOptions, routes } from '../lib/inits/pages';
+import { locale, site, t } from '../lib/inits/site';
 
-const songbookOptions = optionsOf(site.songbooks, await getCollection('songs'), t.songbookOther);
+const songbookOptions = await loadSongbookOptions();
 const songbookSlugs = songbookOptions.map(({ slug }) => slug);
-const headStyles = [themeCss(), songbookCss(songbookSlugs)].filter(Boolean).join('\n');
+const headStyles = await headCss();
 
 interface Props {
   title?: string | undefined;
@@ -73,14 +69,14 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
   </head>
   <body class:list={[pageClass]}>
     <header class="site-header">
-      <a href={homeHref()} class="brand">
+      <a href={routes.homeHref()} class="brand">
         {site.name}
       </a>
       <nav aria-label={t.navLabel}>
-        <a href={songsHref()}>{t.navAllSongs}</a>
-        <a href={artistsHref()}>{t.navArtists}</a>
-        <a href={tagsHref()}>{t.navTags}</a>
-        <a href={languagesHref()}>{t.navLanguages}</a>
+        <a href={routes.songsHref()}>{t.navAllSongs}</a>
+        <a href={routes.artistsHref()}>{t.navArtists}</a>
+        <a href={routes.tagsHref()}>{t.navTags}</a>
+        <a href={routes.languagesHref()}>{t.navLanguages}</a>
       </nav>
       {songbookOptions.length > 0 && (
         <select id="songbook-select" class="btn" aria-label={t.songbookLabel} hidden>
@@ -107,7 +103,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
       </footer>
     )}
     <script>
-      import { t } from '../lib/i18n';
+      import { t } from '../lib/inits/site';
 
       const toggle = document.getElementById('theme-toggle');
       if (toggle) {
