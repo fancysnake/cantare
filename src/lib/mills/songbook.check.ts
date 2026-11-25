@@ -6,11 +6,11 @@
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
 
-import type { SongbookFields } from '../pacts/songbook.ts';
+import { OTHER, type SongbookFields } from '../pacts/songbook.ts';
+import { parseSiteConfig } from './config.ts';
+import { facetValues, songbookMatchers, songbookOptions, songbooksOf } from './songbook.ts';
 
-import { OTHER, facetValues, parseSongbooks, songbookOptions, songbooksOf } from './songbook.ts';
-
-const books = parseSongbooks([
+const books = songbookMatchers([
   { name: 'Campfire', tags: ['folk', 'Shanty'] },
   { name: 'Celebrations', tags: ['hymn'], artists: ['Robert Burns'] },
   { name: 'Polish', languages: ['pl'], albums: ['Kolędy'] },
@@ -56,7 +56,17 @@ assert.deepEqual(songbookOptions(config, [{ data: { songbooks: [OTHER] } }], 'Re
   { slug: OTHER, name: 'Rest' },
 ]);
 
-assert.deepEqual(parseSongbooks(undefined), []);
+const site = { name: 'Site', description: 'Songs', url: 'https://example.org', locale: 'en' };
+const parseSongbooks = (songbooks: unknown) => parseSiteConfig({ ...site, songbooks });
+
+assert.deepEqual(parseSiteConfig(site), site);
+assert.deepEqual(songbookMatchers(parseSiteConfig(site).songbooks), []);
+// A misspelled key fails, whether the field it meant is required or optional.
+assert.throws(() => parseSiteConfig({ ...site, name: undefined, nmae: 'Site' }), /"nmae"/);
+assert.throws(() => parseSiteConfig({ ...site, themeDrak: {} }), /"themeDrak"/);
+assert.throws(() => parseSiteConfig({ ...site, footer: { text: 'x', link: 'y' } }), /"link"/);
+assert.throws(() => parseSiteConfig({ ...site, description: 7 }), /expected string/);
+assert.throws(() => parseSiteConfig({ ...site, footer: 'x' }), /expected object/);
 assert.throws(() => parseSongbooks([{ name: 'Empty' }]), /hold no songs/);
 assert.throws(() => parseSongbooks([{ name: 'Empty', tags: [] }]), /hold no songs/);
 assert.throws(() => parseSongbooks([{ name: 'Other', tags: ['x'] }]), /clashes/);

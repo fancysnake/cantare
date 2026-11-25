@@ -17,6 +17,10 @@ songbooks:
 
 From source, the same file is the repo's `site.config.json`.
 
+The build checks the file before it renders a page. An unknown key, a missing
+`name`, `description`, `url` or `locale`, or a value of the wrong type fails
+the build with a message that names the field.
+
 ## Footer
 
 `footer` renders a single line under the page, linked when `href` is set. Omit

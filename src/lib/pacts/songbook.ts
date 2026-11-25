@@ -9,6 +9,9 @@ export const FACET_KEYS = ['tags', 'artists', 'albums', 'languages'] as const;
 /** A song field that songbooks match on and the listing pages group by. */
 export type FacetKey = (typeof FACET_KEYS)[number];
 
+/** The built-in songbook holding every song no defined songbook picks. */
+export const OTHER = 'other';
+
 // An empty slug would match every song whose value also slugifies to nothing.
 const sluggable = z.string().refine((value) => slugify(value) !== '', 'has no letters or digits');
 const values = z.array(sluggable).optional();
@@ -26,7 +29,7 @@ export const songbookSchema = z
     error: `lists no ${FACET_KEYS.join(', ')}, so it would hold no songs`,
   });
 
-export type SongbookConfig = z.input<typeof songbookSchema>;
+export type SongbookConfig = z.infer<typeof songbookSchema>;
 
 /** The songs that share one value of a facet key; each gets a listing page. */
 export interface Facet<Song> {
