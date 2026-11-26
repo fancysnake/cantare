@@ -5,14 +5,13 @@
  */
 import { z } from 'astro/zod';
 
-import { site } from '../links/config/virtual';
 import { readSongFiles } from '../links/songs/fs';
 import { songMeta } from '../mills/song';
-import { parseSongbooks, songbooksOf } from '../mills/songbook';
+import { songbooksOf } from '../mills/songbook';
 import { songMetaSchema } from '../pacts/song';
+import { songbooks } from './songbooks';
 
 const SONGS_DIR = process.env.CANTARE_SONGS_DIR ?? 'songs';
-const songbooks = parseSongbooks(site.songbooks);
 
 export const songSchema = songMetaSchema.extend({
   songbooks: z.array(z.string()),

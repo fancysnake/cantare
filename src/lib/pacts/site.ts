@@ -1,16 +1,23 @@
-import type { SongbookConfig } from './songbook.ts';
+import { z } from 'astro/zod';
 
-export interface SiteConfig {
-  name: string;
-  description: string;
-  url: string;
-  locale: string;
+import { songbooksSchema } from './songbook.ts';
+
+const colors = z.record(z.string(), z.string());
+
+/** The site config file. An unknown key is an error, so a misspelled optional field cannot pass as absent. */
+export const siteConfigSchema = z.strictObject({
+  name: z.string(),
+  description: z.string(),
+  url: z.string(),
+  locale: z.string(),
   /** Override `--color-*` custom properties (key without the prefix). */
-  theme?: Record<string, string>;
+  theme: colors.optional(),
   /** Same, applied in dark mode (forced or via prefers-color-scheme). */
-  themeDark?: Record<string, string>;
+  themeDark: colors.optional(),
   /** Footer line; omitted entirely when unset, linked when `href` is given. */
-  footer?: { text: string; href?: string };
+  footer: z.strictObject({ text: z.string(), href: z.string().optional() }).optional(),
   /** Named song selections the reader can switch between. */
-  songbooks?: SongbookConfig[];
-}
+  songbooks: songbooksSchema.optional(),
+});
+
+export type SiteConfig = z.infer<typeof siteConfigSchema>;
