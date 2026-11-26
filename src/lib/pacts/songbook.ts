@@ -17,7 +17,7 @@ const sluggable = z.string().refine((value) => slugify(value) !== '', 'has no le
 const values = z.array(sluggable).optional();
 
 /** A songbook as written in the config: a song belongs if it matches any listed value. */
-export const songbookSchema = z
+const songbookSchema = z
   .strictObject({
     name: sluggable,
     tags: values,
@@ -30,6 +30,23 @@ export const songbookSchema = z
   });
 
 export type SongbookConfig = z.infer<typeof songbookSchema>;
+
+/** The config's songbook list: each slug is unique and none is `OTHER`. */
+export const songbooksSchema = z.array(songbookSchema).superRefine((songbooks, context) => {
+  // Two songbooks with one slug would share a switcher choice and a `?songbook=` link.
+  const seen = new Set([OTHER]);
+  for (const [index, { name }] of songbooks.entries()) {
+    const slug = slugify(name);
+    if (seen.has(slug)) {
+      context.addIssue({
+        code: 'custom',
+        path: [index, 'name'],
+        message: `"${name}" clashes with another songbook (or the built-in "${OTHER}")`,
+      });
+    }
+    seen.add(slug);
+  }
+});
 
 /** The songs that share one value of a facet key; each gets a listing page. */
 export interface Facet<Song> {

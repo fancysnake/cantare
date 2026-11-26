@@ -51,13 +51,13 @@ export function songbooksOf(song: SongbookFields, songbooks: Songbook[]): string
   return matched.length > 0 ? matched : [OTHER];
 }
 
-/** The switcher's choices: the config's songbooks, then `otherName` when some song lands in Other. */
+/** The switcher's choices: the songbooks, then `otherName` when some song lands in Other. */
 export function songbookOptions(
-  config: SongbookConfig[] = [],
+  songbooks: Songbook[],
   songs: { data: { songbooks: string[] } }[],
   otherName: string,
 ): { slug: string; name: string }[] {
-  const options = config.map(({ name }) => ({ slug: slugify(name), name }));
+  const options = songbooks.map(({ slug, name }) => ({ slug, name }));
   const hasOther = songs.some((song) => song.data.songbooks.includes(OTHER));
   return hasOther ? [...options, { slug: OTHER, name: otherName }] : options;
 }

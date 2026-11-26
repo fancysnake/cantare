@@ -15,6 +15,7 @@ import { routesFor } from '../mills/routes';
 import { songbookCss, songbookOptions } from '../mills/songbook';
 import { themeCss } from '../mills/theme';
 import { locale, site, t } from './site';
+import { songbooks } from './songbooks';
 
 export const routes = routesFor(import.meta.env.BASE_URL);
 
@@ -28,7 +29,7 @@ export const facets = async (key: FacetKey): Promise<Facet<Song>[]> =>
 
 /** The songbook switcher's choices. */
 export const loadSongbookOptions = async (): Promise<{ slug: string; name: string }[]> =>
-  songbookOptions(site.songbooks, await allSongs(), t.songbookOther);
+  songbookOptions(songbooks, await allSongs(), t.songbookOther);
 
 /** The `<head>` stylesheet: the palette overrides from the site config, then the songbook rules. */
 export const headCss = async (): Promise<string> =>

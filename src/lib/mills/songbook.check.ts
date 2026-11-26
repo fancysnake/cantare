@@ -1,7 +1,7 @@
 /**
- * Self-check for songbook membership and config validation. Matching decides
- * what a reader sees in every list, and neither `astro check` nor oxlint can
- * see a wrong rule. Run it with `node src/lib/songbook.check.ts`.
+ * Self-check for songbook membership and songbook config validation. Matching
+ * decides what a reader sees in every list, and neither `astro check` nor oxlint
+ * can see a wrong rule. Run it with `node src/lib/mills/songbook.check.ts`.
  */
 import assert from 'node:assert/strict';
 import { stdout } from 'node:process';
@@ -47,41 +47,37 @@ assert.deepEqual(songbooksOf(song({ tags: ['test'] }), books), [OTHER]);
 assert.deepEqual(songbooksOf(song({ tags: ['folk'] }), []), []);
 
 // "Other" is offered only when some song lands in it.
-const config = [{ name: 'Campfire', tags: ['folk'] }];
-assert.deepEqual(songbookOptions(config, [{ data: { songbooks: ['campfire'] } }], 'Rest'), [
+const offered = songbookMatchers([{ name: 'Campfire', tags: ['folk'] }]);
+assert.deepEqual(songbookOptions(offered, [{ data: { songbooks: ['campfire'] } }], 'Rest'), [
   { slug: 'campfire', name: 'Campfire' },
 ]);
-assert.deepEqual(songbookOptions(config, [{ data: { songbooks: [OTHER] } }], 'Rest'), [
+assert.deepEqual(songbookOptions(offered, [{ data: { songbooks: [OTHER] } }], 'Rest'), [
   { slug: 'campfire', name: 'Campfire' },
   { slug: OTHER, name: 'Rest' },
 ]);
 
 const site = { name: 'Site', description: 'Songs', url: 'https://example.org', locale: 'en' };
-const parseSongbooks = (songbooks: unknown) => parseSiteConfig({ ...site, songbooks });
+const parseWithSongbooks = (songbooks: unknown) => parseSiteConfig({ ...site, songbooks });
 
-assert.deepEqual(parseSiteConfig(site), site);
 assert.deepEqual(songbookMatchers(parseSiteConfig(site).songbooks), []);
-// A misspelled key fails, whether the field it meant is required or optional.
-assert.throws(() => parseSiteConfig({ ...site, name: undefined, nmae: 'Site' }), /"nmae"/);
-assert.throws(() => parseSiteConfig({ ...site, themeDrak: {} }), /"themeDrak"/);
-assert.throws(() => parseSiteConfig({ ...site, footer: { text: 'x', link: 'y' } }), /"link"/);
-assert.throws(() => parseSiteConfig({ ...site, description: 7 }), /expected string/);
-assert.throws(() => parseSiteConfig({ ...site, footer: 'x' }), /expected object/);
-assert.throws(() => parseSongbooks([{ name: 'Empty' }]), /hold no songs/);
-assert.throws(() => parseSongbooks([{ name: 'Empty', tags: [] }]), /hold no songs/);
-assert.throws(() => parseSongbooks([{ name: 'Other', tags: ['x'] }]), /clashes/);
+assert.throws(() => parseWithSongbooks([{ name: 'Empty' }]), /hold no songs/);
+assert.throws(() => parseWithSongbooks([{ name: 'Empty', tags: [] }]), /hold no songs/);
+assert.throws(() => parseWithSongbooks([{ name: 'Other', tags: ['x'] }]), /clashes/);
 assert.throws(
   () =>
-    parseSongbooks([
+    parseWithSongbooks([
       { name: 'Choir', tags: ['x'] },
       { name: 'choir', tags: ['y'] },
     ]),
   /clashes/,
 );
-assert.throws(() => parseSongbooks([{ name: 'Typo', tags: ['x'], tag: ['y'] }]), /"tag"/);
-assert.throws(() => parseSongbooks({ name: 'Campfire', tags: ['x'] }), /expected array/);
-assert.throws(() => parseSongbooks([{ name: '!!', tags: ['x'] }]), /no letters or digits/);
-assert.throws(() => parseSongbooks([{ name: 'Blank', tags: [''] }]), /no letters or digits/);
-assert.throws(() => parseSongbooks([{ name: 'Kanji', artists: ['日本'] }]), /no letters or digits/);
+assert.throws(() => parseWithSongbooks([{ name: 'Typo', tags: ['x'], tag: ['y'] }]), /"tag"/);
+assert.throws(() => parseWithSongbooks({ name: 'Campfire', tags: ['x'] }), /expected array/);
+assert.throws(() => parseWithSongbooks([{ name: '!!', tags: ['x'] }]), /no letters or digits/);
+assert.throws(() => parseWithSongbooks([{ name: 'Blank', tags: [''] }]), /no letters or digits/);
+assert.throws(
+  () => parseWithSongbooks([{ name: 'Kanji', artists: ['日本'] }]),
+  /no letters or digits/,
+);
 
 stdout.write('songbook checks passed\n');
